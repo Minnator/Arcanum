@@ -1,0 +1,58 @@
+﻿<UserControl x:Class = "Arcanum.UI.Components.UserControls.SearchTextBox"
+             xmlns = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x = "http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:styleClasses = "clr-namespace:Arcanum.UI.Components.Base.StyleClasses">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source = "/Components/Base/Styles/BaseDarkScrollbar.xaml" />
+                <ResourceDictionary Source = "/Components/Base/Styles/BaseDarkButton.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+
+    <Border Padding = "10, 0,0,0"
+            CornerRadius = "0"
+            Background = "{StaticResource DefaultBackColorBrush}"
+            BorderBrush = "{StaticResource DefaultBorderColorBrush}"
+            BorderThickness = "0"
+            Margin = "1">
+        <DockPanel LastChildFill = "True">
+
+            <!-- Left Icon -->
+            <Image Source = "/Assets/Icons/Missing16x16.png"
+                   Width = "16"
+                   Height = "16"
+                   Margin = "4,0"
+                   VerticalAlignment = "Center"
+                   DockPanel.Dock = "Left" />
+
+            <!-- Right Button -->
+            <styleClasses:BaseButton Style = "{StaticResource BaseDarkButtonStyle}"
+                                        Width = "20"
+                                        Height = "20"
+                                        Margin = "1,1, 14, 0"
+                                        Padding = "0"
+                                        VerticalAlignment = "Center"
+                                        HorizontalAlignment = "Center"
+                                        Background = "Transparent"
+                                        DockPanel.Dock = "Right">
+                <Image Source = "/Assets/Icons/Settings.png"
+                       Stretch = "None" />
+            </styleClasses:BaseButton>
+
+            <!-- Text Input -->
+            <TextBox x:Name = "SearchInputTextBox"
+                     BorderThickness = "0"
+                     Background = "Transparent"
+                     VerticalAlignment = "Center"
+                     Margin = "4,0"
+                     MinWidth = "100"
+                     Foreground = "{StaticResource DefaultForeColorBrush}"
+                     CaretBrush = "{StaticResource DefaultForeColorBrush}" />
+        </DockPanel>
+    </Border>
+
+</UserControl>

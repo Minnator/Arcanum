@@ -1,0 +1,44 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    
+    <!-- Back colors and their brushes -->
+    <Color x:Key="InlineBackColor">#333333</Color>
+    <Color x:Key="DefaultBackColor">#222222</Color>
+    <Color x:Key="DarkBackColor">#1c1c1c</Color>
+    <Color x:Key="LightBackColor">#393939</Color>
+    <Color x:Key="SelectedBackColor">#575757</Color>
+    <Color x:Key="DarkerSelectedBackColor">#484848</Color>
+    <Color x:Key="BlueSelectionBackColor">#2e436e</Color>
+    <Color x:Key="AggressiveRedBackColor">#e81123</Color>
+    
+    <SolidColorBrush x:Key="InlineBackColorBrush" Color="{StaticResource InlineBackColor}" />
+    <SolidColorBrush x:Key="DefaultBackColorBrush" Color="{StaticResource DefaultBackColor}" />
+    <SolidColorBrush x:Key="DarkBackColorBrush" Color="{StaticResource DarkBackColor}" />
+    <SolidColorBrush x:Key="LightBackColorBrush" Color="{StaticResource LightBackColor}" />
+    <SolidColorBrush x:Key="SelectedBackColorBrush" Color="{StaticResource SelectedBackColor}" />
+    <SolidColorBrush x:Key="BlueSelectionBackColorBrush" Color="{StaticResource BlueSelectionBackColor}" />
+    <SolidColorBrush x:Key="DarkerSelectedBackColorBrush" Color="{StaticResource DarkerSelectedBackColor}" />
+    <SolidColorBrush x:Key="AggressiveRedBackColorBrush" Color="{StaticResource AggressiveRedBackColor}" />
+    
+    
+    <!-- Foreground colors and their brushes -->
+    <Color x:Key="GreenForeColor">#50964d</Color>
+    <Color x:Key="GreyedOutForeColor">#676e70</Color>
+    <Color x:Key="DisabledForeColor">#595959</Color>
+    <Color x:Key="DefaultForeColor">#dfdfdf</Color>
+    
+    <SolidColorBrush x:Key="GreenForeColorBrush" Color="{StaticResource GreenForeColor}" />
+    <SolidColorBrush x:Key="GreyedOutForeColorBrush" Color="{StaticResource GreyedOutForeColor}" />
+    <SolidColorBrush x:Key="DisabledForeColorBrush" Color="{StaticResource DisabledForeColor}" />
+    <SolidColorBrush x:Key="DefaultForeColorBrush" Color="{StaticResource DefaultForeColor}" />
+    
+    <!-- Border colors and their brushes -->
+    <Color x:Key="DefaultBorderColor">#454545</Color>
+    <Color x:Key="SelectedControlBorderColor">#3574f0</Color>
+    
+    <SolidColorBrush x:Key="DefaultBorderColorBrush" Color="{StaticResource DefaultBorderColor}" />
+    <SolidColorBrush x:Key="SelectedControlBorderColorBrush" Color="{StaticResource SelectedControlBorderColor}" />
+    
+    
+    
+</ResourceDictionary>

@@ -1,0 +1,21 @@
+﻿<Application x:Class="Arcanum.UI.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="../WpfTesting/ExampleWindow.xaml">
+    
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Assets/ArcanumShared/DefaultPalette.xaml" />
+                <ResourceDictionary Source="Assets/ArcanumShared/DefaultFonts.xaml" />
+                <ResourceDictionary Source="Components/Base/Styles/BaseTextBoxStyle.xaml" />
+                <ResourceDictionary Source="Components/Base/Styles/BaseComboboxStyle.xaml" />
+                <ResourceDictionary Source="Components/Base/Styles/BorderlessComboBox.xaml" />
+                <ResourceDictionary Source="Components/Base/Styles/BaseCheckBox.xaml" />
+                <ResourceDictionary Source="Components/Base/Styles/BaseDarkScrollbar.xaml" />
+                <ResourceDictionary Source="Components/Base/Styles/BaseListBox.xaml" />
+                <ResourceDictionary Source="Components/Base/Styles/BaseTextBlock.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

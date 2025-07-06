@@ -1,0 +1,155 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UseWindowsForms>false</UseWindowsForms>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <OutputType>WinExe</OutputType>
+        <UseWPF>true</UseWPF>
+        <LangVersion>12</LangVersion>
+        <AssemblyName>Arcanum_UI</AssemblyName>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+      <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Arcanum.Core\Arcanum.Core.csproj" />
+      <ProjectReference Include="..\Arcanum.PluginHost\Arcanum.PluginHost.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Components\Specific\Converters\" />
+      <Folder Include="HostUIServices\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="ConsoleUi\ConsoleUi.cs">
+        <SubType>Form</SubType>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Resources\Icons\ArrowDown.png" />
+      <None Remove="Resources\Icons\ArrowUp.png" />
+      <None Remove="C#.png" />
+      <None Remove="Assets\Icons\Missing16x16.png" />
+      <Resource Include="Assets\Icons\Missing16x16.png" />
+      <None Remove="Assets\Icons\Missing64x64.png" />
+      <Resource Include="Assets\Icons\Missing64x64.png" />
+      <None Remove="Assets\Icons\Settings14x14.png" />
+      <Resource Include="Assets\Icons\Settings.png" />
+      <None Remove="Assets\Icons\Quit Full Screen.png" />
+      <None Remove="Assets\Icons\Full Screen.png" />
+      <None Remove="Assets\Icons\Minimize.png" />
+      <Resource Include="Assets\Icons\Minimize.png" />
+      <None Remove="Assets\Icons\Close.png" />
+      <Resource Include="Assets\Icons\Close.png" />
+      <None Remove="Assets\Icons\FullScreen.png" />
+      <Resource Include="Assets\Icons\FullScreen.png" />
+      <None Remove="Assets\Icons\CheckSquare.png" />
+      <Resource Include="Assets\Icons\CheckSquare.png" />
+      <None Remove="Assets\Icons\CloseSquare.png" />
+      <Resource Include="Assets\Icons\CloseSquare.png" />
+      <None Remove="Assets\Icons\ArrowDown.png" />
+      <Resource Include="Assets\Icons\ArrowDown.png" />
+      <None Remove="Assets\Icons\ArrowUp.png" />
+      <Resource Include="Assets\Icons\ArrowUp.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="Temp\DarkScrollbar.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Temp\ResultListView.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Temp\SearchTextBox.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Temp\TestWindow.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Theme\Generic.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="BaseComponents\BaseStyles\BaseDarkScrollbar.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="BaseComponents\BaseStyles\BaseDarkButton.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="UserControls\SearchTextBox.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="BaseComponents\BaseStyles\SearchResultListView.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Components\Base\BaseStyles\BaseComboboxStyle.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+      <Page Update="Components\Base\BaseStyles\BaseComboBoxItem.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+      <Page Update="Components\Base\BaseStyles\BaseDarkScrollbar.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+      <Page Update="Components\Base\BaseStyles\BaseDarkButton.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+      <Page Update="Components\Base\BaseStyles\SearchResultListView.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+      <Page Update="Components\UserControls\SearchTextBox.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+      <Page Update="Components\Specific\Styles\SearchResultListView.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Components\Windows\SearchWindow.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Components\Themes\Generic.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+      <Page Update="Themes\Generic.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Assets\Icons\RestoreWindow.png" />
+      <Resource Include="Assets\Icons\RestoreWindow.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+      <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+    </ItemGroup>
+
+</Project>

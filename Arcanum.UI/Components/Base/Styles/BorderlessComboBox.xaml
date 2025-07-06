@@ -18,14 +18,14 @@
                     BorderBrush = "{TemplateBinding BorderBrush}"
                     CornerRadius = "2"
                     BorderThickness = "0"
-                    Background = "{StaticResource DefaultBackColorBrush}" />
+                    Background="Transparent" />
             <Border Grid.Column = "1"
                     Margin = "1, 1, 1, 1"
                     BorderBrush = "{TemplateBinding BorderBrush}"
                     Name = "ButtonBorder"
                     CornerRadius = "2"
                     BorderThickness = "0"
-                    Background = "{StaticResource DefaultBackColorBrush}" />
+                    Background="Transparent" />
 
             <Path Name = "Arrow"
                   Grid.Column = "1"
@@ -120,7 +120,7 @@
         <Setter Property = "Template">
             <Setter.Value>
                 <ControlTemplate TargetType = "ComboBox">
-                    <Grid>
+                    <Grid Background="Transparent">
                         <ToggleButton Name = "ToggleButton"
                                       Grid.Column = "2"
                                       ClickMode = "Press"

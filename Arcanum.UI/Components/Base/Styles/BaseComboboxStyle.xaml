@@ -8,7 +8,7 @@
 
     <ControlTemplate TargetType = "ToggleButton"
                      x:Key = "ComboBoxToggleButtonTemplate">
-        <Grid>
+        <Grid Background="Transparent">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition Width = "20" />

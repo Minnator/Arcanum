@@ -47,6 +47,28 @@
         </Setter>
     </Style>
 
+    <Style x:Key = "NonHoverListBoxItem"
+           TargetType = "ListBoxItem">
+        <Setter Property = "SnapsToDevicePixels"
+                Value = "true" />
+        <Setter Property = "OverridesDefaultStyle"
+                Value = "true" />
+        <Setter Property = "Template">
+            <Setter.Value>
+                <ControlTemplate TargetType = "ListBoxItem">
+                    <Border x:Name = "Border"
+                            Padding = "0"
+                            SnapsToDevicePixels = "true"
+                            CornerRadius = "3"
+                            Background = "{TemplateBinding Background}">
+
+                        <ContentPresenter />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key = "{x:Type ListBoxItem}"
            TargetType = "ListBoxItem">
         <Setter Property = "SnapsToDevicePixels"

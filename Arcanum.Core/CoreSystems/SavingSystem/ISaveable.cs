@@ -2,7 +2,18 @@
 
 namespace Arcanum.Core.CoreSystems.SavingSystem;
 
-public readonly struct FileInformation(string fileName, string fileEnding, PathObj saveType, bool allowsOverwrite)
+public readonly struct FileTypeInformation(string typeName, string fileEnding, string commentPrefix)
+{
+   //"$\"Country file (EUV-Json)|*{.txt}\""
+   
+   public static FileTypeInformation Default = new("EUV-","txt", "#");
+   
+   public readonly string TypeName = typeName;
+   public readonly string FileEnding = fileEnding;
+   public readonly string CommentPrefix  = commentPrefix;
+}
+
+public readonly struct FileInformation(string fileName, FileTypeInformation fileType, PathObj saveType, bool allowsOverwrite)
 {
    /// <summary>
    /// The default file name for the saveable
@@ -18,7 +29,7 @@ public readonly struct FileInformation(string fileName, string fileEnding, PathO
    /// <summary>
    /// The file ending of the saveable.
    /// </summary>
-   public string FileEnding { get; } = fileEnding;
+   public FileTypeInformation FileType { get; } = fileType;
    
    /// <summary>
    /// The Path where the saveable is saved.

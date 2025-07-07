@@ -23,7 +23,7 @@ public partial class FloatNumericUpDown : UserControl
       DependencyProperty.Register(nameof(MinValue),
                                   typeof(float),
                                   typeof(FloatNumericUpDown),
-                                  new FrameworkPropertyMetadata(0.0, OnMinMaxChanged));
+                                  new FrameworkPropertyMetadata(0.0f, OnMinMaxChanged));
 
    public float MaxValue
    {
@@ -35,7 +35,7 @@ public partial class FloatNumericUpDown : UserControl
       DependencyProperty.Register(nameof(MaxValue),
                                   typeof(float),
                                   typeof(FloatNumericUpDown),
-                                  new FrameworkPropertyMetadata(100.0, OnMinMaxChanged));
+                                  new FrameworkPropertyMetadata(100.0f, OnMinMaxChanged));
 
    public float Value
    {
@@ -47,7 +47,7 @@ public partial class FloatNumericUpDown : UserControl
       DependencyProperty.Register(nameof(Value),
                                   typeof(float),
                                   typeof(FloatNumericUpDown),
-                                  new FrameworkPropertyMetadata(10.0,
+                                  new FrameworkPropertyMetadata(10.0f,
                                                                 FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
                                                                 OnValueChanged));
 
@@ -61,7 +61,7 @@ public partial class FloatNumericUpDown : UserControl
       DependencyProperty.Register(nameof(StepSize),
                                   typeof(float),
                                   typeof(FloatNumericUpDown),
-                                  new FrameworkPropertyMetadata(0.1));
+                                  new FrameworkPropertyMetadata(0.1f));
 
    private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
    {
@@ -157,5 +157,13 @@ public partial class FloatNumericUpDown : UserControl
       {
          e.CancelCommand();
       }
+   }
+
+   private void NudTextBox_MouseWheel(object sender, MouseWheelEventArgs e)
+   {
+      if (e.Delta > 0)
+         NUDButtonUP_Click(sender, e);
+      else
+         NUDButtonDown_Click(sender, e);
    }
 }

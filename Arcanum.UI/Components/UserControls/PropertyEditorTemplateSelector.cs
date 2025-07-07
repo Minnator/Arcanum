@@ -16,10 +16,12 @@ public class PropertyEditorTemplateSelector : DataTemplateSelector
 
    public override DataTemplate SelectTemplate(object? item, DependencyObject container)
    {
-      
       if (item is not PropertyItem property)
          return DefaultTemplate;
       var type = Nullable.GetUnderlyingType(property.Type) ?? property.Type;
+
+      if (type == typeof(float))
+         return FloatTemplate;
 
       if (type == typeof(string))
          return StringTemplate;
@@ -35,9 +37,8 @@ public class PropertyEditorTemplateSelector : DataTemplateSelector
       
       if (type == typeof(double) || type == typeof(decimal))
          return DecimalTemplate;
-      
-      if (type == typeof(float))
-         return FloatTemplate;
+
+
 
       return DefaultTemplate;
    }

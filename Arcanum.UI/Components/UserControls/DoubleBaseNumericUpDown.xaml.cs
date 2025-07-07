@@ -158,4 +158,12 @@ public partial class DoubleBaseNumericUpDown : UserControl
          e.CancelCommand();
       }
    }
+   
+   private void NudTextBox_MouseWheel(object sender, MouseWheelEventArgs e)
+   {
+      if (e.Delta > 0)
+         NUDButtonUP_Click(sender, e);
+      else
+         NUDButtonDown_Click(sender, e);
+   }
 }

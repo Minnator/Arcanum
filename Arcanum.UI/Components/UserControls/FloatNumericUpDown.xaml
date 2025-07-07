@@ -30,6 +30,7 @@
                      PreviewKeyUp = "NUDButtonUP_Click"
                      TextChanged = "NUDTextBox_TextChanged"
                      PreviewTextInput = "NudTextBox_PreviewTextInput"
+                     MouseWheel = "NudTextBox_MouseWheel"
                      Foreground = "{StaticResource DefaultForeColorBrush}"
                      FontFamily = "{StaticResource DefaultFont}"
                      FontSize = "{StaticResource DefaultFontSize}"

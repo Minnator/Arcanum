@@ -134,4 +134,12 @@ public partial class BaseNumericUpDown : UserControl
          NudTextBox.Text = MinValue.ToString();
       NudTextBox.SelectionStart = NudTextBox.Text.Length;
    }
+   
+   private void NudTextBox_MouseWheel(object sender, MouseWheelEventArgs e)
+   {
+      if (e.Delta > 0)
+         NUDButtonUP_Click(sender, e);
+      else
+         NUDButtonDown_Click(sender, e);
+   }
 }

@@ -67,7 +67,7 @@
         
         <DataTemplate x:Key = "FloatTemplate"
                       DataType = "{x:Type base:PropertyItem}">
-            <uc:DoubleBaseNumericUpDown Value = "{Binding Value}"
+            <uc:FloatNumericUpDown Value = "{Binding Value}"
                                          Margin = "0, 0, 6, 0"
                                          Background = "Transparent"
                                          BorderThickness = "0"

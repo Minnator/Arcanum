@@ -31,6 +31,7 @@ public enum SomeOtherValues
 
 public class UserSettings
 {
+   public float Height { get; set; } = 1.75f; // in meters
    public SomeValues SelectedValue { get; set; } = SomeValues.Value2;
    public SomeOtherValues SelectedOption { get; set; } = SomeOtherValues.OptionB;
    public string Username { get; set; } = "User123";
@@ -42,7 +43,6 @@ public class UserSettings
    public string Email { get; set; } = "this.example@web.de";
    public string PhoneNumber { get; set; } = "+1234567890";
    public double AccountBalance { get; set; } = 1000.50;
-   public float Height { get; set; } = 1.75f; // in meters
    public DateTime DateOfBirth { get; set; } = new(1993, 5, 15);
    public List<string> Hobbies { get; set; } = new()
    {

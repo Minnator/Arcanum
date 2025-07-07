@@ -45,13 +45,35 @@
 
         <DataTemplate x:Key = "IntTemplate"
                       DataType = "{x:Type base:PropertyItem}">
-            <uc:BaseNumericUpDown  Value = "{Binding Value}"
+            <uc:BaseNumericUpDown Value = "{Binding Value}"
                                   Margin = "0, 0, 6, 0"
                                   Background = "Transparent"
-                                  BorderThickness="0"
-                                  Padding="0"
-                                  HorizontalAlignment="Stretch"
-                                  VerticalAlignment="Stretch" />
+                                  BorderThickness = "0"
+                                  Padding = "0"
+                                  HorizontalAlignment = "Stretch"
+                                  VerticalAlignment = "Stretch" />
+        </DataTemplate>
+
+        <DataTemplate x:Key = "DecimalTemplate"
+                      DataType = "{x:Type base:PropertyItem}">
+            <uc:DoubleBaseNumericUpDown Value = "{Binding Value}"
+                                         Margin = "0, 0, 6, 0"
+                                         Background = "Transparent"
+                                         BorderThickness = "0"
+                                         Padding = "0"
+                                         HorizontalAlignment = "Stretch"
+                                         VerticalAlignment = "Stretch" />
+        </DataTemplate>   
+        
+        <DataTemplate x:Key = "FloatTemplate"
+                      DataType = "{x:Type base:PropertyItem}">
+            <uc:DoubleBaseNumericUpDown Value = "{Binding Value}"
+                                         Margin = "0, 0, 6, 0"
+                                         Background = "Transparent"
+                                         BorderThickness = "0"
+                                         Padding = "0"
+                                         HorizontalAlignment = "Stretch"
+                                         VerticalAlignment = "Stretch" />
         </DataTemplate>
 
         <uc:PropertyEditorTemplateSelector x:Key = "PropertyEditorSelector"
@@ -59,6 +81,8 @@
                                            BoolTemplate = "{StaticResource BoolTemplate}"
                                            EnumTemplate = "{StaticResource EnumTemplate}"
                                            IntTemplate = "{StaticResource IntTemplate}"
+                                           DecimalTemplate = "{StaticResource DecimalTemplate}"
+                                           FloatTemplate = "{StaticResource FloatTemplate}"
                                            DefaultTemplate = "{StaticResource DefaultTemplate}" />
 
         <DataTemplate x:Key = "PropertyRowTemplate"
@@ -87,10 +111,15 @@
                            Margin = "3"
                            Fill = "{StaticResource LightBackColorBrush}" />
 
-                <ContentPresenter Grid.Row = "0"
-                                  Grid.Column = "2"
-                                  Content = "{Binding}"
-                                  ContentTemplateSelector = "{StaticResource PropertyEditorSelector}" />
+                <Border x:Name = "Border"
+                        Grid.Row = "0"
+                        Grid.Column = "2"
+                        Background = "Transparent"
+                        CornerRadius = "3">
+                    <ContentPresenter Content = "{Binding}"
+                                      ContentTemplateSelector = "{StaticResource PropertyEditorSelector}" />
+
+                </Border>
 
                 <Rectangle Grid.Row = "1"
                            Grid.Column = "0"

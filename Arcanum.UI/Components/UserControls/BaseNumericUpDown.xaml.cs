@@ -33,7 +33,7 @@ public partial class BaseNumericUpDown : UserControl
 
     public static readonly DependencyProperty MaxValueProperty =
         DependencyProperty.Register(nameof(MaxValue), typeof(int), typeof(BaseNumericUpDown),
-            new FrameworkPropertyMetadata(100, OnMinMaxChanged));
+            new FrameworkPropertyMetadata(100000, OnMinMaxChanged));
 
     public int Value
     {

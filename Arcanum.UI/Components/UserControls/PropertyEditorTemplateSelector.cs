@@ -10,24 +10,34 @@ public class PropertyEditorTemplateSelector : DataTemplateSelector
    public DataTemplate BoolTemplate { get; set; } = null!;
    public DataTemplate EnumTemplate { get; set; } = null!;
    public DataTemplate IntTemplate { get; set; } = null!;
+   public DataTemplate DecimalTemplate { get; set; } = null!;
+   public DataTemplate FloatTemplate { get; set; } = null!;
    public DataTemplate DefaultTemplate { get; set; } = null!;
 
    public override DataTemplate SelectTemplate(object? item, DependencyObject container)
    {
+      
       if (item is not PropertyItem property)
          return DefaultTemplate;
+      var type = Nullable.GetUnderlyingType(property.Type) ?? property.Type;
 
-      if (property.Type == typeof(string))
+      if (type == typeof(string))
          return StringTemplate;
 
-      if (property.Type == typeof(bool))
+      if (type == typeof(bool))
          return BoolTemplate;
 
-      if (property.Type.IsEnum)
+      if (type.IsEnum)
          return EnumTemplate;
 
-      if (property.Type == typeof(int) || property.Type == typeof(long) || property.Type == typeof(short))
+      if (type == typeof(int) || type == typeof(long) || type == typeof(short))
          return IntTemplate;
+      
+      if (type == typeof(double) || type == typeof(decimal))
+         return DecimalTemplate;
+      
+      if (type == typeof(float))
+         return FloatTemplate;
 
       return DefaultTemplate;
    }

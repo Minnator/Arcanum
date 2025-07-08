@@ -63,7 +63,7 @@ public class PropertyItem : INotifyPropertyChanged
                  name: propInfo.Name,
                  type: typeof(TProp),
                  getter: () => propInfo.GetValue(instance)!,
-                 setter: v => propInfo.SetValue(instance, v)
+                 setter: v => propInfo.SetValue(instance, Convert.ChangeType(v, propInfo.PropertyType))
                 );
    }
 

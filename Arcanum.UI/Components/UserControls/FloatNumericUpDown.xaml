@@ -26,8 +26,6 @@
                      Grid.Row = "0"
                      Grid.RowSpan = "2"
                      TextAlignment = "Left"
-                     PreviewKeyDown = "NUDButtonDown_Click"
-                     PreviewKeyUp = "NUDButtonUP_Click"
                      TextChanged = "NUDTextBox_TextChanged"
                      PreviewTextInput = "NudTextBox_PreviewTextInput"
                      MouseWheel = "NudTextBox_MouseWheel"

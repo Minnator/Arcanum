@@ -52,34 +52,6 @@ public partial class BaseNumericUpDown
                                                                 FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
                                                                 OnValueChanged));
 
-   private void NUDTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
-   {
-      if (e.Key == Key.Up)
-      {
-         NudButtonUp.RaiseEvent(new(ButtonBase.ClickEvent));
-         typeof(Button).GetMethod("set_IsPressed", BindingFlags.Instance | BindingFlags.NonPublic)!
-                       .Invoke(NudButtonUp, [true]);
-      }
-
-      if (e.Key == Key.Down)
-      {
-         NudButtonDown.RaiseEvent(new(ButtonBase.ClickEvent));
-         typeof(Button).GetMethod("set_IsPressed", BindingFlags.Instance | BindingFlags.NonPublic)!
-                       .Invoke(NudButtonDown, [true]);
-      }
-   }
-
-   private void NUDTextBox_PreviewKeyUp(object sender, KeyEventArgs e)
-   {
-      if (e.Key == Key.Up)
-         typeof(Button).GetMethod("set_IsPressed", BindingFlags.Instance | BindingFlags.NonPublic)!
-                       .Invoke(NudButtonUp, [false]);
-
-      if (e.Key == Key.Down)
-         typeof(Button).GetMethod("set_IsPressed", BindingFlags.Instance | BindingFlags.NonPublic)!
-                       .Invoke(NudButtonDown, [false]);
-   }
-
    private static void OnMinMaxChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
    {
       var control = (BaseNumericUpDown)d;
@@ -123,12 +95,13 @@ public partial class BaseNumericUpDown
 
    private void NUDTextBox_TextChanged(object sender, TextChangedEventArgs e)
    {
-      if (int.TryParse(NudTextBox.Text, out var number))
+      if (NudTextBox.Text == string.Empty)
+         return;
+      
+      if (int.TryParse(NudTextBox.Text, out var number) &&
+          number >= MinValue &&
+          number <= MaxValue)
       {
-         if (number < MinValue)
-            number = MinValue;
-         if (number > MaxValue)
-            number = MaxValue;
          SetCurrentValue(ValueProperty, number);
       }
       else
@@ -137,6 +110,16 @@ public partial class BaseNumericUpDown
          NudTextBox.Text = Value.ToString();
          NudTextBox.SelectionStart = NudTextBox.Text.Length;
       }
+   }
+   
+   private void NudTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+   {
+      var textBox = (TextBox)sender;
+
+      var fullText = textBox.Text.Remove(textBox.SelectionStart, textBox.SelectionLength)
+                            .Insert(textBox.SelectionStart, e.Text);
+
+      e.Handled = !int.TryParse(fullText, out _);
    }
 
    private void NudTextBox_MouseWheel(object sender, MouseWheelEventArgs e)

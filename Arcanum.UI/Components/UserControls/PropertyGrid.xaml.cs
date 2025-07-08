@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
@@ -92,7 +93,18 @@ public partial class PropertyGrid
 
          var categoryAttr = prop.GetCustomAttribute<CategoryAttribute>();
          var target = e.NewValue;
-         Action<object>? setter = prop.CanWrite ? v => prop.SetValue(target, v) : null;
+         Action<object>? setter = prop.CanWrite
+                                     ? v =>
+                                     {
+                                        var targetType = prop.PropertyType;
+                                        var safeValue = v == null! || targetType.IsInstanceOfType(v)
+                                                           ? v
+                                                           : Convert.ChangeType(v,
+                                                                                targetType,
+                                                                                CultureInfo.InvariantCulture);
+                                        prop.SetValue(target, safeValue);
+                                     }
+                                     : null;
 
          grid.Properties.Add(new(prop.Name, prop.PropertyType, Getter, setter, categoryAttr?.Category!));
          continue;

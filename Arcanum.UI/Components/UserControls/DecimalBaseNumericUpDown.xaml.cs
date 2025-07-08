@@ -10,7 +10,7 @@ public partial class DecimalBaseNumericUpDown
    public DecimalBaseNumericUpDown()
    {
       InitializeComponent();
-      DataObject.AddPastingHandler(NudTextBox, NudTextBox_Pasting);
+      PreviewKeyDown += NudTextBox_PreviewKeyDown;
    }
 
    public decimal MinValue
@@ -63,42 +63,6 @@ public partial class DecimalBaseNumericUpDown
                                   typeof(DecimalBaseNumericUpDown),
                                   new FrameworkPropertyMetadata(new decimal(0.1)));
 
-   private void NudTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
-   {
-      var textBox = (TextBox)sender;
-      var proposedText = textBox.Text.Insert(textBox.SelectionStart, e.Text);
-
-      if (!decimal.TryParse(proposedText,
-                            NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign,
-                            CultureInfo.InvariantCulture,
-                            out _))
-      {
-         e.Handled = true;
-      }
-   }
-
-   private void NudTextBox_Pasting(object sender, DataObjectPastingEventArgs e)
-   {
-      if (e.DataObject.GetDataPresent(typeof(string)))
-      {
-         var pastedText = (string)e.DataObject.GetData(typeof(string))!;
-         var textBox = (TextBox)sender;
-         var proposedText = textBox.Text.Insert(textBox.SelectionStart, pastedText);
-
-         if (!decimal.TryParse(proposedText,
-                               NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign,
-                               CultureInfo.InvariantCulture,
-                               out _))
-         {
-            e.CancelCommand();
-         }
-      }
-      else
-      {
-         e.CancelCommand();
-      }
-   }
-
    private static void OnMinMaxChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
    {
       var control = (DecimalBaseNumericUpDown)d;
@@ -115,17 +79,12 @@ public partial class DecimalBaseNumericUpDown
    private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
    {
       var control = (DecimalBaseNumericUpDown)d;
-      var newValue = (decimal)e.NewValue;
-
-      // Clamp value once here, but do NOT set Value again inside OnValueChanged
-      if (newValue < control.MinValue)
-         newValue = control.MinValue;
-      else if (newValue > control.MaxValue)
-         newValue = control.MaxValue;
-
-      // Update TextBox text only if different
-      if (control.NudTextBox.Text != newValue.ToString("0.##########", CultureInfo.InvariantCulture))
-         control.NudTextBox.Text = newValue.ToString("0.##########", CultureInfo.InvariantCulture);
+      var newValue = Math.Clamp((decimal)e.NewValue, control.MinValue, control.MaxValue);
+      //
+      // // Update TextBox text only if different
+      var newValString = newValue.ToString("0.##########", CultureInfo.InvariantCulture);
+      if (!control.NudTextBox.Text.Equals(newValString))
+         control.NudTextBox.Text = newValString;
    }
 
    private void NUDButtonUP_Click(object sender, RoutedEventArgs e)
@@ -140,20 +99,55 @@ public partial class DecimalBaseNumericUpDown
          SetCurrentValue(ValueProperty, number - StepSize);
    }
 
+   private void NudTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+   {
+      var textBox = (TextBox)sender;
+
+      var fullText = textBox.Text.Remove(textBox.SelectionStart, textBox.SelectionLength)
+                            .Insert(textBox.SelectionStart, e.Text);
+
+      e.Handled = !decimal.TryParse(fullText,
+                                    NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign,
+                                    CultureInfo.InvariantCulture,
+                                    out _);
+   }
+
+   private void NudTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+   {
+      // Allow editing keys
+      if (e.Key is Key.Back or Key.Delete or Key.Left or Key.Right or Key.Tab or Key.Enter)
+         return;
+
+      // Block anything that's not a number or editing
+      if (!IsTextInputKey(e.Key))
+         e.Handled = true;
+   }
+
+   private bool IsTextInputKey(Key key)
+   {
+      return (key >= Key.D0 && key <= Key.D9) ||
+             (key >= Key.NumPad0 && key <= Key.NumPad9) ||
+             key == Key.OemPeriod ||
+             key == Key.Decimal ||
+             key == Key.Subtract ||
+             key == Key.OemMinus;
+   }
+
    private void NUDTextBox_TextChanged(object sender, TextChangedEventArgs e)
    {
-      if (decimal.TryParse(NudTextBox.Text, CultureInfo.InvariantCulture, out var number))
+      if (NudTextBox.Text == string.Empty)
+         return;
+      
+      if (decimal.TryParse(NudTextBox.Text, CultureInfo.InvariantCulture, out var number) &&
+          number >= MinValue &&
+          number <= MaxValue)
       {
-         if (number < MinValue)
-            number = MinValue;
-         if (number > MaxValue)
-            number = MaxValue;
          SetCurrentValue(ValueProperty, number);
       }
       else
       {
          // Revert text to last valid value
-         NudTextBox.Text = Value.ToString("0.##########", CultureInfo.InvariantCulture);
+         NudTextBox.Text = Value.ToString(CultureInfo.InvariantCulture);
          NudTextBox.SelectionStart = NudTextBox.Text.Length;
       }
    }

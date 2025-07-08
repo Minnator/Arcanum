@@ -1,8 +1,9 @@
-﻿<UserControl x:Class="Arcanum.UI.Components.UserControls.DecimalBaseNumericUpDown"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Name="NudControl"
-             MinHeight="22" MinWidth="60">
+﻿<UserControl x:Class = "Arcanum.UI.Components.UserControls.DecimalBaseNumericUpDown"
+             xmlns = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x = "http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Name = "NudControl"
+             MinHeight = "22"
+             MinWidth = "60">
 
     <Border BorderThickness = "{Binding BorderThickness, RelativeSource={RelativeSource AncestorType=UserControl}}"
             BorderBrush = "{Binding BorderBrush, RelativeSource={RelativeSource AncestorType=UserControl}}"
@@ -23,12 +24,9 @@
                      Grid.Row = "0"
                      Grid.RowSpan = "2"
                      TextAlignment = "Left"
-                     PreviewKeyDown = "NUDButtonDown_Click"
-                     PreviewKeyUp = "NUDButtonUP_Click"
+                     MouseWheel = "NudTextBox_MouseWheel"
+                     PreviewTextInput = "NudTextBox_PreviewTextInput"
                      TextChanged = "NUDTextBox_TextChanged"
-                     PreviewTextInput="NudTextBox_PreviewTextInput"
-                     MouseWheel="NudTextBox_MouseWheel"
-                     
                      Foreground = "{StaticResource DefaultForeColorBrush}"
                      FontFamily = "{StaticResource DefaultFont}"
                      FontSize = "{StaticResource DefaultFontSize}"

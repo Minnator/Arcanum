@@ -10,7 +10,6 @@ public partial class FloatNumericUpDown
    public FloatNumericUpDown()
    {
       InitializeComponent();
-      DataObject.AddPastingHandler(NudTextBox, NudTextBox_Pasting);
    }
 
    public float MinValue
@@ -79,17 +78,12 @@ public partial class FloatNumericUpDown
    private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
    {
       var control = (FloatNumericUpDown)d;
-      var newValue = (float)e.NewValue;
-
-      // Clamp value once here, but do NOT set Value again inside OnValueChanged
-      if (newValue < control.MinValue)
-         newValue = control.MinValue;
-      else if (newValue > control.MaxValue)
-         newValue = control.MaxValue;
-
-      // Update TextBox text only if different
-      if (control.NudTextBox.Text != newValue.ToString(CultureInfo.InvariantCulture))
-         control.NudTextBox.Text = newValue.ToString(CultureInfo.InvariantCulture);
+      var newValue = Math.Clamp((float)e.NewValue, control.MinValue, control.MaxValue);
+      //
+      // // Update TextBox text only if different
+      var newValString = newValue.ToString(CultureInfo.InvariantCulture);
+      if (!control.NudTextBox.Text.Equals(newValString))
+         control.NudTextBox.Text = newValString;
    }
 
    private void NUDButtonUP_Click(object sender, RoutedEventArgs e)
@@ -104,14 +98,28 @@ public partial class FloatNumericUpDown
          SetCurrentValue(ValueProperty, number - StepSize);
    }
 
+   private void NudTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+   {
+      var textBox = (TextBox)sender;
+
+      var fullText = textBox.Text.Remove(textBox.SelectionStart, textBox.SelectionLength)
+                            .Insert(textBox.SelectionStart, e.Text);
+
+      e.Handled = !float.TryParse(fullText,
+                                  NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign,
+                                  CultureInfo.InvariantCulture,
+                                  out _);
+   }
+   
    private void NUDTextBox_TextChanged(object sender, TextChangedEventArgs e)
    {
-      if (float.TryParse(NudTextBox.Text, CultureInfo.InvariantCulture, out var number))
+      if (NudTextBox.Text == string.Empty)
+         return;
+      
+      if (float.TryParse(NudTextBox.Text, CultureInfo.InvariantCulture, out var number) &&
+          number >= MinValue &&
+          number <= MaxValue)
       {
-         if (number < MinValue)
-            number = MinValue;
-         if (number > MaxValue)
-            number = MaxValue;
          SetCurrentValue(ValueProperty, number);
       }
       else
@@ -119,42 +127,6 @@ public partial class FloatNumericUpDown
          // Revert text to last valid value
          NudTextBox.Text = Value.ToString(CultureInfo.InvariantCulture);
          NudTextBox.SelectionStart = NudTextBox.Text.Length;
-      }
-   }
-
-   private void NudTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
-   {
-      var textBox = (TextBox)sender;
-      var proposedText = textBox.Text.Insert(textBox.SelectionStart, e.Text);
-
-      if (!float.TryParse(proposedText,
-                          NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign,
-                          CultureInfo.InvariantCulture,
-                          out _))
-      {
-         e.Handled = true;
-      }
-   }
-
-   private void NudTextBox_Pasting(object sender, DataObjectPastingEventArgs e)
-   {
-      if (e.DataObject.GetDataPresent(typeof(string)))
-      {
-         var pastedText = (string)e.DataObject.GetData(typeof(string))!;
-         var textBox = (TextBox)sender;
-         var proposedText = textBox.Text.Insert(textBox.SelectionStart, pastedText);
-
-         if (!float.TryParse(proposedText,
-                             NumberStyles.AllowDecimalPoint | NumberStyles.AllowLeadingSign,
-                             CultureInfo.InvariantCulture,
-                             out _))
-         {
-            e.CancelCommand();
-         }
-      }
-      else
-      {
-         e.CancelCommand();
       }
    }
 

@@ -34,7 +34,9 @@
                             BorderBrush = "{TemplateBinding BorderBrush}"
                             BorderThickness = "{TemplateBinding BorderThickness}"
                             CornerRadius = "3"
-                            Padding = "{TemplateBinding Padding}">
+                            Padding = "{TemplateBinding Padding}"
+                            HorizontalAlignment = "Stretch"
+                            VerticalAlignment = "Stretch">
                         <ContentPresenter HorizontalAlignment = "Center"
                                           VerticalAlignment = "Center" />
                     </Border>

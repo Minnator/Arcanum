@@ -57,24 +57,57 @@
         <DataTemplate x:Key = "DecimalTemplate"
                       DataType = "{x:Type base:PropertyItem}">
             <uc:DoubleBaseNumericUpDown Value = "{Binding Value}"
-                                         Margin = "0, 0, 6, 0"
-                                         Background = "Transparent"
-                                         BorderThickness = "0"
-                                         Padding = "0"
-                                         HorizontalAlignment = "Stretch"
-                                         VerticalAlignment = "Stretch" />
-        </DataTemplate>   
-        
+                                        Margin = "0, 0, 6, 0"
+                                        Background = "Transparent"
+                                        BorderThickness = "0"
+                                        Padding = "0"
+                                        HorizontalAlignment = "Stretch"
+                                        VerticalAlignment = "Stretch" />
+        </DataTemplate>
+
         <DataTemplate x:Key = "FloatTemplate"
                       DataType = "{x:Type base:PropertyItem}">
             <uc:FloatNumericUpDown Value = "{Binding Value}"
-                                         Margin = "0, 0, 6, 0"
-                                         Background = "Transparent"
-                                         BorderThickness = "0"
-                                         Padding = "0"
-                                         HorizontalAlignment = "Stretch"
-                                         VerticalAlignment = "Stretch" />
+                                   Margin = "0, 0, 6, 0"
+                                   Background = "Transparent"
+                                   BorderThickness = "0"
+                                   Padding = "0"
+                                   HorizontalAlignment = "Stretch"
+                                   VerticalAlignment = "Stretch" />
         </DataTemplate>
+
+        <DataTemplate x:Key = "CollectionTemplate"
+                      DataType = "{x:Type base:PropertyItem}">
+            <Grid Margin = "3, 0, 6, 0"
+                  HorizontalAlignment = "Stretch"
+                  VerticalAlignment = "Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width = "1*" />
+                    <ColumnDefinition Width = "20" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text = "{Binding CollectionDescription}"
+                           Margin = "2, 0, 0, 0"
+                           VerticalAlignment = "Center"
+                           HorizontalAlignment = "Left"
+                           Style = "{StaticResource BaseTextBlock}" />
+
+                <base:BaseButton Grid.Column = "1"
+                                 Margin = "2"
+                                 Padding = "0"
+                                 Style = "{StaticResource BaseDarkButtonStyle}"
+                                 VerticalAlignment = "Stretch"
+                                 Click = "ViewCollection_Button_Click"
+                                 HorizontalAlignment = "Stretch">
+                    <Image Source = "../../Assets/Icons/Eye20x20.png"
+                           VerticalAlignment = "Center"
+                           HorizontalAlignment = "Center"
+                           Stretch = "UniformToFill"
+                           Margin = "0" />
+                </base:BaseButton>
+            </Grid>
+        </DataTemplate>
+
 
         <uc:PropertyEditorTemplateSelector x:Key = "PropertyEditorSelector"
                                            StringTemplate = "{StaticResource StringTemplate}"
@@ -83,13 +116,17 @@
                                            IntTemplate = "{StaticResource IntTemplate}"
                                            DecimalTemplate = "{StaticResource DecimalTemplate}"
                                            FloatTemplate = "{StaticResource FloatTemplate}"
+                                           CollectionTemplate = "{StaticResource CollectionTemplate}"
                                            DefaultTemplate = "{StaticResource DefaultTemplate}" />
+
 
         <DataTemplate x:Key = "PropertyRowTemplate"
                       DataType = "{x:Type base:PropertyItem}">
             <Grid HorizontalAlignment = "Stretch">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width = "150" />
+                    <ColumnDefinition
+                        Width = "{Binding LabelWidth, RelativeSource={RelativeSource AncestorType={x:Type uc:PropertyGrid}}}" />
+
                     <ColumnDefinition Width = "7" />
                     <ColumnDefinition Width = "1*" />
                 </Grid.ColumnDefinitions>
@@ -130,16 +167,15 @@
             </Grid>
         </DataTemplate>
 
-
     </UserControl.Resources>
 
     <Border CornerRadius = "4"
             BorderBrush = "{StaticResource DefaultBorderColorBrush}"
-            BorderThickness = "2"
-            Margin = "4"
+            BorderThickness = "{Binding BorderThickness, RelativeSource={RelativeSource AncestorType=UserControl}}"
+            Margin = "{Binding Margin, RelativeSource={RelativeSource AncestorType=UserControl}}"
             Background = "{StaticResource DefaultBackColorBrush}"
             VerticalAlignment = "Stretch"
-            HorizontalAlignment = "Center">
+            HorizontalAlignment = "Stretch">
         <Grid>
             <Grid.Resources>
                 <Style TargetType = "{x:Type Grid}">

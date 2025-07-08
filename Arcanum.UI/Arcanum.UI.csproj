@@ -58,6 +58,8 @@
       <Resource Include="Assets\Icons\ArrowDown.png" />
       <None Remove="Assets\Icons\ArrowUp.png" />
       <Resource Include="Assets\Icons\ArrowUp.png" />
+      <None Remove="Assets\Icons\Eye20x20.png" />
+      <Resource Include="Assets\Icons\Eye20x20.png" />
     </ItemGroup>
 
     <ItemGroup>

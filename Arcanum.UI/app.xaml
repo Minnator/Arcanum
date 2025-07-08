@@ -8,6 +8,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Assets/ArcanumShared/DefaultPalette.xaml" />
                 <ResourceDictionary Source="Assets/ArcanumShared/DefaultFonts.xaml" />
+                <ResourceDictionary Source="Components/Base/Styles/BaseDarkButton.xaml" />
                 <ResourceDictionary Source="Components/Base/Styles/BaseTextBoxStyle.xaml" />
                 <ResourceDictionary Source="Components/Base/Styles/BaseComboboxStyle.xaml" />
                 <ResourceDictionary Source="Components/Base/Styles/BorderlessComboBox.xaml" />

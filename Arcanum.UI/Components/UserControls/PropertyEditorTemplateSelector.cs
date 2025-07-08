@@ -12,12 +12,14 @@ public class PropertyEditorTemplateSelector : DataTemplateSelector
    public DataTemplate IntTemplate { get; set; } = null!;
    public DataTemplate DecimalTemplate { get; set; } = null!;
    public DataTemplate FloatTemplate { get; set; } = null!;
+   public DataTemplate CollectionTemplate { get; set; } = null!;
    public DataTemplate DefaultTemplate { get; set; } = null!;
 
    public override DataTemplate SelectTemplate(object? item, DependencyObject container)
    {
       if (item is not PropertyItem property)
          return DefaultTemplate;
+
       var type = Nullable.GetUnderlyingType(property.Type) ?? property.Type;
 
       if (type == typeof(float))
@@ -34,11 +36,15 @@ public class PropertyEditorTemplateSelector : DataTemplateSelector
 
       if (type == typeof(int) || type == typeof(long) || type == typeof(short))
          return IntTemplate;
-      
+
       if (type == typeof(double) || type == typeof(decimal))
          return DecimalTemplate;
 
-
+      if (type.IsArray ||
+          type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>) ||
+          type.IsGenericType && type.GetGenericTypeDefinition() == typeof(ICollection<>) ||
+          type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>))
+         return CollectionTemplate;
 
       return DefaultTemplate;
    }

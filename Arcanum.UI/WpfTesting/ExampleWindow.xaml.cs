@@ -1,9 +1,11 @@
-﻿namespace Arcanum.UI.WpfTesting;
+﻿using System.Windows;
 
-public partial class ExampleWindow 
+namespace Arcanum.UI.WpfTesting;
+
+public partial class ExampleWindow
 {
    public UserSettings CurrentSettings { get; } = new();
-   
+
    public ExampleWindow()
    {
       InitializeComponent();
@@ -44,11 +46,22 @@ public class UserSettings
    public string PhoneNumber { get; set; } = "+1234567890";
    public double AccountBalance { get; set; } = 1000.50;
    public DateTime DateOfBirth { get; set; } = new(1993, 5, 15);
-   public List<string> Hobbies { get; set; } = new()
-   {
-      "Reading",
-      "Gaming",
-      "Traveling",
-      "Cooking"
-   };
+   public List<string> Hobbies { get; set; } = ["Reading", "Gaming", "Traveling", "Cooking"];
+
+   public List<Point> Coordinates { get; set; } = [new(1.0, 2.0), new(3.0, 4.0), new(5.0, 6.0)];
+   public List<List<Point>> NestedCoordinates { get; set; } =
+   [
+      new List<Point> { new(1.0, 2.0), new(3.0, 4.0) }, new List<Point> { new(5.0, 6.0), new(7.0, 8.0) }
+   ];
+   public string Line { get; set; } = "===============================";
+   public Point[] ArrayCoordinates { get; set; } = [new(1.0, 2.0), new(3.0, 4.0), new(5.0, 6.0)];
+   public Point[][] NestedArrayCoordinates { get; set; } =
+   [
+      new[] { new Point(1.0, 2.0), new Point(3.0, 4.0) }, new[] { new Point(5.0, 6.0), new Point(7.0, 8.0) }
+   ];
+   public string SLine { get; set; } = "===============================";
+   public List<Point[]> ListOfPointArrays { get; set; } =
+   [
+      new[] { new Point(1.0, 2.0), new Point(3.0, 4.0) }, new[] { new Point(5.0, 6.0), new Point(7.0, 8.0) }
+   ];
 }

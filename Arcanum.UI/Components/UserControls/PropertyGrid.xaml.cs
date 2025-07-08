@@ -1,9 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using Arcanum.UI.Components.Base.StyleClasses;
+using Arcanum.UI.Components.Windows.PopUp;
 
 namespace Arcanum.UI.Components.UserControls;
 
@@ -13,7 +15,12 @@ public partial class PropertyGrid : UserControl
    {
       InitializeComponent();
       Properties = [];
+      BorderThickness = new (2);
+      Margin = new (2);
    }
+   
+   public double LabelWidth { get; set; } = 150;
+
 
    public static readonly DependencyProperty SelectedObjectProperty =
       DependencyProperty.Register(nameof(SelectedObject),
@@ -26,7 +33,7 @@ public partial class PropertyGrid : UserControl
                                   typeof(string),
                                   typeof(PropertyGrid),
                                   new("Property Grid"));
-   
+
    public object? SelectedObject
    {
       get => GetValue(SelectedObjectProperty);
@@ -64,5 +71,18 @@ public partial class PropertyGrid : UserControl
             IsReadOnly = !prop.CanWrite,
          });
       }
+   }
+
+   private void ViewCollection_Button_Click(object sender, RoutedEventArgs e)
+   {
+      if (sender is not BaseButton { DataContext: PropertyItem item })
+         return;
+      
+      var collection = item.Value as ICollection;
+      if (collection == null)
+         return;
+
+      var collectionView = new BaseCollectionView(collection);
+      collectionView.ShowDialog();
    }
 }

@@ -50,7 +50,7 @@ public partial class PropertyGrid
       DependencyProperty.Register(nameof(Title),
                                   typeof(string),
                                   typeof(PropertyGrid),
-                                  new("Property Grid"));
+                                  new("Property-Grid"));
 
    public static readonly DependencyProperty DescriptionProperty =
       DependencyProperty.Register(nameof(Description),
@@ -67,11 +67,18 @@ public partial class PropertyGrid
    public object? SelectedObject
    {
       get => GetValue(SelectedObjectProperty);
-      set => SetValue(SelectedObjectProperty, value);
+      set
+      {
+         SetValue(SelectedObjectProperty, value);
+      }
    }
 
    // Returns the ToString representation of the selected object
-   public string Title => SelectedObject?.ToString() ?? "Property Grid";
+   public string Title
+   {
+      get => (string)GetValue(TitleProperty);
+      set => SetValue(TitleProperty, value);
+   }
 
    public ObservableCollection<PropertyItem> Properties { get; }
 
@@ -90,8 +97,10 @@ public partial class PropertyGrid
       {
          if (!prop.CanRead)
             continue;
+         
 
          var categoryAttr = prop.GetCustomAttribute<CategoryAttribute>();
+         grid.SetValue(TitleProperty, e.NewValue.GetType().Name);
          var target = e.NewValue;
          Action<object>? setter = prop.CanWrite
                                      ? v =>

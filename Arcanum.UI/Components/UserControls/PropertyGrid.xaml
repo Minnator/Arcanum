@@ -230,7 +230,7 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Row = "0"
-                       Text = "{Binding Title, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                       Text = "{Binding Title, RelativeSource={RelativeSource AncestorType=uc:PropertyGrid}}"
                        FontWeight = "Bold"
                        Margin = "0"
                        Padding = "5,0"

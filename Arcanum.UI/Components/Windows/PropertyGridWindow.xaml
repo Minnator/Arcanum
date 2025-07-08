@@ -12,12 +12,16 @@
                  Height = "450"
                  Width = "300"
                  Background = "{StaticResource DefaultBackColorBrush}"
-                 BorderThickness="0">
+                 BorderThickness="0"
+                 FooterHeight = "4"
+                 >
+    
+    
     <userControls:PropertyGrid x:Name = "PropertyGrid"
-                  Margin = "2"
-                  Background = "{StaticResource DefaultBackColorBrush}"
-                  BorderThickness = "0"
-                  BorderBrush = "{StaticResource DefaultBorderColorBrush}"
-                  SelectedObject = "{Binding SelectedObject, RelativeSource={RelativeSource AncestorType=Window}}">
+                               Margin = "2"
+                               Background = "{StaticResource DefaultBackColorBrush}"
+                               BorderThickness = "0"
+                               BorderBrush = "{StaticResource DefaultBorderColorBrush}"
+                               SelectedObject = "{Binding SelectedObject, RelativeSource={RelativeSource AncestorType=Window}}">
     </userControls:PropertyGrid>
 </base:BaseWindow>

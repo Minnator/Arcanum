@@ -60,6 +60,9 @@
       <Resource Include="Assets\Icons\ArrowUp.png" />
       <None Remove="Assets\Icons\Eye20x20.png" />
       <Resource Include="Assets\Icons\Eye20x20.png" />
+      <Resource Include="Assets\Icons\SplashTest.png" />
+      <None Remove="Assets\Icons\ArcanumSimplified.png" />
+      <Resource Include="Assets\Icons\ArcanumSimplified.png" />
     </ItemGroup>
 
     <ItemGroup>

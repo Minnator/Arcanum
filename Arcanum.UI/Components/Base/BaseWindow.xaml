@@ -75,7 +75,7 @@
                                     <behaviors:Interaction.Behaviors>
                                         <customBehaviors:WindowDrag />
                                     </behaviors:Interaction.Behaviors>
-                                    <Image Source = "/Assets/Icons/Missing16x16.png"
+                                    <Image Source = "/Assets/Icons/ArcanumSimplified.png"
                                            DockPanel.Dock = "Left"
                                            Stretch = "None"
                                            Margin = "6,0,0,0">

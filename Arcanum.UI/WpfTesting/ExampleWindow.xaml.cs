@@ -9,8 +9,20 @@ public partial class ExampleWindow
 
    public ExampleWindow()
    {
+      SplashScreen splash = new("../Assets/Icons/SplashTest.png");
+      Thread.Sleep(1000); // Simulate some loading time
+      splash.Show(false, true);
       InitializeComponent();
       DataContext = this;
+      
+      Loaded += (sender, args) =>
+      {
+         // This is just an example of how to use the settings in the UI.
+         // You can bind the properties to UI elements like TextBoxes, ComboBoxes, etc.
+         // For example:
+         // FavoriteColorTextBox.Text = CurrentSettings.FavoriteColor;
+         // ProfilePictureImage.Source = new BitmapImage(new Uri(CurrentSettings.ProfilePicturePath, UriKind.RelativeOrAbsolute));
+      };
    }
 }
 

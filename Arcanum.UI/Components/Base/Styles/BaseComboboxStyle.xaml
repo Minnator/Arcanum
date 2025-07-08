@@ -8,7 +8,7 @@
 
     <ControlTemplate TargetType = "ToggleButton"
                      x:Key = "ComboBoxToggleButtonTemplate">
-        <Grid Background="Transparent">
+        <Grid Background = "Transparent">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition Width = "20" />
@@ -120,14 +120,13 @@
         <Setter Property = "Template">
             <Setter.Value>
                 <ControlTemplate TargetType = "ComboBox">
-                    <Grid Background="Transparent">
+                    <Grid Background = "Transparent">
                         <ToggleButton Name = "ToggleButton"
-                                      Grid.Column = "2"
                                       ClickMode = "Press"
                                       Focusable = "False"
                                       IsChecked = "{Binding Path=IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
-                                      Template = "{StaticResource ComboBoxToggleButtonTemplate}" 
-                                      Background="Transparent"/>
+                                      Template = "{StaticResource ComboBoxToggleButtonTemplate}"
+                                      Background = "Transparent" />
 
                         <ContentPresenter Name = "ContentSite"
                                           Margin = "5, 1, 23, 3"

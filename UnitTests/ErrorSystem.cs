@@ -1,5 +1,4 @@
-﻿using Arcanum.Core.CoreSystems.ErrorSystem;
-using Arcanum.Core.CoreSystems.ErrorSystem.Diagnostics;
+﻿using Arcanum.Core.CoreSystems.ErrorSystem.Diagnostics;
 
 namespace UnitTests;
 

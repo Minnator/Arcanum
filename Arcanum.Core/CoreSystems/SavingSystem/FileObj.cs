@@ -4,10 +4,6 @@ public abstract class FileObj
 {
    public PathObj Path;
 
-   protected FileObj()
-   {
-   }
-
    public abstract IEnumerable<ISaveable> GetSaveables();
    public abstract string ComposeFile();
    public abstract void SaveFile();

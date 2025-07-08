@@ -49,11 +49,8 @@ public class DependencyManagerTests
       var aGuid = Guid.NewGuid();
       var bGuid = Guid.NewGuid();
       var cGuid = Guid.NewGuid();
-      var dGuid = Guid.NewGuid();
       var a = MockPluginWithGuid("A", aGuid, bGuid);
       var b = MockPluginWithGuid("B", bGuid, cGuid);
-      var c = MockPluginWithGuid("C", cGuid, dGuid);
-      var d = MockPluginWithGuid("D", dGuid, aGuid); // Circular dependency back to A
 
       var nodes = new Dictionary<Guid, DependencyManager.PluginNode> { [a.Guid] = new(a), [b.Guid] = new(b) };
 

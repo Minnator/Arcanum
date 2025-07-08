@@ -1,4 +1,4 @@
-﻿namespace CommandHistory;
+﻿namespace Arcanum.Core.CoreSystems.History;
 
 public enum AutoCompactingStrategy
 {

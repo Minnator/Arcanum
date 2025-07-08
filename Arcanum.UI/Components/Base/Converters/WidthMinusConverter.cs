@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Windows.Data;
 
-namespace Arcanum.UI.BaseComponents.Converters;
+namespace Arcanum.UI.Components.Base.Converters;
 
 public class WidthMinusConverter : IValueConverter
 {

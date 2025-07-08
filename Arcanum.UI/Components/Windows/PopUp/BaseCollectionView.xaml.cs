@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Arcanum.UI.Components.Base;
 using Arcanum.UI.Components.Base.StyleClasses;
 
 namespace Arcanum.UI.Components.Windows.PopUp;

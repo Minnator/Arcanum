@@ -1,4 +1,4 @@
-﻿namespace CommandHistory;
+﻿namespace Arcanum.Core.CoreSystems.History;
 
 /// <summary>
 /// The LinearHistoryManager class provides a linear implementation of the IHistoryManager interface,

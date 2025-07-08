@@ -1,12 +1,12 @@
-﻿using Arcanum.Core.CoreSystems.ErrorSystem.Diagnostics;
+﻿// using Arcanum.Core.CoreSystems.ErrorSystem.Diagnostics;
+//
+// namespace Arcanum.Core.CoreSystems.ErrorSystem;
 
-namespace Arcanum.Core.CoreSystems.ErrorSystem;
-
-public class MethodState
-{
-   public DiagnosticDescriptor? Diagnostic;
-   public ErrorHandlingActions Action;
-}
+// public class MethodState
+// {
+//    public DiagnosticDescriptor? Diagnostic;
+//    public ErrorHandlingActions Action;
+// }
 
 /*
  * Error should be reported in the following way:
@@ -103,117 +103,117 @@ public class Example
 //    FA-001 [Recovered] Invalid Format for xxx
 
 // Report Method should contain the Actions
-
-[Flags]
-public enum ErrorHandlingActions
-{
-   Ignore = 0,
-   Redo = 1,
-   Skip = 2,
-   Cancel = 4,
-}
-
-public static class Test
-{
-   /// <summary>
-   /// Reports a diagnostic descriptor based on specified error-handling actions.
-   /// </summary>
-   /// <param name="actions">The error-handling actions to perform.</param>
-   /// <param name="diagnostic">The diagnostic descriptor to report.</param>
-   /// <returns>A modified set of error-handling actions after evaluating the diagnostic report.</returns>
-   public static ErrorHandlingActions Report(ErrorHandlingActions actions, DiagnosticDescriptor diagnostic)
-   {
-      // Template
-      return actions;
-   }
-
-   /// <summary>
-   /// Analyzes a failure based on the provided state and catchable actions.
-   /// </summary>
-   /// <param name="state">The current state of the method, including diagnostic information and actions.</param>
-   /// <param name="catchableActions">The set of actions that can be caught and handled.</param>
-   /// <returns>True if the failure can be analyzed and handled; otherwise, false.</returns>
-   public static bool AnalyzeFailure(MethodState state, ErrorHandlingActions catchableActions)
-   {
-      if ((state.Action & catchableActions) != 0)
-         return false;
-
-      return true;
-   }
-
-   public static bool AnalyzeAndReportFailure(MethodState state,
-                                              ErrorHandlingActions catchableActions,
-                                              ErrorHandlingActions userSelection)
-   {
-      if (state.Diagnostic is not null)
-      {
-         // Report the diagnostic
-         state.Action = Report(userSelection, state.Diagnostic);
-         state.Diagnostic = null;
-      }
-
-      if ((state.Action & catchableActions) != 0)
-         return false;
-
-      return true;
-   }
-
-   public static bool DoY(out MethodState? methodState)
-   {
-      if (DoX(out var state))
-      {
-         methodState = state;
-         // return false; // Escalate the error further
-
-         // Only Reports Failures
-         var action = Report(ErrorHandlingActions.Ignore, state!.Diagnostic!);
-
-         // Only Reacts to Actions
-         if (AnalyzeFailure(state, ErrorHandlingActions.Redo | ErrorHandlingActions.Skip))
-         {
-            methodState = state;
-            return false;
-         }
-         else
-         {
-            // Action handling Logic
-         }
-
-         // Reports Failures and Reacts to Actions
-         if (AnalyzeAndReportFailure(state,
-                                     ErrorHandlingActions.Redo | ErrorHandlingActions.Skip,
-                                     ErrorHandlingActions.Redo))
-         {
-            // User selected to redo
-            methodState = state;
-            return false; // Indicating we need to redo the operation
-         }
-         else
-         {
-            // Action handling Logic
-         }
-      }
-
-      // continue stuff
-      methodState = null;
-      return true;
-   }
-
-   public static bool DoX(out MethodState? methodState)
-   {
-      // Simulate some processing
-      methodState = new MethodState
-      {
-         Diagnostic = new DiagnosticDescriptor(id: 1001,
-                                               category: DiagnosticCategory.Loading,
-                                               severity: DiagnosticSeverity.Warning,
-                                               message: "An error occurred while processing X.",
-                                               description: "This is a simulated error for method X.",
-                                               reportSeverity: DiagnosticReportSeverity.PopupError)
-      };
-      return true; // Simulate success
-   }
-}
+//
+// [Flags]
+// public enum ErrorHandlingActions
+// {
+//    Ignore = 0,
+//    Redo = 1,
+//    Skip = 2,
+//    Cancel = 4,
+// }
+//
+// public static class Test
+// {
+//    /// <summary>
+//    /// Reports a diagnostic descriptor based on specified error-handling actions.
+//    /// </summary>
+//    /// <param name="actions">The error-handling actions to perform.</param>
+//    /// <param name="diagnostic">The diagnostic descriptor to report.</param>
+//    /// <returns>A modified set of error-handling actions after evaluating the diagnostic report.</returns>
+//    public static ErrorHandlingActions Report(ErrorHandlingActions actions, DiagnosticDescriptor diagnostic)
+//    {
+//       // Template
+//       return actions;
+//    }
+//
+//    /// <summary>
+//    /// Analyzes a failure based on the provided state and catchable actions.
+//    /// </summary>
+//    /// <param name="state">The current state of the method, including diagnostic information and actions.</param>
+//    /// <param name="catchableActions">The set of actions that can be caught and handled.</param>
+//    /// <returns>True if the failure can be analyzed and handled; otherwise, false.</returns>
+//    public static bool AnalyzeFailure(MethodState state, ErrorHandlingActions catchableActions)
+//    {
+//       if ((state.Action & catchableActions) != 0)
+//          return false;
+//
+//       return true;
+//    }
+//
+//    public static bool AnalyzeAndReportFailure(MethodState state,
+//                                               ErrorHandlingActions catchableActions,
+//                                               ErrorHandlingActions userSelection)
+//    {
+//       if (state.Diagnostic is not null)
+//       {
+//          // Report the diagnostic
+//          state.Action = Report(userSelection, state.Diagnostic);
+//          state.Diagnostic = null;
+//       }
+//
+//       if ((state.Action & catchableActions) != 0)
+//          return false;
+//
+//       return true;
+//    }
+//
+//    public static bool DoY(out MethodState? methodState)
+//    {
+//       if (DoX(out var state))
+//       {
+//          methodState = state;
+//          // return false; // Escalate the error further
+//
+//          // Only Reports Failures
+//          var action = Report(ErrorHandlingActions.Ignore, state!.Diagnostic!);
+//
+//          // Only Reacts to Actions
+//          if (AnalyzeFailure(state, ErrorHandlingActions.Redo | ErrorHandlingActions.Skip))
+//          {
+//             methodState = state;
+//             return false;
+//          }
+//          else
+//          {
+//             // Action handling Logic
+//          }
+//
+//          // Reports Failures and Reacts to Actions
+//          if (AnalyzeAndReportFailure(state,
+//                                      ErrorHandlingActions.Redo | ErrorHandlingActions.Skip,
+//                                      ErrorHandlingActions.Redo))
+//          {
+//             // User selected to redo
+//             methodState = state;
+//             return false; // Indicating we need to redo the operation
+//          }
+//          else
+//          {
+//             // Action handling Logic
+//          }
+//       }
+//
+//       // continue stuff
+//       methodState = null;
+//       return true;
+//    }
+//
+//    public static bool DoX(out MethodState? methodState)
+//    {
+//       // Simulate some processing
+//       methodState = new MethodState
+//       {
+//          Diagnostic = new DiagnosticDescriptor(id: 1001,
+//                                                category: DiagnosticCategory.Loading,
+//                                                severity: DiagnosticSeverity.Warning,
+//                                                message: "An error occurred while processing X.",
+//                                                description: "This is a simulated error for method X.",
+//                                                reportSeverity: DiagnosticReportSeverity.PopupError)
+//       };
+//       return true; // Simulate success
+//    }
+// }
 
 // how do we handle if an error occurs and the user has to interact with the reported error?
 // 

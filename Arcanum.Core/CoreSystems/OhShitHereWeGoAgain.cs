@@ -1,13 +1,13 @@
 ﻿namespace Arcanum.Core.CoreSystems;
 
-public class OhShitHereWeGoAgain_Exception : Exception
+public class OhShitHereWeGoAgainException : Exception
 {
-   public OhShitHereWeGoAgain_Exception(string message)
+   public OhShitHereWeGoAgainException(string message)
       : base(message)
    {
    }
    
-   public OhShitHereWeGoAgain_Exception(string message, Exception innerException)
+   public OhShitHereWeGoAgainException(string message, Exception innerException)
       : base(message, innerException)
    {
    }

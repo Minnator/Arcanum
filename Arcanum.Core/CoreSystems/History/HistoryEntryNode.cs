@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Diagnostics;
 
-namespace CommandHistory;
+namespace Arcanum.Core.CoreSystems.History;
 
 public enum HistoryEntryType
 {

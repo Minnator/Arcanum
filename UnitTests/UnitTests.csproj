@@ -25,7 +25,6 @@
     <ItemGroup>
       <ProjectReference Include="..\Arcanum.API\Arcanum.API.csproj" />
       <ProjectReference Include="..\Arcanum.Core\Arcanum.Core.csproj" />
-      <ProjectReference Include="..\CommandHistory\CommandHistory.csproj" />
     </ItemGroup>
 
 </Project>

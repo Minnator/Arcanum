@@ -81,7 +81,7 @@ public class ConsoleServiceImpl : IConsoleService
       // Remove the main name
       // Remove all aliases pointing to this command instance
       var aliasesToRemove = _commands
-                           .Where(kvp => kvp.Value == commandToUnregister &&
+                           .Where(kvp => Equals(kvp.Value, commandToUnregister) &&
                                          !kvp.Key.Equals(commandToUnregister.Name,
                                                          StringComparison.InvariantCultureIgnoreCase))
                            .Select(kvp => kvp.Key)
@@ -392,7 +392,7 @@ public class ConsoleServiceImpl : IConsoleService
    {
       List<string> parts = [];
       var inQuotes = false;
-      var currentPart = new System.Text.StringBuilder();
+      var currentPart = new StringBuilder();
 
       foreach (var c in cmd)
       {

@@ -1,4 +1,4 @@
-﻿namespace CommandHistory;
+﻿namespace Arcanum.Core.CoreSystems.History;
 
 /// Represents the base interface for commands in the command history system.
 /// Commands implementing this interface are used to modify the state, and they

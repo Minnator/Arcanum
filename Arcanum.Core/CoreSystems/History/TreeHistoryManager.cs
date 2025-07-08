@@ -1,4 +1,6 @@
-﻿namespace CommandHistory;
+﻿using Timer = System.Threading.Timer;
+
+namespace Arcanum.Core.CoreSystems.History;
 
 /// <summary>
 /// TreeHistoryManager is responsible for managing the history of commands using a tree structure.

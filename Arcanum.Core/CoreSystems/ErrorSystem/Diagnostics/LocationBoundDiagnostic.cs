@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Arcanum.Core.CoreSystems.Common;
+﻿using Arcanum.Core.CoreSystems.Common;
 
 namespace Arcanum.Core.CoreSystems.ErrorSystem.Diagnostics;
 

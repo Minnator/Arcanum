@@ -1,9 +1,5 @@
 ﻿<ResourceDictionary xmlns = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x = "http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:base = "clr-namespace:Arcanum.UI.Components.Base"
-                    xmlns:styleClasses = "clr-namespace:Arcanum.UI.Components.Base.StyleClasses"
-                    xmlns:behaviors="http://schemas.microsoft.com/xaml/behaviors"
-                    xmlns:customBehaviors="clr-namespace:Arcanum.UI.Components.Behaviors">
+                    xmlns:x = "http://schemas.microsoft.com/winfx/2006/xaml">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source = "/Components/Base/Styles/BaseDarkButton.xaml"> </ResourceDictionary>

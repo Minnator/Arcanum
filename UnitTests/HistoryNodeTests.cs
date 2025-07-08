@@ -1,4 +1,4 @@
-﻿using CommandHistory;
+﻿using Arcanum.Core.CoreSystems.History;
 
 namespace UnitTests;
 
@@ -13,7 +13,7 @@ public class HistoryTests
    [Test]
    public void HistoryNode_Constructor_InitializesCorrectly()
    {
-      var cmd = new Mock<CommandHistory.ICommand>().Object;
+      var cmd = new Mock<ICommand>().Object;
       var node = new HistoryNode(1, cmd, HistoryEntryType.Normal);
 
       Assert.That(node.Id, Is.EqualTo(1));
@@ -27,8 +27,8 @@ public class HistoryTests
    [Test]
    public void HistoryNode_GetChildWithId_ReturnsCorrectChild()
    {
-      var child = new HistoryNode(2, new Mock<CommandHistory.ICommand>().Object, HistoryEntryType.Normal);
-      var node = new HistoryNode(1, new Mock<CommandHistory.ICommand>().Object, HistoryEntryType.Normal)
+      var child = new HistoryNode(2, new Mock<ICommand>().Object, HistoryEntryType.Normal);
+      var node = new HistoryNode(1, new Mock<ICommand>().Object, HistoryEntryType.Normal)
       {
          Children = [ child ]
       };
@@ -40,15 +40,15 @@ public class HistoryTests
    [Test]
    public void HistoryNode_GetChildWithId_ThrowsIfNotFound()
    {
-      var node = new HistoryNode(1, new Mock<CommandHistory.ICommand>().Object, HistoryEntryType.Normal);
+      var node = new HistoryNode(1, new Mock<ICommand>().Object, HistoryEntryType.Normal);
       Assert.Throws<InvalidOperationException>(() => node.GetChildWithId(999));
    }
 
    [Test]
    public void HistoryNode_Enumerator_TraversesCorrectly()
    {
-      var root = new HistoryNode(1, new Mock<CommandHistory.ICommand>().Object, HistoryEntryType.Normal);
-      var child = new HistoryNode(2, new Mock<CommandHistory.ICommand>().Object, HistoryEntryType.Normal) { Parent = root };
+      var root = new HistoryNode(1, new Mock<ICommand>().Object, HistoryEntryType.Normal);
+      var child = new HistoryNode(2, new Mock<ICommand>().Object, HistoryEntryType.Normal) { Parent = root };
       root.Children.Add(child);
 
       var result = root.ToList();
@@ -62,10 +62,10 @@ public class HistoryTests
    [Test]
    public void CompactHistoryNode_InsertInTree_ReplacesNodesCorrectly()
    {
-      var parent = new HistoryNode(0, new Mock<CommandHistory.ICommand>().Object, HistoryEntryType.Normal);
-      var n1 = new HistoryNode(1, new Mock<CommandHistory.ICommand>().Object, HistoryEntryType.Normal) { Parent = parent };
+      var parent = new HistoryNode(0, new Mock<ICommand>().Object, HistoryEntryType.Normal);
+      var n1 = new HistoryNode(1, new Mock<ICommand>().Object, HistoryEntryType.Normal) { Parent = parent };
       parent.Children.Add(n1);
-      var n2 = new HistoryNode(2, new Mock<CommandHistory.ICommand>().Object, HistoryEntryType.Normal) { Parent = parent };
+      var n2 = new HistoryNode(2, new Mock<ICommand>().Object, HistoryEntryType.Normal) { Parent = parent };
       parent.Children.Add(n2);
 
       var compacted = new CompactHistoryNode(10, [ n1 ]);
@@ -78,8 +78,8 @@ public class HistoryTests
    [Test]
    public void CompactHistoryNode_UnCompact_RestoresNodesCorrectly()
    {
-      var parent = new HistoryNode(0, new Mock<CommandHistory.ICommand>().Object, HistoryEntryType.Normal);
-      var n1 = new HistoryNode(1, new Mock<CommandHistory.ICommand>().Object, HistoryEntryType.Normal) { Parent = parent };
+      var parent = new HistoryNode(0, new Mock<ICommand>().Object, HistoryEntryType.Normal);
+      var n1 = new HistoryNode(1, new Mock<ICommand>().Object, HistoryEntryType.Normal) { Parent = parent };
       parent.Children.Add(n1);
 
       var compacted = new CompactHistoryNode(10, [ n1 ]);
@@ -93,8 +93,8 @@ public class HistoryTests
    [Test]
    public void CompactHistoryNode_StepUndo_CallsUndoOnCorrectNode()
    {
-      var cmd1 = new Mock<CommandHistory.ICommand>();
-      var cmd2 = new Mock<CommandHistory.ICommand>();
+      var cmd1 = new Mock<ICommand>();
+      var cmd2 = new Mock<ICommand>();
 
       var n1 = new HistoryNode(1, cmd1.Object, HistoryEntryType.Normal);
       var n2 = new HistoryNode(2, cmd2.Object, HistoryEntryType.Normal);
@@ -107,8 +107,8 @@ public class HistoryTests
    [Test]
    public void CompactHistoryNode_GetStepRedoCommand_ReturnsCorrectCommand()
    {
-      var cmd1 = new Mock<CommandHistory.ICommand>();
-      var cmd2 = new Mock<CommandHistory.ICommand>();
+      var cmd1 = new Mock<ICommand>();
+      var cmd2 = new Mock<ICommand>();
 
       var n1 = new HistoryNode(1, cmd1.Object, HistoryEntryType.Normal);
       var n2 = new HistoryNode(2, cmd2.Object, HistoryEntryType.Normal);
@@ -122,8 +122,8 @@ public class HistoryTests
    [Test]
    public void CompactHistoryNode_FullUndo_CallsUndoOnAllInReverse()
    {
-      var cmd1 = new Mock<CommandHistory.ICommand>();
-      var cmd2 = new Mock<CommandHistory.ICommand>();
+      var cmd1 = new Mock<ICommand>();
+      var cmd2 = new Mock<ICommand>();
 
       var n1 = new HistoryNode(1, cmd1.Object, HistoryEntryType.Normal);
       var n2 = new HistoryNode(2, cmd2.Object, HistoryEntryType.Normal);
@@ -138,8 +138,8 @@ public class HistoryTests
    [Test]
    public void CompactHistoryNode_FullRedo_CallsRedoOnAllInOrder()
    {
-      var cmd1 = new Mock<CommandHistory.ICommand>();
-      var cmd2 = new Mock<CommandHistory.ICommand>();
+      var cmd1 = new Mock<ICommand>();
+      var cmd2 = new Mock<ICommand>();
 
       var n1 = new HistoryNode(1, cmd1.Object, HistoryEntryType.Normal);
       var n2 = new HistoryNode(2, cmd2.Object, HistoryEntryType.Normal);
@@ -154,8 +154,8 @@ public class HistoryTests
    [Test]
    public void CompactHistoryNode_HasStepUndo_And_HasStepRedo_WorkCorrectly()
    {
-      var n1 = new HistoryNode(1, new Mock<CommandHistory.ICommand>().Object, HistoryEntryType.Normal);
-      var n2 = new HistoryNode(2, new Mock<CommandHistory.ICommand>().Object, HistoryEntryType.Normal);
+      var n1 = new HistoryNode(1, new Mock<ICommand>().Object, HistoryEntryType.Normal);
+      var n2 = new HistoryNode(2, new Mock<ICommand>().Object, HistoryEntryType.Normal);
       var compacted = new CompactHistoryNode(10, [ n1, n2 ]);
 
       Assert.That(compacted.HasStepUndo, Is.True);
@@ -165,7 +165,7 @@ public class HistoryTests
    [Test]
    public void CompactHistoryNode_GetDescription_ReturnsCorrectString()
    {
-      var compacted = new CompactHistoryNode(10, [ new HistoryNode(1, new Mock<CommandHistory.ICommand>().Object, HistoryEntryType.Normal) ]);
+      var compacted = new CompactHistoryNode(10, [ new HistoryNode(1, new Mock<ICommand>().Object, HistoryEntryType.Normal) ]);
       Assert.That(compacted.GetDescription(), Is.EqualTo("Compacting 1 Nodes"));
    }
 }

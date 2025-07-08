@@ -121,6 +121,11 @@
             <Setter.Value>
                 <ControlTemplate TargetType = "ComboBox">
                     <Grid Background="Transparent">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
                         <ToggleButton Name = "ToggleButton"
                                       Grid.Column = "2"
                                       ClickMode = "Press"

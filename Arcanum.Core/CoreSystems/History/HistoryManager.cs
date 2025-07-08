@@ -1,4 +1,4 @@
-﻿namespace CommandHistory;
+﻿namespace Arcanum.Core.CoreSystems.History;
 
 /// <summary>
 /// Represents a manager for handling command history operations, including

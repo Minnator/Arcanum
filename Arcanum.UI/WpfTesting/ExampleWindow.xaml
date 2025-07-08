@@ -4,7 +4,6 @@
                         xmlns:d = "http://schemas.microsoft.com/expression/blend/2008"
                         xmlns:mc = "http://schemas.openxmlformats.org/markup-compatibility/2006"
                         xmlns:base = "clr-namespace:Arcanum.UI.Components.Base"
-                        xmlns:forms = "clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
                         xmlns:userControls = "clr-namespace:Arcanum.UI.Components.UserControls"
                         mc:Ignorable = "d"
                         Height = "450"

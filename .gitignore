@@ -365,3 +365,9 @@ FodyWeavers.xsd
 
 # Idea - JetBrains IDEs
 .idea/
+
+# Copilot commit and general instructions
+*instructions.md
+
+# Auth
+*auth*

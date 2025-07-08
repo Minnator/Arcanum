@@ -13,6 +13,7 @@ public class PropertyEditorTemplateSelector : DataTemplateSelector
    public DataTemplate DecimalTemplate { get; set; } = null!;
    public DataTemplate FloatTemplate { get; set; } = null!;
    public DataTemplate CollectionTemplate { get; set; } = null!;
+   public DataTemplate ObjectTemplate { get; set; } = null!;
    public DataTemplate DefaultTemplate { get; set; } = null!;
 
    public override DataTemplate SelectTemplate(object? item, DependencyObject container)
@@ -45,6 +46,9 @@ public class PropertyEditorTemplateSelector : DataTemplateSelector
           type.IsGenericType && type.GetGenericTypeDefinition() == typeof(ICollection<>) ||
           type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>))
          return CollectionTemplate;
+      
+      if (type.IsClass || type.IsValueType)
+         return ObjectTemplate;
 
       return DefaultTemplate;
    }

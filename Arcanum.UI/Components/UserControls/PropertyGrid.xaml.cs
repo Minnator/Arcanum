@@ -5,22 +5,39 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using Arcanum.UI.Components.Base.StyleClasses;
+using Arcanum.UI.Components.Windows;
 using Arcanum.UI.Components.Windows.PopUp;
 
 namespace Arcanum.UI.Components.UserControls;
 
-public partial class PropertyGrid : UserControl
+public partial class PropertyGrid
 {
    public PropertyGrid()
    {
       InitializeComponent();
       Properties = [];
-      BorderThickness = new (2);
-      Margin = new (2);
+      BorderThickness = new(2);
+      Margin = new(2);
+      PropertyList.SelectionChanged += OnPropertyListOnSelectionChanged;
    }
-   
-   public double LabelWidth { get; set; } = 150;
 
+   private void OnPropertyListOnSelectionChanged(object sender, SelectionChangedEventArgs _)
+   {
+      if (sender is not ListBox { SelectedItem: PropertyItem item })
+      {
+         Description = "";
+         return;
+      }
+
+      if (SelectedObject == null)
+         return;
+
+      var prop = SelectedObject.GetType().GetProperty(item.Name);
+      var attr = prop?.GetCustomAttribute<DescriptionAttribute>();
+      Description = attr?.Description ?? "No description.";
+   }
+
+   public double LabelWidth { get; set; } = 150;
 
    public static readonly DependencyProperty SelectedObjectProperty =
       DependencyProperty.Register(nameof(SelectedObject),
@@ -34,12 +51,24 @@ public partial class PropertyGrid : UserControl
                                   typeof(PropertyGrid),
                                   new("Property Grid"));
 
+   public static readonly DependencyProperty DescriptionProperty =
+      DependencyProperty.Register(nameof(Description),
+                                  typeof(string),
+                                  typeof(PropertyGrid),
+                                  new(""));
+
+   public string Description
+   {
+      get => (string)GetValue(DescriptionProperty);
+      set => SetValue(DescriptionProperty, value);
+   }
+
    public object? SelectedObject
    {
       get => GetValue(SelectedObjectProperty);
       set => SetValue(SelectedObjectProperty, value);
    }
-   
+
    // Returns the ToString representation of the selected object
    public string Title => SelectedObject?.ToString() ?? "Property Grid";
 
@@ -62,14 +91,13 @@ public partial class PropertyGrid : UserControl
             continue;
 
          var categoryAttr = prop.GetCustomAttribute<CategoryAttribute>();
-         grid.Properties.Add(new()
-         {
-            Name = prop.Name,
-            Category = categoryAttr?.Category ?? "Misc",
-            Type = prop.PropertyType,
-            Value = prop.GetValue(e.NewValue)!,
-            IsReadOnly = !prop.CanWrite,
-         });
+         var target = e.NewValue;
+         Action<object>? setter = prop.CanWrite ? v => prop.SetValue(target, v) : null;
+
+         grid.Properties.Add(new(prop.Name, prop.PropertyType, Getter, setter, categoryAttr?.Category!));
+         continue;
+
+         object Getter() => prop.GetValue(target)!;
       }
    }
 
@@ -77,12 +105,24 @@ public partial class PropertyGrid : UserControl
    {
       if (sender is not BaseButton { DataContext: PropertyItem item })
          return;
-      
+
       var collection = item.Value as ICollection;
       if (collection == null)
          return;
 
       var collectionView = new BaseCollectionView(collection);
       collectionView.ShowDialog();
+   }
+
+   private void ViewObject_Button_Click(object? sender, RoutedEventArgs e)
+   {
+      if (sender is not BaseButton { DataContext: PropertyItem item })
+         return;
+
+      if (item.Value == null!)
+         return;
+
+      var objectView = new PropertyGridWindow(item.Value);
+      objectView.ShowDialog();
    }
 }

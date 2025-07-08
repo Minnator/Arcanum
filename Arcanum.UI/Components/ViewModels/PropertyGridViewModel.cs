@@ -21,14 +21,19 @@ public class PropertyGridViewModel
 
       return
       [
-         .. props.Select(p => new PropertyItem
-         {
-            Name = p.Name,
-            Category = p.GetCustomAttribute<CategoryAttribute>()?.Category ?? "Misc",
-            Type = p.PropertyType,
-            Value = p.GetValue(target)!,
-            IsReadOnly = !p.CanWrite,
-         }),
+         .. props
+           .Where(p => p.CanRead)
+           .Select(p =>
+            {
+               var getter = () => p.GetValue(target)!;
+               Action<object>? setter = p.CanWrite ? v => p.SetValue(target, v) : null;
+
+               return new PropertyItem(name: p.Name,
+                                       type: p.PropertyType,
+                                       getter: getter,
+                                       setter: setter,
+                                       category: p.GetCustomAttribute<CategoryAttribute>()?.Category ?? "Misc");
+            }),
       ];
    }
 }

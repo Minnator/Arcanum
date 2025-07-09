@@ -1,0 +1,104 @@
+﻿<UserControl x:Class = "Arcanum.UI.Components.ViewModels.Views.MainViewModelView"
+             xmlns = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x = "http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc = "http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d = "http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable = "d"
+             Background = "Transparent"
+             d:DesignHeight = "450"
+             d:DesignWidth = "800">
+    <StackPanel>
+        <TextBlock Text = "Discover"
+                   Foreground = "{StaticResource DefaultForeColorBrush}"
+                   FontSize = "28"
+                   HorizontalAlignment = "Left"
+                   Margin = "0,0,0,20">
+        </TextBlock>
+        <StackPanel Orientation = "Horizontal">
+            <Border Width = "400"
+                    Height = "200">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint = "0,0"
+                                         EndPoint = "1,2">
+                        <GradientStop Color = "CornflowerBlue"
+                                      Offset = "0.0">
+                        </GradientStop>
+                        <GradientStop Color = "BlueViolet"
+                                      Offset = "1.0">
+                        </GradientStop>
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Border.Clip>
+                    <RectangleGeometry RadiusX = "10"
+                                       RadiusY = "10"
+                                       Rect = "0,0,400,200">
+                    </RectangleGeometry>
+                </Border.Clip>
+
+                <Grid>
+                    <StackPanel>
+                        <TextBlock Text = "World leader&#x0a;in EU-4 modding"
+                                   Foreground = "{StaticResource DefaultForeColorBrush}"
+                                   FontSize = "28"
+                                   Margin = "20,20,20,0" />
+                        <TextBlock Text = "Explore now!"
+                                   Foreground = "{StaticResource DefaultForeColorBrush}"
+                                   FontSize = "18"
+                                   Margin = "20,10,20,0" />
+                    </StackPanel>
+                    <Image Width = "120"
+                           Height = "120"
+                           Source = "../../../Assets/Images/ProvinceFileCreator1024x1024.png"
+                           Margin = "230,10,10,10">
+                    </Image>
+                </Grid>
+            </Border>
+            <Border Width = "200"
+                    Height = "200"
+                    CornerRadius = "10"
+                    Margin = "50,0,0,0">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint = "0,0"
+                                         EndPoint = "1,2">
+                        <GradientStop Color = "Orange"
+                                      Offset = "0.0">
+                        </GradientStop>
+                        <GradientStop Color = "BlueViolet"
+                                      Offset = "1.0">
+                        </GradientStop>
+                    </LinearGradientBrush>
+                </Border.Background>
+            </Border>
+        </StackPanel>
+        <StackPanel>
+            <StackPanel.Resources>
+                <Style TargetType = "{x:Type  Border}">
+                    <Setter Property = "Margin"
+                            Value = "15,0,0,0" />
+                    <Setter Property = "CornerRadius"
+                            Value = "10" />
+                </Style>
+            </StackPanel.Resources>
+            <TextBlock Text = "Features"
+                       Foreground = "White"
+                       FontSize = "20"
+                       HorizontalAlignment = "Left"
+                       Margin = "0,0,0,10" />
+            <StackPanel Orientation = "Horizontal">
+                <Border Width = "150"
+                        Height = "150"
+                        Background = "BlueViolet"
+                        Margin = "0" />
+                <Border Width = "150"
+                        Height = "150"
+                        Background = "DarkViolet" />
+                <Border Width = "150"
+                        Height = "150"
+                        Background = "SlateBlue" />
+                <Border Width = "150"
+                        Height = "150"
+                        Background = "MediumSlateBlue" />
+            </StackPanel>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

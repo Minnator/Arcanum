@@ -24,6 +24,7 @@
                 Value = "1" />
         <Setter Property = "BorderThickness"
                 Value = "1" />
+        <Setter Property="MinHeight" Value="23"/>
         <Setter Property="VerticalScrollBarVisibility" Value="Auto"/>
 
         <Setter Property = "Template">

@@ -1,0 +1,104 @@
+﻿<Window x:Class = "Arcanum.UI.WpfTesting.MainMenuScreen"
+        xmlns = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x = "http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d = "http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc = "http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModel = "clr-namespace:Arcanum.UI.Components.ViewModels"
+        xmlns:view = "clr-namespace:Arcanum.UI.Components.ViewModels.Views"
+        xmlns:b = "http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:behaviors = "clr-namespace:Arcanum.UI.Components.Behaviors"
+        mc:Ignorable = "d"
+        Height = "550"
+        Width = "900"
+        WindowStyle = "None"
+        ResizeMode = "NoResize">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <DataTemplate DataType = "{x:Type viewModel:HomeViewModel}">
+                <view:MainViewModelView /> <!-- not MainViewModelView -->
+            </DataTemplate>
+            <DataTemplate DataType = "{x:Type viewModel:ModforgeViewModel}">
+                <view:ModforgeView /> <!-- not MainViewModelView -->
+            </DataTemplate>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source = "../Components/Base/Styles/MenuButtonTheme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Window.DataContext>
+        <viewModel:MainViewModel />
+    </Window.DataContext>
+    <!-- #272537 -->
+    <Border Background = "{StaticResource InvertedAccentGradientBrush}"
+            CornerRadius = "0">
+        <b:Interaction.Behaviors>
+            <behaviors:WindowDrag EnableDoubleClickMaximize="False"/>
+        </b:Interaction.Behaviors>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width = "200" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height = "75" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <TextBlock Text = "Arcanum"
+                       VerticalAlignment = "Center"
+                       HorizontalAlignment = "Center"
+                       Foreground = "{StaticResource DefaultForeColorBrush}"
+                       FontSize = "30">
+            </TextBlock>
+
+            <StackPanel Grid.Row = "1"
+                        Grid.Column = "0">
+                <RadioButton IsChecked = "True"
+                             Margin = "40,0,40,10"
+                             Content = "Home"
+                             Height = "50"
+                             Foreground = "{StaticResource DefaultForeColorBrush}"
+                             FontSize = "14"
+                             Command = "{Binding HomeVc}"
+                             Style = "{StaticResource MenuButtonTheme}" />
+                <RadioButton IsChecked = "False"
+                             Margin = "40,0,40,10"
+                             Content = "Modforge"
+                             Height = "50"
+                             Foreground = "{StaticResource DefaultForeColorBrush}"
+                             FontSize = "14"
+                             Command = "{Binding ModforgeVc}"
+                             Style = "{StaticResource MenuButtonTheme}"
+                             />
+                <RadioButton Margin = "40,0,40,10"
+                             Content = "Test"
+                             Height = "50"
+                             Foreground = "{StaticResource DefaultForeColorBrush}"
+                             FontSize = "14"
+                             Command = "{Binding DiscoveryVc}"
+                             Style = "{StaticResource MenuButtonTheme}" />
+            </StackPanel>
+
+            <TextBox Grid.Row = "0"
+                     Grid.Column = "1"
+                     Width = "200"
+                     Height = "20"
+                     VerticalAlignment = "Center"
+                     HorizontalAlignment = "Left"
+                     Margin = "5"
+                     Style = "{StaticResource BaseTextBoxStyle}">
+            </TextBox>
+
+            <ContentControl Grid.Row = "1"
+                            Grid.Column = "1"
+                            Margin = "10"
+                            Content = "{Binding CurrentView}" />
+
+        </Grid>
+
+    </Border>
+</Window>

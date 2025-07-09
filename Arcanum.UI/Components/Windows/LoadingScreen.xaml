@@ -1,78 +1,109 @@
-﻿<base:BaseWindow x:Class = "Arcanum.UI.Components.Windows.LoadingScreen"
-                 xmlns = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                 xmlns:x = "http://schemas.microsoft.com/winfx/2006/xaml"
-                 xmlns:mc = "http://schemas.openxmlformats.org/markup-compatibility/2006"
-                 xmlns:d = "http://schemas.microsoft.com/expression/blend/2008"
-                 xmlns:base = "clr-namespace:Arcanum.UI.Components.Base"
-                 mc:Ignorable = "d"
-                 Title = "LoadingScreen"
-                 Height = "800"
-                 Width = "450"
-                 FooterHeight = "0"
-                 Background = "{StaticResource DefaultBackColorBrush}">
+﻿<Window x:Class = "Arcanum.UI.Components.Windows.LoadingScreen"
+        xmlns = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x = "http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc = "http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d = "http://schemas.microsoft.com/expression/blend/2008"
+        mc:Ignorable = "d"
+        Title = "LoadingScreen"
+        Height = "500"
+        Width = "900"
+        Background = "{StaticResource AccentGradientBrush}"
+        WindowStyle = "None"
+        ResizeMode = "NoResize"
+        WindowStartupLocation = "CenterScreen"
+        Icon="../../Assets/Icons/ArcanumSimplified.ico">
 
-    <base:BaseWindow.Resources>
+    <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source = "../Base/Styles/DarkProgressbar.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
-    </base:BaseWindow.Resources>
+    </Window.Resources>
 
     <Grid Margin = "8">
         <Grid.RowDefinitions>
+            <RowDefinition Height = "7*" />
             <RowDefinition Height = "40" />
-            <RowDefinition Height = "*" />
-            <RowDefinition Height = "45" />
+            <RowDefinition Height = "3*" />
             <RowDefinition Height = "4" />
-            <RowDefinition Height = "45" />
-            <RowDefinition Height = "20" />
+            <RowDefinition Height = "70" />
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width = "60*" />
+            <ColumnDefinition Width = "40*" />
+        </Grid.ColumnDefinitions>
 
         <TextBlock Grid.Row = "0"
+                   Grid.Column = "0"
                    x:Name = "LoadingTitleTextBlock"
                    Style = "{StaticResource BaseTextBlock}"
-                   Text = "Arcanum is loading..."
+                   Text = "Arcanum"
                    HorizontalAlignment = "Center"
-                   VerticalAlignment = "Center"
+                   VerticalAlignment = "Bottom"
+                   FontSize = "72"
+                   FontWeight = "Bold"
+                   Margin = "2">
+        </TextBlock>
+
+        <TextBlock Grid.Row = "1"
+                   Grid.Column = "0"
+                   Style = "{StaticResource
+                   BaseTextBlock}"
+                   Text = "By Minnator and Mel-co"
+                   HorizontalAlignment = "Center"
+                   VerticalAlignment = "Top"
                    FontSize = "18"
-                   Margin = "5" />
+                   Margin = "2, -8, 2, 2" />
 
-        <ProgressBar Grid.Row = "2"
-                     Style = "{StaticResource DarkProgressBar}"
-                     IsIndeterminate = "True"
-                     HorizontalAlignment = "Stretch"
-                     VerticalAlignment = "stretch"
-                     Margin = "0, 5" />
 
-        <Border Grid.Row = "1"
-                Background = "{StaticResource DarkBackColorBrush}"
+        <Border Grid.Row = "0"
+                Grid.Column = "1"
+                Grid.RowSpan = "5"
+                Background = "Transparent"
                 HorizontalAlignment = "Stretch"
                 VerticalAlignment = "Stretch">
 
-            <Image Source = "../../Assets/Icons/SplashTest.png"
+            <Image Source = "../../Assets/Icons/Arcanum.png"
                    HorizontalAlignment = "Center"
                    VerticalAlignment = "Center"
-                   Stretch = "None"
-                   Margin = "0,20,0,0" />
+                   Stretch = "Uniform"
+                   Margin = "0,0,0,0" />
         </Border>
 
+        <TextBlock x:Name = "LoadingPercentage"
+                   Grid.Column = "0"
+                   Grid.Row = "2"
+                   Text = "0% - Initializing Lifecycle Manager"
+                   Style="{StaticResource BaseTextBlock}"
+                   TextAlignment="Center"
+                   VerticalAlignment = "Center"
+                   HorizontalAlignment = "Stretch"
+                   FontSize = "20">
+        </TextBlock>
+
         <Border Grid.Row = "3"
+                Grid.Column = "0"
                 BorderBrush = "{StaticResource DefaultBorderColorBrush}"
                 Margin = "12, 0"
                 CornerRadius = "2"
-                BorderThickness="2"
-                Padding = "0">
+                BorderThickness = "2"
+                Padding = "0"
+                Height = "4"
+                VerticalAlignment = "Bottom">
         </Border>
 
         <TextBlock Grid.Row = "4"
+                   Grid.Column = "0"
                    x:Name = "LoadingTipTextBlock"
                    Style = "{StaticResource BaseTextBlock}"
-                   VerticalAlignment = "Center"
-                   HorizontalAlignment = "Center"
+                   VerticalAlignment = "Top"
+                   HorizontalAlignment = "Stretch"
+                   TextAlignment = "Center"
                    FontSize = "14"
-                   TextWrapping = "Wrap">
+                   TextWrapping = "WrapWithOverflow"
+                   Margin = "12, 8, 12, 2">
 
         </TextBlock>
     </Grid>
-</base:BaseWindow>
+</Window>

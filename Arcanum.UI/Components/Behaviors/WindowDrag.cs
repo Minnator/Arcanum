@@ -9,6 +9,18 @@ public class WindowDrag : Behavior<FrameworkElement>
    private Point? _lastMousePosition;
    private Window _window = null!;
 
+   public static readonly DependencyProperty EnableDoubleClickMaximizeProperty =
+      DependencyProperty.Register(nameof(EnableDoubleClickMaximize),
+                                  typeof(bool),
+                                  typeof(WindowDrag),
+                                  new(true));
+
+   public bool EnableDoubleClickMaximize
+   {
+      get => (bool)GetValue(EnableDoubleClickMaximizeProperty);
+      set => SetValue(EnableDoubleClickMaximizeProperty, value);
+   }
+
    protected override void OnAttached()
    {
       var nullableWindow = Window.GetWindow(AssociatedObject);
@@ -29,7 +41,7 @@ public class WindowDrag : Behavior<FrameworkElement>
 
    private void AssociatedObject_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
    {
-      if (e.ClickCount == 2)
+      if (e.ClickCount == 2 && EnableDoubleClickMaximize)
       {
          if (_window.WindowState == WindowState.Normal)
             _window.WindowState = WindowState.Maximized;

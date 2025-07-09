@@ -63,6 +63,13 @@
       <Resource Include="Assets\Icons\SplashTest.png" />
       <None Remove="Assets\Icons\ArcanumSimplified.png" />
       <Resource Include="Assets\Icons\ArcanumSimplified.png" />
+      <Resource Include="Assets\Icons\Arcanum.png" />
+      <None Remove="Assets\Icons\ArcanumSimplified.ico" />
+      <Resource Include="Assets\Icons\ArcanumSimplified.ico" />
+      <None Remove="Assets\Images\ProvinceFileCreator1024x1024.png" />
+      <Resource Include="Assets\Images\ProvinceFileCreator1024x1024.png" />
+      <None Remove="Assets\Icons\LinkSquare40x40.png" />
+      <Resource Include="Assets\Icons\LinkSquare40x40.png" />
     </ItemGroup>
 
     <ItemGroup>

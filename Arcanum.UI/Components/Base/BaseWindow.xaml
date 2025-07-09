@@ -30,6 +30,8 @@
                     Value = "400" />
             <Setter Property = "MinHeight"
                     Value = "300" />
+            <Setter Property = "Icon"
+                    Value = "../../Assets/Icons/ArcanumSimplified.ico" />
             <Setter Property = "WindowChrome.WindowChrome">
                 <Setter.Value>
                     <WindowChrome CaptionHeight = "0"
@@ -77,8 +79,10 @@
                                     </behaviors:Interaction.Behaviors>
                                     <Image Source = "/Assets/Icons/ArcanumSimplified.png"
                                            DockPanel.Dock = "Left"
-                                           Stretch = "None"
-                                           Margin = "6,0,0,0">
+                                           Stretch = "Uniform"
+                                           Margin = "6,2,2,2"
+                                           Height = "26"
+                                           Width = "26">
                                     </Image>
 
                                     <TextBlock Text = "{TemplateBinding Title}"

@@ -1,3 +1,4 @@
+using Arcanum.API.Core.IO;
 using Arcanum.Core.CoreSystems.ConsoleServices;
 
 namespace UnitTests;

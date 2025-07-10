@@ -2,28 +2,27 @@
 
 using System.Drawing.Imaging;
 using System.Text;
-using Arcanum.API.UtilServices;
-
+using Arcanum.API.Core.IO;
 namespace Arcanum.Core.CoreSystems.IO
 {
-   internal class FileOperations : IFileOperations
+   static internal class IO
    {
-      private readonly Encoding _windows1250Encoding;
-      private readonly UTF8Encoding _bomUtf8Encoding;
-      private readonly UTF8Encoding _noBomUtf8Encoding; // Standard UTF-8 (no BOM)
+      private static readonly Encoding Windows1250Encoding;
+      private static readonly UTF8Encoding BomUtf8Encoding;
+      private static readonly UTF8Encoding NoBomUtf8Encoding; // Standard UTF-8 (no BOM)
 
-      public FileOperations()
+      static IO()
       {
          Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-         _windows1250Encoding = Encoding.GetEncoding("windows-1250");
-         _bomUtf8Encoding = new(true); // UTF-8 with BOM
-         _noBomUtf8Encoding = new(false); // UTF-8 without BOM (same as Encoding.UTF8 default)
+         Windows1250Encoding = Encoding.GetEncoding("windows-1250");
+         BomUtf8Encoding = new(true); // UTF-8 with BOM
+         NoBomUtf8Encoding = new(false); // UTF-8 without BOM (same as Encoding.UTF8 default)
       }
       
-      public string GetArcanumDataPath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ArcanumData");
+      public static string GetArcanumDataPath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ArcanumData");
 
       // --- Dialogs ---
-      public string? SelectFolder(string startPath, string defaultFileName = "Select Folder")
+      public static string? SelectFolder(string startPath, string defaultFileName = "Select Folder")
       {
          EnsureDirectoryExists(startPath);
 
@@ -40,7 +39,7 @@ namespace Arcanum.Core.CoreSystems.IO
          return null;
       }
 
-      public string? SelectFile(string startFolder, string filterText)
+      public static string? SelectFile(string startFolder, string filterText)
       {
          EnsureDirectoryExists(startFolder);
 
@@ -58,7 +57,7 @@ namespace Arcanum.Core.CoreSystems.IO
       }
 
       // --- Generic File Read Operations ---
-      public string? ReadAllText(string path, Encoding encoding)
+      public static string? ReadAllText(string path, Encoding encoding)
       {
          if (string.IsNullOrEmpty(path) || !File.Exists(path))
             return null;
@@ -79,7 +78,7 @@ namespace Arcanum.Core.CoreSystems.IO
          }
       }
 
-      public string[]? ReadAllLines(string path, Encoding encoding)
+      public static string[]? ReadAllLines(string path, Encoding encoding)
       {
          if (string.IsNullOrEmpty(path) || !File.Exists(path))
             return null;
@@ -101,15 +100,15 @@ namespace Arcanum.Core.CoreSystems.IO
       }
 
       // --- Specific Encoding Readers ---
-      public string? ReadAllTextAnsi(string path) => ReadAllText(path, _windows1250Encoding);
-      public string[]? ReadAllLinesAnsi(string path) => ReadAllLines(path, _windows1250Encoding);
-      public string? ReadAllTextUtf8(string path) => ReadAllText(path, _noBomUtf8Encoding);
-      public string[]? ReadAllLinesUtf8(string path) => ReadAllLines(path, _noBomUtf8Encoding);
-      public string? ReadAllTextUtf8WithBom(string path) => ReadAllText(path, _bomUtf8Encoding);
-      public string[]? ReadAllLinesUtf8WithBom(string path) => ReadAllLines(path, _bomUtf8Encoding);
+      public static string? ReadAllTextAnsi(string path) => ReadAllText(path, Windows1250Encoding);
+      public static string[]? ReadAllLinesAnsi(string path) => ReadAllLines(path, Windows1250Encoding);
+      public static string? ReadAllTextUtf8(string path) => ReadAllText(path, NoBomUtf8Encoding);
+      public static string[]? ReadAllLinesUtf8(string path) => ReadAllLines(path, NoBomUtf8Encoding);
+      public static string? ReadAllTextUtf8WithBom(string path) => ReadAllText(path, BomUtf8Encoding);
+      public static string[]? ReadAllLinesUtf8WithBom(string path) => ReadAllLines(path, BomUtf8Encoding);
 
       // --- Generic File Write Operations ---
-      public bool WriteAllText(string path, string data, Encoding encoding, bool append = false)
+      public static bool WriteAllText(string path, string data, Encoding encoding, bool append = false)
       {
          if (string.IsNullOrEmpty(path))
             return false;
@@ -138,17 +137,17 @@ namespace Arcanum.Core.CoreSystems.IO
       }
 
       // --- Specific Encoding Writers ---
-      public bool WriteAllTextAnsi(string path, string data, bool append = false)
-         => WriteAllText(path, data, _windows1250Encoding, append);
+      public static bool WriteAllTextAnsi(string path, string data, bool append = false)
+         => WriteAllText(path, data, Windows1250Encoding, append);
 
-      public bool WriteAllTextUtf8(string path, string data, bool append = false)
-         => WriteAllText(path, data, _noBomUtf8Encoding, append);
+      public static bool WriteAllTextUtf8(string path, string data, bool append = false)
+         => WriteAllText(path, data, NoBomUtf8Encoding, append);
 
-      public bool WriteAllTextUtf8WithBom(string path, string data, bool append = false)
-         => WriteAllText(path, data, _bomUtf8Encoding, append);
+      public static bool WriteAllTextUtf8WithBom(string path, string data, bool append = false)
+         => WriteAllText(path, data, BomUtf8Encoding, append);
 
       // --- Directory Operations ---
-      public bool EnsureDirectoryExists(string directoryPath)
+      public static bool EnsureDirectoryExists(string directoryPath)
       {
          if (string.IsNullOrEmpty(directoryPath))
             return false;
@@ -169,7 +168,7 @@ namespace Arcanum.Core.CoreSystems.IO
 
       private const bool ALLOW_DEFAULT_TO_APP_DIRECTORY = true;
 
-      public bool EnsureFileDirectoryExists(string filePath)
+      public static bool EnsureFileDirectoryExists(string filePath)
       {
          if (string.IsNullOrEmpty(filePath))
             return false;
@@ -186,11 +185,11 @@ namespace Arcanum.Core.CoreSystems.IO
       }
 
       // --- File/Directory Checks ---
-      public bool FileExists(string path) => !string.IsNullOrEmpty(path) && File.Exists(path);
-      public bool DirectoryExists(string path) => !string.IsNullOrEmpty(path) && Directory.Exists(path);
+      public static bool FileExists(string path) => !string.IsNullOrEmpty(path) && File.Exists(path);
+      public static bool DirectoryExists(string path) => !string.IsNullOrEmpty(path) && Directory.Exists(path);
 
       // --- Image Operations ---
-      public bool SaveBitmap(string path, Bitmap bmp, ImageFormat format)
+      public static bool SaveBitmap(string path, Bitmap bmp, ImageFormat format)
       {
          if (string.IsNullOrEmpty(path) || bmp == null! || format == null!)
             return false;
@@ -211,9 +210,9 @@ namespace Arcanum.Core.CoreSystems.IO
       }
 
       // --- Async Operations ---
-      public async Task<string?> ReadAllTextAsync(string path,
-                                                  Encoding encoding,
-                                                  CancellationToken cancellationToken = default)
+      public static async Task<string?> ReadAllTextAsync(string path,
+                                                         Encoding encoding,
+                                                         CancellationToken cancellationToken = default)
       {
          if (string.IsNullOrEmpty(path) || !File.Exists(path))
             return null;
@@ -239,9 +238,9 @@ namespace Arcanum.Core.CoreSystems.IO
          }
       }
 
-      public async Task<string[]?> ReadAllLinesAsync(string path,
-                                                     Encoding encoding,
-                                                     CancellationToken cancellationToken = default)
+      public static async Task<string[]?> ReadAllLinesAsync(string path,
+                                                            Encoding encoding,
+                                                            CancellationToken cancellationToken = default)
       {
          if (string.IsNullOrEmpty(path) || !File.Exists(path))
             return null;
@@ -267,29 +266,29 @@ namespace Arcanum.Core.CoreSystems.IO
          }
       }
 
-      public Task<string?> ReadAllTextAnsiAsync(string path, CancellationToken cancellationToken = default)
-         => ReadAllTextAsync(path, _windows1250Encoding, cancellationToken);
+      public static Task<string?> ReadAllTextAnsiAsync(string path, CancellationToken cancellationToken = default)
+         => ReadAllTextAsync(path, Windows1250Encoding, cancellationToken);
 
-      public Task<string[]?> ReadAllLinesAnsiAsync(string path, CancellationToken cancellationToken = default)
-         => ReadAllLinesAsync(path, _windows1250Encoding, cancellationToken);
+      public static Task<string[]?> ReadAllLinesAnsiAsync(string path, CancellationToken cancellationToken = default)
+         => ReadAllLinesAsync(path, Windows1250Encoding, cancellationToken);
 
-      public Task<string?> ReadAllTextUtf8Async(string path, CancellationToken cancellationToken = default)
-         => ReadAllTextAsync(path, _noBomUtf8Encoding, cancellationToken);
+      public static Task<string?> ReadAllTextUtf8Async(string path, CancellationToken cancellationToken = default)
+         => ReadAllTextAsync(path, NoBomUtf8Encoding, cancellationToken);
 
-      public Task<string[]?> ReadAllLinesUtf8Async(string path, CancellationToken cancellationToken = default)
-         => ReadAllLinesAsync(path, _noBomUtf8Encoding, cancellationToken);
+      public static Task<string[]?> ReadAllLinesUtf8Async(string path, CancellationToken cancellationToken = default)
+         => ReadAllLinesAsync(path, NoBomUtf8Encoding, cancellationToken);
 
-      public Task<string?> ReadAllTextUtf8WithBomAsync(string path, CancellationToken cancellationToken = default)
-         => ReadAllTextAsync(path, _bomUtf8Encoding, cancellationToken);
+      public static Task<string?> ReadAllTextUtf8WithBomAsync(string path, CancellationToken cancellationToken = default)
+         => ReadAllTextAsync(path, BomUtf8Encoding, cancellationToken);
 
-      public Task<string[]?> ReadAllLinesUtf8WithBomAsync(string path, CancellationToken cancellationToken = default)
-         => ReadAllLinesAsync(path, _bomUtf8Encoding, cancellationToken);
+      public static Task<string[]?> ReadAllLinesUtf8WithBomAsync(string path, CancellationToken cancellationToken = default)
+         => ReadAllLinesAsync(path, BomUtf8Encoding, cancellationToken);
 
-      public async Task<bool> WriteAllTextAsync(string path,
-                                                string data,
-                                                Encoding encoding,
-                                                bool append = false,
-                                                CancellationToken cancellationToken = default)
+      public static async Task<bool> WriteAllTextAsync(string path,
+                                                       string data,
+                                                       Encoding encoding,
+                                                       bool append = false,
+                                                       CancellationToken cancellationToken = default)
       {
          if (string.IsNullOrEmpty(path))
             return false;
@@ -322,34 +321,34 @@ namespace Arcanum.Core.CoreSystems.IO
          }
       }
 
-      public Task<bool> WriteAllTextAnsiAsync(string path,
-                                              string data,
-                                              bool append = false,
-                                              CancellationToken cancellationToken = default)
-         => WriteAllTextAsync(path, data, _windows1250Encoding, append, cancellationToken);
-
-      public Task<bool> WriteAllTextUtf8Async(string path,
-                                              string data,
-                                              bool append = false,
-                                              CancellationToken cancellationToken = default)
-         => WriteAllTextAsync(path, data, _noBomUtf8Encoding, append, cancellationToken);
-
-      public Task<bool> WriteAllTextUtf8WithBomAsync(string path,
+      public static Task<bool> WriteAllTextAnsiAsync(string path,
                                                      string data,
                                                      bool append = false,
                                                      CancellationToken cancellationToken = default)
-         => WriteAllTextAsync(path, data, _bomUtf8Encoding, append, cancellationToken);
+         => WriteAllTextAsync(path, data, Windows1250Encoding, append, cancellationToken);
 
-      public Task<bool> SaveBitmapAsync(string path,
-                                        Bitmap bmp,
-                                        ImageFormat format,
-                                        CancellationToken cancellationToken = default)
+      public static Task<bool> WriteAllTextUtf8Async(string path,
+                                                     string data,
+                                                     bool append = false,
+                                                     CancellationToken cancellationToken = default)
+         => WriteAllTextAsync(path, data, NoBomUtf8Encoding, append, cancellationToken);
+
+      public static Task<bool> WriteAllTextUtf8WithBomAsync(string path,
+                                                            string data,
+                                                            bool append = false,
+                                                            CancellationToken cancellationToken = default)
+         => WriteAllTextAsync(path, data, BomUtf8Encoding, append, cancellationToken);
+
+      public static Task<bool> SaveBitmapAsync(string path,
+                                               Bitmap bmp,
+                                               ImageFormat format,
+                                               CancellationToken cancellationToken = default)
       {
          // Bitmap.Save is synchronous. Run it on a thread pool thread.
          return Task.Run(() => SaveBitmap(path, bmp, format), cancellationToken);
       }
 
-      public void Unload()
+      public static void Unload()
       {
          
       }

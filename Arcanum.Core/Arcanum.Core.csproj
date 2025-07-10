@@ -15,7 +15,6 @@
     <Folder Include="CoreSystems\LoadingLifecycle\" />
     <Folder Include="CoreSystems\ParsingSystem\" />
     <Folder Include="CoreSystems\Parsing\ImageParsingUtil\" />
-    <Folder Include="CoreSystems\ProjectFileUtil\" />
   </ItemGroup>
 
 </Project>

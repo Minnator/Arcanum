@@ -1,5 +1,6 @@
 ﻿using Arcanum.API;
 using Arcanum.API.Console;
+using Arcanum.API.Core.IO;
 using Arcanum.API.UtilServices;
 using Arcanum.Core.CoreSystems.ConsoleServices;
 using Arcanum.Core.CoreSystems.IO;
@@ -62,7 +63,7 @@ public class LifecycleManager
    {
       // Initialize core services here
       // This might include logging, configuration management, etc.
-      host.RegisterService<IFileOperations>(new FileOperations());
+      host.RegisterService<IFileOperations>(new APIWrapperIO());
       host.RegisterService<IJsonProcessor>(new JsonProcessor());
       host.RegisterService<IConsoleService>(new ConsoleServiceImpl(host, "ArcanumConsole"));
    }

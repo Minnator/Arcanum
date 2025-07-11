@@ -12,7 +12,7 @@ public class ProjectFileDescriptorTests
 
       Assert.That(desc.ModName, Is.EqualTo("TestMod"));
       Assert.That(desc.ModPath, Is.EqualTo("TestPath"));
-      Assert.That(desc.IsSubMOd, Is.False);
+      Assert.That(desc.IsSubMod, Is.False);
       Assert.That(desc.RequiredMods, Is.Empty);
       Assert.That(desc.LastModified, Is.Not.EqualTo(default(DateTime)));
    }
@@ -24,7 +24,7 @@ public class ProjectFileDescriptorTests
       var desc = new ProjectFileDescriptor("MainMod", string.Empty, true, mods);
 
       Assert.That(desc.ModName, Is.EqualTo("MainMod"));
-      Assert.That(desc.IsSubMOd, Is.True);
+      Assert.That(desc.IsSubMod, Is.True);
       Assert.That(desc.RequiredMods, Is.EqualTo(mods));
    }
 

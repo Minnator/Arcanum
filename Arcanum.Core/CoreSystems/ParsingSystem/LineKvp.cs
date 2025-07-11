@@ -35,7 +35,7 @@ public readonly struct LineKvp<T, TQ>
 
       return false;
    }
-   
+
    public override int GetHashCode()
    {
       var hash = new HashCode();
@@ -50,10 +50,9 @@ public static class StringExtensions
 {
    public static string TrimQuotes(this string str)
    {
-      if (str is ['"', _, ..] && str[^1] == '"')
-         return str[1..^1];
-
-      return str;
+      if (string.IsNullOrEmpty(str))
+         return string.Empty;
+      return str is ['"', .., '"'] ? str[1..^1] : str.Trim();
    }
 }
 

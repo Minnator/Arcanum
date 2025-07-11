@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 
 namespace Arcanum.Core.CoreSystems.ParsingSystem;
 
@@ -40,6 +41,13 @@ public interface IElement
 
    public static void MergeInto(List<Block> blocks, List<Content> contents, List<IElement> output)
    {
+      ArgumentNullException.ThrowIfNull(blocks);
+      ArgumentNullException.ThrowIfNull(contents);
+      ArgumentNullException.ThrowIfNull(output);
+      
+      Debug.Assert(IsSorted(blocks), "Block list must be sorted by Index.");
+      Debug.Assert(IsSorted(contents), "Content list must be sorted by Index.");
+      
       var ib = 0;
       var ic = 0;
       var cb = blocks.Count;
@@ -71,6 +79,12 @@ public interface IElement
    
    public static IEnumerable<IElement> MergeBlocksAndContent(List<Block> blocks, List<Content> contents)
    {
+      ArgumentNullException.ThrowIfNull(blocks);
+      ArgumentNullException.ThrowIfNull(contents);
+      
+      Debug.Assert(IsSorted(blocks), "Block list must be sorted by Index.");
+      Debug.Assert(IsSorted(contents), "Content list must be sorted by Index.");
+      
       var ib = 0;
       var ic = 0;
       var cb = blocks.Count;
@@ -107,4 +121,14 @@ public interface IElement
    public static bool operator >(IElement a, IElement b) => a.Index > b.Index;
    public static bool operator <=(IElement a, IElement b) => a.Index <= b.Index;
    public static bool operator >=(IElement a, IElement b) => a.Index >= b.Index;
+   
+   #if DEBUG
+   private static bool IsSorted<T>(List<T> list) where T : IElement
+   {
+      for (var i = 1; i < list.Count; i++)
+         if (list[i - 1].Index > list[i].Index)
+            return false;
+      return true;
+   }
+   #endif
 }

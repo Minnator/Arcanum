@@ -21,12 +21,12 @@ public class FileObjSingle(ISaveable saveable) : FileObj
 
    public override string ComposeFile()
    {
-      throw new NotImplementedException();
+      throw new NotImplementedException();   
    }
 
    public override void SaveFile()
    {
-      var fileData = ComposeFile();
+      IO.IO.WriteAllTextUtf8(Path.AbsolutPath, ComposeFile());
    }
 
    public override void LoadFile()

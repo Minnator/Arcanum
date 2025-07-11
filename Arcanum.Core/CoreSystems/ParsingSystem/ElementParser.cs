@@ -45,14 +45,13 @@ public static class ElementParser
             switch (c)
             {
                case '\\':
+                  currentContent.Append(c);
                   if (isInQuotes)
                   {
                      charIndex++;
                      if (line.Length > charIndex)
                         currentContent.Append(line[charIndex]);
                   }
-                  else
-                     currentContent.Append(c);
 
                   break;
                case '"':
@@ -110,9 +109,9 @@ public static class ElementParser
                   {
                      var content =
                         new Content(trimmed,
-                                            contentStart,
-                                            elementIndex
-                                               ++); // We create a new content element as there is no block element on the stack
+                                    contentStart,
+                                    elementIndex
+                                       ++); // We create a new content element as there is no block element on the stack
                      newBlock = new(new(charSpan), i, elementIndex++); // we create a new block
                      if (blockStack.IsEmpty)
                      {
@@ -162,9 +161,9 @@ public static class ElementParser
                       0) // We have remaining content in the currentContent which we need to add to the previous block element
                   {
                      var content = new Content(trimmedClosing,
-                                                       currentStr[0] == '\n' ? contentStart + 1 : contentStart,
-                                                       elementIndex
-                                                          ++); // We create a new content element as there is no block element on the stack
+                                               currentStr[0] == '\n' ? contentStart + 1 : contentStart,
+                                               elementIndex
+                                                  ++); // We create a new content element as there is no block element on the stack
                      blockStack.Peek().ContentElements.Add(content);
                      wordEnd = -1;
                      wordEnd = -1;

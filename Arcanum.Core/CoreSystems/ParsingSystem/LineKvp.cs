@@ -31,9 +31,18 @@ public readonly struct LineKvp<T, TQ>
    public override bool Equals([NotNullWhen(true)] object? obj)
    {
       if (obj is LineKvp<T, TQ> kvp)
-         return Key.Equals(kvp.Key) && Value.Equals(kvp.Value) && Line == kvp.Line;
+         return Key != null && Key.Equals(kvp.Key) && Value != null && Value.Equals(kvp.Value) && Line == kvp.Line;
 
       return false;
+   }
+
+   public override int GetHashCode()
+   {
+      var hash = new HashCode();
+      hash.Add(Key);
+      hash.Add(Value);
+      hash.Add(Line);
+      return hash.ToHashCode();
    }
 }
 
@@ -41,9 +50,9 @@ public static class StringExtensions
 {
    public static string TrimQuotes(this string str)
    {
-      if (str.Length >= 2 && str[0] == '"' && str[^1] == '"')
-         return str[1..^1];
-      return str;
+      if (string.IsNullOrEmpty(str))
+         return string.Empty;
+      return str is ['"', .., '"'] ? str[1..^1] : str.Trim();
    }
 }
 
@@ -53,23 +62,24 @@ public static class SavingTemp
    {
       if (string.IsNullOrEmpty(s))
          return;
+
       AddTabs(ref tabs, ref sb);
       sb.AppendLine($"{stringName} = {s}");
    }
-   
+
    public static void AddTabs(ref int tabs, ref StringBuilder sb)
    {
       for (var i = 0; i < tabs; i++)
          sb.Append('\t');
    }
-   
+
    public static void OpenBlock(ref int tabs, string blockName, ref StringBuilder sb)
    {
       AddTabs(ref tabs, ref sb);
       sb.AppendLine($"{blockName} = {{");
       tabs++;
    }
-   
+
    public static void CloseBlock(ref int tabs, ref StringBuilder sb)
    {
       tabs--;

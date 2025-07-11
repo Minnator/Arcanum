@@ -4,7 +4,7 @@ public class ProjectFileDescriptor
 {
    public string ModName { get; }
    public string ModPath { get; }
-   public bool IsSubMOd { get; }
+   public bool IsSubMod { get; }
    public List<string> RequiredMods { get; } = [];
    public DateTime LastModified { get; private set; }
 
@@ -12,7 +12,7 @@ public class ProjectFileDescriptor
    {
       ModName = modName;
       ModPath = modPath;
-      IsSubMOd = isSubMod;
+      IsSubMod = isSubMod;
       LastModified = DateTime.Now;
    }
 
@@ -20,7 +20,7 @@ public class ProjectFileDescriptor
    {
       ModName = modName;
       ModPath = modPath;
-      IsSubMOd = isSubMod;
+      IsSubMod = isSubMod;
       RequiredMods = requiredMods;
       LastModified = DateTime.Now;
    }
@@ -29,7 +29,7 @@ public class ProjectFileDescriptor
 
    public override string ToString()
    {
-      return $"{ModName} (SubMod: {IsSubMOd}, RequiredMods: {string.Join(", ", RequiredMods)})";
+      return $"{ModName} (SubMod: {IsSubMod}, RequiredMods: {string.Join(", ", RequiredMods)})";
    }
 
    public override bool Equals(object? obj)
@@ -37,7 +37,7 @@ public class ProjectFileDescriptor
       if (obj is ProjectFileDescriptor other)
       {
          return ModName == other.ModName &&
-                IsSubMOd == other.IsSubMOd &&
+                IsSubMod == other.IsSubMod &&
                 ModPath == other.ModPath &&
                 RequiredMods.SequenceEqual(other.RequiredMods);
       }
@@ -49,7 +49,7 @@ public class ProjectFileDescriptor
    {
       var hash = new HashCode();
       hash.Add(ModName);
-      hash.Add(IsSubMOd);
+      hash.Add(IsSubMod);
       hash.Add(ModPath);
       foreach (var mod in RequiredMods)
          hash.Add(mod);

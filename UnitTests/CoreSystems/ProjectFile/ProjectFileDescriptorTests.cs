@@ -10,7 +10,7 @@ public class ProjectFileDescriptorTests
    {
       var desc = new ProjectFileDescriptor("TestMod", "TestPath");
 
-      Assert.That(desc.ModeName, Is.EqualTo("TestMod"));
+      Assert.That(desc.ModName, Is.EqualTo("TestMod"));
       Assert.That(desc.ModPath, Is.EqualTo("TestPath"));
       Assert.That(desc.IsSubMOd, Is.False);
       Assert.That(desc.RequiredMods, Is.Empty);
@@ -23,7 +23,7 @@ public class ProjectFileDescriptorTests
       var mods = new List<string> { "ReqMod1", "ReqMod2" };
       var desc = new ProjectFileDescriptor("MainMod", string.Empty, true, mods);
 
-      Assert.That(desc.ModeName, Is.EqualTo("MainMod"));
+      Assert.That(desc.ModName, Is.EqualTo("MainMod"));
       Assert.That(desc.IsSubMOd, Is.True);
       Assert.That(desc.RequiredMods, Is.EqualTo(mods));
    }

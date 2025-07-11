@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Arcanum.Core.CoreSystems.IO
 {
-   static internal class IO
+   public static class IO
    {
       private static readonly Encoding Windows1250Encoding;
       private static readonly UTF8Encoding BomUtf8Encoding;

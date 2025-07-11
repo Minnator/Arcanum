@@ -18,11 +18,22 @@ internal static class JsonProcessor
 
    static JsonProcessor()
    {
+      var defaultRules = new JsonSerializationRules
+      {
+         WriteIndented = true,
+      };
+      
+      var defaultDeserializationRules = new JsonDeserializationRules
+      {
+         PropertyNameCaseInsensitive = true,
+         AllowTrailingCommas = true,
+      };
+      
       // Initialize default serializer options
-      DefaultSerializerOptions = CreateSerializerOptions(null);
+      DefaultSerializerOptions = CreateSerializerOptions(defaultRules);
 
       // Initialize default deserializer options
-      DefaultDeserializerOptions = CreateDeserializerOptions(null);
+      DefaultDeserializerOptions = CreateDeserializerOptions(defaultDeserializationRules);
    }
 
    /// <summary>

@@ -1,16 +1,18 @@
 ﻿using System.IO.Compression;
+using Arcanum.Core.CoreSystems.IO;
 
 namespace Arcanum.Core.CoreSystems.ProjectFileUtil;
 
-internal static class ProjectFileUtil
+public static class ProjectFileUtil
 {
    private const string ARCANUM_PROJECT_FILE_EXTENSION = ".arcanum";
+   private const string ARCANUM_PROJECT_FILES_DIRECTORY = "ArcanumProjects";
 
    public static ZipArchive CreateZipArchive(string zipFilePath)
    {
       return ZipFile.Open(zipFilePath, ZipArchiveMode.Create);
    }
-   
+
    public static void AddFileToZip(ZipArchive zip, string filePath)
    {
       if (!File.Exists(filePath))
@@ -18,7 +20,7 @@ internal static class ProjectFileUtil
 
       zip.CreateEntryFromFile(filePath, Path.GetFileName(filePath));
    }
-   
+
    public static void AddFileFromStringToArchive(ZipArchive zip, string fileName, string content)
    {
       ArgumentException.ThrowIfNullOrEmpty(fileName, nameof(fileName));
@@ -27,12 +29,12 @@ internal static class ProjectFileUtil
       using var writer = new StreamWriter(entry.Open());
       writer.Write(content);
    }
-   
+
    public static string CreateFromFiles(List<string> files, string outputFileName, string outputDirectory)
    {
       IO.IO.EnsureDirectoryExists(outputDirectory);
 
-      var outputFile = Path.Combine(outputDirectory + ARCANUM_PROJECT_FILE_EXTENSION, outputFileName);
+      var outputFile = Path.Combine(outputDirectory, outputFileName + ARCANUM_PROJECT_FILE_EXTENSION);
       using var zip = ZipFile.Open(outputFile, ZipArchiveMode.Create);
       foreach (var file in files)
          zip.CreateEntryFromFile(file, Path.GetFileName(file));
@@ -44,7 +46,7 @@ internal static class ProjectFileUtil
    {
       IO.IO.EnsureDirectoryExists(outputDirectory);
 
-      var outputFile = Path.Combine(outputDirectory + ARCANUM_PROJECT_FILE_EXTENSION, outputFileName);
+      var outputFile = Path.Combine(outputDirectory, outputFileName + ARCANUM_PROJECT_FILE_EXTENSION);
       using var zip = ZipFile.Open(outputFile, ZipArchiveMode.Create);
       foreach (var file in files)
       {
@@ -101,8 +103,18 @@ internal static class ProjectFileUtil
    /// 
    /// </summary>
    /// <param name="descriptor"></param>
-   internal static void GatherFilesForProjectFile(ProjectFileDescriptor descriptor)
+   public static void GatherFilesForProjectFile(ProjectFileDescriptor? descriptor)
    {
-      
+      descriptor ??= ProjectFileDescriptor.GatherFromState();
+      var zipPath = Path.Combine(IO.IO.GetArcanumDataPath,
+                                 ARCANUM_PROJECT_FILES_DIRECTORY,
+                                 $"{descriptor.ModName}{ARCANUM_PROJECT_FILE_EXTENSION}");
+
+      IO.IO.EnsureDirectoryExists(Path.GetDirectoryName(zipPath) ?? string.Empty);
+      // The file may already exist, so we delete it to ensure we create a new one
+      if (File.Exists(zipPath))
+         File.Delete(zipPath);
+      using var zipFile = CreateZipArchive(zipPath);
+      AddFileFromStringToArchive(zipFile, "ProjDescriptor.json", JsonProcessor.Serialize(descriptor));
    }
 }

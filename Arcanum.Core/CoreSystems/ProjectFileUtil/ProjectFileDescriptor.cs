@@ -1,27 +1,24 @@
-﻿using System.Text;
-using Arcanum.API.Core.IO;
-
-namespace Arcanum.Core.CoreSystems.ProjectFileUtil;
+﻿namespace Arcanum.Core.CoreSystems.ProjectFileUtil;
 
 public class ProjectFileDescriptor
 {
-   public string ModeName { get; }
+   public string ModName { get; }
    public string ModPath { get; }
-   public bool IsSubMOd { get; } = false;
+   public bool IsSubMOd { get; }
    public List<string> RequiredMods { get; } = [];
-   public DateTime LastModified { get; set; }
+   public DateTime LastModified { get; private set; }
 
-   public ProjectFileDescriptor(string modeName, string modPath, bool isSubMod = false)
+   public ProjectFileDescriptor(string modName, string modPath, bool isSubMod = false)
    {
-      ModeName = modeName;
+      ModName = modName;
       ModPath = modPath;
       IsSubMOd = isSubMod;
       LastModified = DateTime.Now;
    }
 
-   public ProjectFileDescriptor(string modeName, string modPath, bool isSubMod, List<string> requiredMods)
+   public ProjectFileDescriptor(string modName, string modPath, bool isSubMod, List<string> requiredMods)
    {
-      ModeName = modeName;
+      ModName = modName;
       ModPath = modPath;
       IsSubMOd = isSubMod;
       RequiredMods = requiredMods;
@@ -32,14 +29,14 @@ public class ProjectFileDescriptor
 
    public override string ToString()
    {
-      return $"{ModeName} (SubMod: {IsSubMOd}, RequiredMods: {string.Join(", ", RequiredMods)})";
+      return $"{ModName} (SubMod: {IsSubMOd}, RequiredMods: {string.Join(", ", RequiredMods)})";
    }
 
    public override bool Equals(object? obj)
    {
       if (obj is ProjectFileDescriptor other)
       {
-         return ModeName == other.ModeName &&
+         return ModName == other.ModName &&
                 IsSubMOd == other.IsSubMOd &&
                 ModPath == other.ModPath &&
                 RequiredMods.SequenceEqual(other.RequiredMods);
@@ -51,7 +48,7 @@ public class ProjectFileDescriptor
    public override int GetHashCode()
    {
       var hash = new HashCode();
-      hash.Add(ModeName);
+      hash.Add(ModName);
       hash.Add(IsSubMOd);
       hash.Add(ModPath);
       foreach (var mod in RequiredMods)
@@ -59,4 +56,11 @@ public class ProjectFileDescriptor
       return hash.ToHashCode();
    }
 
+   public static ProjectFileDescriptor GatherFromState()
+   {
+      // This method should gather the necessary data from the current state of the application
+      // and return a new ProjectFileDescriptor instance.
+      // For now, we will return a placeholder instance.
+      return new ("DefaultMod", "DefaultPath", false, ["RequiredMod1", "RequiredMod2"]);
+   }
 }

@@ -1,3 +1,6 @@
+using System.Diagnostics;
+using Arcanum.Core.CoreSystems.IO;
+using Arcanum.Core.CoreSystems.ParsingSystem;
 using Arcanum.Core.CoreSystems.ProjectFileUtil;
 
 namespace Arcanum.UI
@@ -10,7 +13,13 @@ namespace Arcanum.UI
       [STAThread]
       private static void Main()
       {
-         ProjectFileUtil.GatherFilesForProjectFile(null);
+         var inputPath = "C:\\Users\\david\\Downloads\\ParsingExample.txt";
+         var (blocks, contents) = ElementParser.GetElements(inputPath,
+                                                            IO.ReadAllTextUtf8(inputPath));
+
+         Console.WriteLine($"Parsed Blocks: {blocks.Count}\nParsed Contents: {contents.Count}");
+
+         //ProjectFileUtil.GatherFilesForProjectFile(null);
 
          //Application.Run(new Form1());
 

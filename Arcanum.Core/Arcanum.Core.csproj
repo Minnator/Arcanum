@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,7 +14,6 @@
 
   <ItemGroup>
     <Folder Include="CoreSystems\LoadingLifecycle\" />
-    <Folder Include="CoreSystems\ParsingSystem\" />
     <Folder Include="CoreSystems\Parsing\ImageParsingUtil\" />
   </ItemGroup>
 

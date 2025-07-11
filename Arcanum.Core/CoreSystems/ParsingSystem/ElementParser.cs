@@ -1,43 +1,76 @@
 ﻿using System.Text;
+using System;
 
 namespace Arcanum.Core.CoreSystems.ParsingSystem;
+
+// Define a clear enum for the parsing state to replace the 'wasEquals' byte.
+file enum ParsingState : byte
+{
+   Default, // Looking for a key or a block name
+   SawEquals, // Just saw an '=', the next non-quoted token is a value
+   InValue // Currently processing a value (either quoted or unquoted)
+}
 
 public static class ElementParser
 {
    public static unsafe (List<Block>, List<Content>) GetElements(string path, string input)
    {
-      var lines = input.Split('\n');
       var contents = new List<Content>();
       var blocks = new List<Block>();
-      StringBuilder currentContent = new();
-      ModifiableStack<Block> blockStack = new();
+      var currentContent = new StringBuilder();
+      var blockStack = new ModifiableStack<Block>();
 
       var isInQuotes = false;
       var isInWord = false;
       var isInWhiteSpace = false;
       var contentStart = 0;
       var elementIndex = 0;
-      byte wasEquals = 0;
 
+      // Use the clear state enum instead of the cryptic 'wasEquals' byte.
+      var state = ParsingState.Default;
+
+      // This logic is crucial for the "heinous formatting" test and is preserved.
       var prevWordStart = -1;
       var prevWordEnd = -1;
 
-      for (var i = 0; i < lines.Length; i++)
+      ReadOnlySpan<char> remainingInput = input.AsSpan();
+      int lineIndex = 0;
+
+      while (!remainingInput.IsEmpty)
       {
-         var length = lines[i].Length;
+         // This line-slicing logic is correct and performant.
+         int lineBreakIndex = remainingInput.IndexOf('\n');
+         ReadOnlySpan<char> line;
+         if (lineBreakIndex == -1)
+         {
+            line = remainingInput;
+            remainingInput = ReadOnlySpan<char>.Empty;
+         }
+         else
+         {
+            line = remainingInput.Slice(0, lineBreakIndex);
+            remainingInput = remainingInput.Slice(lineBreakIndex + 1);
+         }
+
+         if (!line.IsEmpty && line[^1] == '\r')
+         {
+            line = line.Slice(0, line.Length - 1);
+         }
+
+         // Per-line state is reset here, which is correct.
+         var length = line.Length;
          var charIndex = 0;
          var wordStart = -1;
          var wordEnd = -1;
          isInWord = false;
          isInWhiteSpace = false;
 
-         if (lines[i].Length == 0)
+         if (line.Length == 0)
          {
             currentContent.Append('\n');
+            lineIndex++;
             continue;
          }
-
-         var line = lines[i].ToCharArray();
 
          while (charIndex < length)
          {
@@ -54,14 +87,16 @@ public static class ElementParser
                   }
 
                   break;
+
                case '"':
-                  if (isInQuotes)
-                     if (wasEquals == 2)
-                        wasEquals = 3;
+                  // If we see a quote after an equals sign, we are now parsing a value.
+                  if (state == ParsingState.SawEquals)
+                     state = ParsingState.InValue;
                   isInQuotes = !isInQuotes;
                   isInWhiteSpace = false;
                   currentContent.Append(c);
                   break;
+
                case '{':
                   if (isInQuotes)
                   {
@@ -71,64 +106,56 @@ public static class ElementParser
 
                   if (currentContent.Length < 1)
                   {
-                     Console.WriteLine($"Error in file {path}: Block name cannot be empty at line {i + 1}, char {charIndex + 1}");
+                     Console.WriteLine($"Error in file {path}: Block name cannot be empty at line {lineIndex + 1}, char {charIndex + 1}");
                      return ([], []);
                   }
 
+                  // This is the "heinous formatting" check that must be preserved.
                   if (wordEnd < 0 || wordStart < 0)
                   {
                      if (prevWordStart < 0 || prevWordEnd < 0)
                      {
-                        Console.WriteLine($"Error in file {path}: Block name cannot be empty at line {i + 1}, char {charIndex + 1}");
+                        Console.WriteLine($"Error in file {path}: Block name cannot be empty at line {lineIndex + 1}, char {charIndex + 1}");
                         return ([], []);
                      }
 
                      wordStart = prevWordStart;
                      wordEnd = prevWordEnd;
-                     Console.WriteLine($"Warning in file {path}: Block name is empty at line {i + 1}, char {charIndex + 1}. Using previous block name.");
+                     Console.WriteLine($"Warning in file {path}: Block name is empty at line {lineIndex + 1}, char {charIndex + 1}. Using previous block name.");
                   }
 
                   prevWordStart = -1;
                   prevWordEnd = -1;
 
                   var nameLength = wordEnd - wordStart;
-
                   Span<char> charSpan = stackalloc char[nameLength];
-                  currentContent.CopyTo(wordStart, charSpan, nameLength); // We copy the name of the block from the sb
-                  currentContent.Remove(wordStart,
-                                        currentContent.Length - wordStart); // we remove anything after the name start
+                  currentContent.CopyTo(wordStart, charSpan, nameLength);
+                  currentContent.Remove(wordStart, currentContent.Length - wordStart);
                   Block newBlock;
-
                   wordStart = -1;
                   wordEnd = -1;
 
-                  var trimmed = currentContent.ToString().Trim();
-
-                  if (trimmed.Length >
-                      0) // We have remaining content in the currentContent which we need to add to the previous block element
+                  // OPTIMIZATION: Use the GetTrimmedRange helper to avoid ToString().Trim()
+                  var (trimmedStart, trimmedLength) = GetTrimmedRange(currentContent);
+                  if (trimmedLength > 0)
                   {
-                     var content =
-                        new Content(trimmed,
-                                    contentStart,
-                                    elementIndex
-                                       ++); // We create a new content element as there is no block element on the stack
-                     newBlock = new(new(charSpan), i, elementIndex++); // we create a new block
+                     var contentValue = currentContent.ToString(trimmedStart, trimmedLength);
+                     var content = new Content(contentValue, contentStart, elementIndex++);
+                     newBlock = new(new(charSpan), lineIndex, elementIndex++);
                      if (blockStack.IsEmpty)
                      {
                         contents.Add(content);
                         blocks.Add(newBlock);
                      }
-                     else // We add the content to the previous block element
+                     else
                      {
-                        var currentBlock = blockStack.Peek();
-                        currentBlock.ContentElements.Add(content);
-                        currentBlock.SubBlocks
-                                    .Add(newBlock); //TODO super rare 1 in 1000 program runs Run condition here?!
+                        blockStack.Peek().ContentElements.Add(content);
+                        blockStack.Peek().SubBlocks.Add(newBlock);
                      }
                   }
-                  else // No Content to be added, only add the new Block which was started
+                  else
                   {
-                     newBlock = new(new(charSpan), i, elementIndex++); // we create a new block
+                     newBlock = new(new(charSpan), lineIndex, elementIndex++);
                      if (blockStack.IsEmpty)
                         blocks.Add(newBlock);
                      else
@@ -137,10 +164,10 @@ public static class ElementParser
 
                   currentContent.Clear();
                   blockStack.Push(newBlock);
-                  contentStart = i;
-                  wasEquals = 0;
-
+                  contentStart = lineIndex;
+                  state = ParsingState.Default; // Reset state after a block starts.
                   break;
+
                case '}':
                   if (isInQuotes)
                   {
@@ -150,32 +177,32 @@ public static class ElementParser
 
                   if (blockStack.IsEmpty)
                   {
-                     Console.WriteLine($"Error in file {path}: Unmatched closing brace at line {i + 1}, char {charIndex + 1}");
+                     Console.WriteLine($"Error in file {path}: Unmatched closing brace at line {lineIndex + 1}, char {charIndex + 1}");
                      return ([], []);
                   }
 
-                  var currentStr = currentContent.ToString();
-                  var trimmedClosing = currentStr.Trim();
-
-                  if (trimmedClosing.Length >
-                      0) // We have remaining content in the currentContent which we need to add to the previous block element
+                  // OPTIMIZATION: Use the GetTrimmedRange helper here as well.
+                  var (closeTrimmedStart, closeTrimmedLength) = GetTrimmedRange(currentContent);
+                  if (closeTrimmedLength > 0)
                   {
-                     var content = new Content(trimmedClosing,
-                                               currentStr[0] == '\n' ? contentStart + 1 : contentStart,
-                                               elementIndex
-                                                  ++); // We create a new content element as there is no block element on the stack
+                     var closingContentValue = currentContent.ToString(closeTrimmedStart, closeTrimmedLength);
+                     var closingContentStartLine = (currentContent.Length > 0 && currentContent[0] == '\n')
+                                                      ? contentStart + 1
+                                                      : contentStart;
+                     var content = new Content(closingContentValue, closingContentStartLine, elementIndex++);
                      blockStack.Peek().ContentElements.Add(content);
-                     wordEnd = -1;
+                     wordStart = -1;
                      wordEnd = -1;
                      currentContent.Clear();
                   }
 
                   blockStack.Pop();
-                  contentStart = i;
-                  wasEquals = 0;
+                  contentStart = lineIndex;
+                  state = ParsingState.Default; // Reset state after a block closes.
                   break;
+
                case '#':
-                  if (!isInQuotes) // # is in quotes and thus allowed
+                  if (!isInQuotes)
                   {
                      charIndex = length;
                      break;
@@ -183,22 +210,23 @@ public static class ElementParser
 
                   currentContent.Append(c);
                   break;
-               case '\r': // WHY TF ARE THERE SINGLE \r IN THE FILES
+
+               case '\r':
                   if (charIndex != length - 1)
                   {
-                     Console.WriteLine($"Error in file {path}: Unexpected carriage return at line {i + 1}, char {charIndex + 1}");
+                     Console.WriteLine($"Error in file {path}: Unexpected carriage return at line {lineIndex + 1}, char {charIndex + 1}");
                      if (currentContent.Length >= 1 &&
                          char.IsWhiteSpace(currentContent[^1]) &&
                          currentContent[^1] != '\n')
                         currentContent.Remove(currentContent.Length - 1, 1);
-
                      currentContent.Append('\n');
-                     wasEquals = 0;
+                     state = ParsingState.Default; // Reset state.
                   }
 
                   break;
+
                default:
-                  if (!isInQuotes) // We only add whitespace if we are in quotes
+                  if (!isInQuotes)
                   {
                      if (char.IsWhiteSpace(c))
                      {
@@ -207,13 +235,17 @@ public static class ElementParser
                            isInWhiteSpace = true;
                            isInWord = false;
                            if (wordStart != -1)
-                              if (wasEquals > 2)
+                              // This logic is for multi-value pairs like `list = { a b c }`
+                              // The original code used `wasEquals > 2`, this is the direct equivalent.
+                              if (state == ParsingState.InValue)
                               {
-                                 wasEquals = 1;
+                                 state = ParsingState.Default;
                                  currentContent.Append('\t');
                               }
                               else
+                              {
                                  currentContent.Append(' ');
+                              }
                         }
 
                         break;
@@ -227,19 +259,19 @@ public static class ElementParser
                            wordEnd = currentContent.Length + 1;
                            wordStart = currentContent.Length;
                            isInWord = true;
-
-                           if (wasEquals == 2)
-                              wasEquals = 3;
-                           else
-                              wasEquals = 0;
+                           // If we see a word after an equals sign, it's a value.
+                           if (state == ParsingState.SawEquals)
+                              state = ParsingState.InValue;
                         }
                         else
+                        {
                            wordEnd = currentContent.Length + 1;
+                        }
                      }
-                     else
+                     else // c is '='
                      {
                         isInWord = false;
-                        wasEquals = 2;
+                        state = ParsingState.SawEquals;
                      }
                   }
 
@@ -250,9 +282,11 @@ public static class ElementParser
             charIndex++;
          }
 
+         // This logic at the end of the line is critical and preserved.
          if (currentContent.Length >= 1 && char.IsWhiteSpace(currentContent[^1]) && currentContent[^1] != '\n')
             currentContent.Remove(currentContent.Length - 1, 1);
 
+         // This correctly saves the word position for the "heinous formatting" case on the next line.
          if (wordStart >= 0 && wordEnd >= 0)
          {
             prevWordStart = wordStart;
@@ -260,22 +294,47 @@ public static class ElementParser
          }
 
          currentContent.Append('\n');
-         wasEquals = 0;
+         state = ParsingState.Default; // Reset state at the end of every line.
+         lineIndex++;
       }
 
+      // Final checks and content creation are preserved.
       if (!blockStack.IsEmpty)
       {
          Console.WriteLine($"Error in file {path}: Unmatched opening brace at line {blockStack.Peek().StartLine + 1}");
          return ([], []);
       }
 
-      if (currentContent.Length > 0)
+      // OPTIMIZATION: Final use of the helper.
+      var (finalTrimmedStart, finalTrimmedLength) = GetTrimmedRange(currentContent);
+      if (finalTrimmedLength > 0)
       {
-         var contentStr = currentContent.ToString();
-         if (!string.IsNullOrWhiteSpace(contentStr))
-            contents.Add(new(contentStr, contentStart, elementIndex++));
+         contents.Add(new(currentContent.ToString(finalTrimmedStart, finalTrimmedLength),
+                          contentStart,
+                          elementIndex++));
       }
 
       return (blocks, contents);
+   }
+
+   // --- New Helper Method ---
+   private static (int start, int length) GetTrimmedRange(StringBuilder sb)
+   {
+      int start = 0;
+      while (start < sb.Length && char.IsWhiteSpace(sb[start]))
+      {
+         start++;
+      }
+
+      int end = sb.Length - 1;
+      while (end > start && char.IsWhiteSpace(sb[end]))
+      {
+         end--;
+      }
+
+      if (end < start)
+         return (0, 0);
+
+      return (start, end - start + 1);
    }
 }

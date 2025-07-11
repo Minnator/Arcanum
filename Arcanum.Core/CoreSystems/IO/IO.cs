@@ -1,8 +1,6 @@
-﻿// Make sure this using is present for Bitmap
-
-using System.Drawing.Imaging;
+﻿using System.Drawing.Imaging;
 using System.Text;
-using Arcanum.API.Core.IO;
+
 namespace Arcanum.Core.CoreSystems.IO
 {
    static internal class IO
@@ -18,7 +16,7 @@ namespace Arcanum.Core.CoreSystems.IO
          BomUtf8Encoding = new(true); // UTF-8 with BOM
          NoBomUtf8Encoding = new(false); // UTF-8 without BOM (same as Encoding.UTF8 default)
       }
-      
+
       public static string GetArcanumDataPath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ArcanumData");
 
       // --- Dialogs ---
@@ -278,10 +276,12 @@ namespace Arcanum.Core.CoreSystems.IO
       public static Task<string[]?> ReadAllLinesUtf8Async(string path, CancellationToken cancellationToken = default)
          => ReadAllLinesAsync(path, NoBomUtf8Encoding, cancellationToken);
 
-      public static Task<string?> ReadAllTextUtf8WithBomAsync(string path, CancellationToken cancellationToken = default)
+      public static Task<string?> ReadAllTextUtf8WithBomAsync(string path,
+                                                              CancellationToken cancellationToken = default)
          => ReadAllTextAsync(path, BomUtf8Encoding, cancellationToken);
 
-      public static Task<string[]?> ReadAllLinesUtf8WithBomAsync(string path, CancellationToken cancellationToken = default)
+      public static Task<string[]?> ReadAllLinesUtf8WithBomAsync(string path,
+                                                                 CancellationToken cancellationToken = default)
          => ReadAllLinesAsync(path, BomUtf8Encoding, cancellationToken);
 
       public static async Task<bool> WriteAllTextAsync(string path,
@@ -350,7 +350,6 @@ namespace Arcanum.Core.CoreSystems.IO
 
       public static void Unload()
       {
-         
       }
    }
 }

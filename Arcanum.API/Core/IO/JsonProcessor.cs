@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
+using Arcanum.API.UtilServices;
 
-namespace Arcanum.API.UtilServices; // Exposing this via API
+namespace Arcanum.API.Core.IO; // Exposing this via API
 
 /// <summary>
 /// Provides an abstraction for JSON serialization and deserialization operations

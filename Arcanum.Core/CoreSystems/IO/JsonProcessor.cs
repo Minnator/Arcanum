@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Arcanum.API.Core.IO;
 using Arcanum.API.UtilServices;
 
 // For the interface
@@ -10,30 +11,27 @@ namespace Arcanum.Core.CoreSystems.IO;
 /// <summary>
 /// Implements IJsonProcessor using System.Text.Json.
 /// </summary>
-internal class JsonProcessor : IJsonProcessor
+internal static class JsonProcessor
 {
-   private readonly JsonSerializerOptions _defaultSerializerOptions;
-   private readonly JsonSerializerOptions _defaultDeserializerOptions;
+   private static readonly JsonSerializerOptions DefaultSerializerOptions;
+   private static readonly JsonSerializerOptions DefaultDeserializerOptions;
 
-   public JsonProcessor() : this(new(), new())
+   static JsonProcessor()
    {
-   }
+      // Initialize default serializer options
+      DefaultSerializerOptions = CreateSerializerOptions(null);
 
-   public JsonProcessor(JsonSerializerOptions serializerOptions,
-                        JsonSerializerOptions deserializerOptions)
-   {
-      _defaultSerializerOptions = serializerOptions;
-      _defaultSerializerOptions.WriteIndented = true;
-      _defaultDeserializerOptions = deserializerOptions;
+      // Initialize default deserializer options
+      DefaultDeserializerOptions = CreateDeserializerOptions(null);
    }
 
    /// <summary>
    /// Creates JsonSerializerOptions from JsonSerializationRules.
    /// </summary>
-   private JsonSerializerOptions CreateSerializerOptions(JsonSerializationRules? rules)
+   private static JsonSerializerOptions CreateSerializerOptions(JsonSerializationRules? rules)
    {
       if (rules == null)
-         return new(_defaultSerializerOptions); // Copy defaults
+         return new(DefaultSerializerOptions); // Copy defaults
 
       var options = new JsonSerializerOptions
       {
@@ -84,10 +82,10 @@ internal class JsonProcessor : IJsonProcessor
    /// <summary>
    /// Creates JsonSerializerOptions from JsonDeserializationRules.
    /// </summary>
-   private JsonSerializerOptions CreateDeserializerOptions(JsonDeserializationRules? rules)
+   private static JsonSerializerOptions CreateDeserializerOptions(JsonDeserializationRules? rules)
    {
       if (rules == null)
-         return new(_defaultDeserializerOptions); // Copy defaults
+         return new(DefaultDeserializerOptions); // Copy defaults
 
       var options = new JsonSerializerOptions
       {
@@ -120,11 +118,13 @@ internal class JsonProcessor : IJsonProcessor
       return options;
    }
 
-   public string Serialize<T>(T value, JsonSerializationRules? rules = null)
+   public static string Serialize<T>(T value, JsonSerializationRules? rules = null)
    {
+      var options = rules == null
+                       ? DefaultSerializerOptions
+                       : CreateSerializerOptions(rules);
       try
       {
-         var options = CreateSerializerOptions(rules);
          return JsonSerializer.Serialize(value, options);
       }
       catch (JsonException ex)
@@ -137,14 +137,16 @@ internal class JsonProcessor : IJsonProcessor
       }
    }
 
-   public T? Deserialize<T>(string json, JsonDeserializationRules? rules = null)
+   public static T? Deserialize<T>(string json, JsonDeserializationRules? rules = null)
    {
       if (string.IsNullOrEmpty(json))
          return default;
 
+      var options = rules == null
+                       ? DefaultSerializerOptions
+                       : CreateDeserializerOptions(rules);
       try
       {
-         var options = CreateDeserializerOptions(rules);
          return JsonSerializer.Deserialize<T>(json, options);
       }
       catch (JsonException ex)
@@ -159,7 +161,7 @@ internal class JsonProcessor : IJsonProcessor
       }
    }
 
-   public bool TryDeserialize<T>(string json, out T? value, JsonDeserializationRules? rules = null)
+   public static bool TryDeserialize<T>(string json, out T? value, JsonDeserializationRules? rules = null)
    {
       try
       {
@@ -174,13 +176,15 @@ internal class JsonProcessor : IJsonProcessor
       return true;
    }
 
-   public async Task<string> SerializeAsync<T>(T value,
-                                               JsonSerializationRules? rules = null,
-                                               CancellationToken cancellationToken = default)
+   public static async Task<string> SerializeAsync<T>(T value,
+                                                      JsonSerializationRules? rules = null,
+                                                      CancellationToken cancellationToken = default)
    {
       // System.Text.Json.SerializeAsync is for writing to a stream which we get for serializing to a string asynchronously.
       using var stream = new MemoryStream();
-      var options = CreateSerializerOptions(rules);
+      var options = rules == null
+                       ? DefaultSerializerOptions
+                       : CreateSerializerOptions(rules);
       try
       {
          await JsonSerializer.SerializeAsync(stream, value, options, cancellationToken);
@@ -199,16 +203,18 @@ internal class JsonProcessor : IJsonProcessor
       }
    }
 
-   public async Task<T?> DeserializeAsync<T>(string json,
-                                             JsonDeserializationRules? rules = null,
-                                             CancellationToken cancellationToken = default)
+   public static async Task<T?> DeserializeAsync<T>(string json,
+                                                    JsonDeserializationRules? rules = null,
+                                                    CancellationToken cancellationToken = default)
    {
       if (string.IsNullOrEmpty(json))
          return default;
 
       // System.Text.Json.SerializeAsync is for writing to a stream which we get for serializing to a string asynchronously.
       using var stream = new MemoryStream(Encoding.UTF8.GetBytes(json));
-      var options = CreateDeserializerOptions(rules);
+      var options = rules == null
+                       ? DefaultSerializerOptions
+                       : CreateDeserializerOptions(rules);
       try
       {
          return await JsonSerializer.DeserializeAsync<T>(stream, options, cancellationToken);
@@ -227,14 +233,16 @@ internal class JsonProcessor : IJsonProcessor
       }
    }
 
-   public async Task<T?> DeserializeAsync<T>(Stream utf8JsonStream,
-                                             JsonDeserializationRules? rules = null,
-                                             CancellationToken cancellationToken = default)
+   public static async Task<T?> DeserializeAsync<T>(Stream utf8JsonStream,
+                                                    JsonDeserializationRules? rules = null,
+                                                    CancellationToken cancellationToken = default)
    {
       if (utf8JsonStream is not { CanRead: true })
          throw new ArgumentException("Stream cannot be null and must be readable.", nameof(utf8JsonStream));
 
-      var options = CreateDeserializerOptions(rules);
+      var options = rules == null
+                       ? DefaultSerializerOptions
+                       : CreateDeserializerOptions(rules);
       try
       {
          return await JsonSerializer.DeserializeAsync<T>(utf8JsonStream, options, cancellationToken);
@@ -253,15 +261,17 @@ internal class JsonProcessor : IJsonProcessor
       }
    }
 
-   public async Task SerializeAsync<T>(Stream utf8JsonStream,
-                                       T value,
-                                       JsonSerializationRules? rules = null,
-                                       CancellationToken cancellationToken = default)
+   public static async Task SerializeAsync<T>(Stream utf8JsonStream,
+                                              T value,
+                                              JsonSerializationRules? rules = null,
+                                              CancellationToken cancellationToken = default)
    {
       if (utf8JsonStream is not { CanWrite: true })
          throw new ArgumentException("Stream cannot be null and must be writable.", nameof(utf8JsonStream));
 
-      var options = CreateSerializerOptions(rules);
+      var options = rules == null
+                       ? DefaultSerializerOptions
+                       : CreateSerializerOptions(rules);
       try
       {
          await JsonSerializer.SerializeAsync(utf8JsonStream, value, options, cancellationToken);
@@ -276,10 +286,5 @@ internal class JsonProcessor : IJsonProcessor
          throw new
             JsonSerializationException($"Asynchronous serialization not supported for type {typeof(T).FullName}.", ex);
       }
-   }
-
-   public void Unload()
-   {
-      
    }
 }

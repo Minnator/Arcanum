@@ -64,7 +64,7 @@ public class LifecycleManager
       // Initialize core services here
       // This might include logging, configuration management, etc.
       host.RegisterService<IFileOperations>(new APIWrapperIO());
-      host.RegisterService<IJsonProcessor>(new JsonProcessor());
+      host.RegisterService<IJsonProcessor>(new APIWrapperJsonProcessor());
       host.RegisterService<IConsoleService>(new ConsoleServiceImpl(host, "ArcanumConsole"));
    }
 }

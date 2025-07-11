@@ -2,15 +2,35 @@
 
 namespace Arcanum.Core.CoreSystems.ProjectFileUtil;
 
-public static class ProjectFileUtil
+internal static class ProjectFileUtil
 {
    private const string ARCANUM_PROJECT_FILE_EXTENSION = ".arcanum";
 
+   public static ZipArchive CreateZipArchive(string zipFilePath)
+   {
+      return ZipFile.Open(zipFilePath, ZipArchiveMode.Create);
+   }
+   
+   public static void AddFileToZip(ZipArchive zip, string filePath)
+   {
+      if (!File.Exists(filePath))
+         throw new FileNotFoundException($"The file '{filePath}' does not exist. Can not add to zip archive.");
+
+      zip.CreateEntryFromFile(filePath, Path.GetFileName(filePath));
+   }
+   
+   public static void AddFileFromStringToArchive(ZipArchive zip, string fileName, string content)
+   {
+      ArgumentException.ThrowIfNullOrEmpty(fileName, nameof(fileName));
+
+      var entry = zip.CreateEntry(fileName);
+      using var writer = new StreamWriter(entry.Open());
+      writer.Write(content);
+   }
+   
    public static string CreateFromFiles(List<string> files, string outputFileName, string outputDirectory)
    {
-      if (!Directory.Exists(outputDirectory))
-         // TODO: Use Ui.EnsureDirectoryExists(outputDirectory); but therefore fix template and interface for IO first
-         Directory.CreateDirectory(outputDirectory);
+      IO.IO.EnsureDirectoryExists(outputDirectory);
 
       var outputFile = Path.Combine(outputDirectory + ARCANUM_PROJECT_FILE_EXTENSION, outputFileName);
       using var zip = ZipFile.Open(outputFile, ZipArchiveMode.Create);
@@ -22,9 +42,7 @@ public static class ProjectFileUtil
 
    public static string CreateAndRemoveEntries(List<string> files, string outputFileName, string outputDirectory)
    {
-      if (!Directory.Exists(outputDirectory))
-         // TODO: Use Ui.EnsureDirectoryExists(outputDirectory); but therefore fix template and interface for IO first
-         Directory.CreateDirectory(outputDirectory);
+      IO.IO.EnsureDirectoryExists(outputDirectory);
 
       var outputFile = Path.Combine(outputDirectory + ARCANUM_PROJECT_FILE_EXTENSION, outputFileName);
       using var zip = ZipFile.Open(outputFile, ZipArchiveMode.Create);
@@ -55,10 +73,6 @@ public static class ProjectFileUtil
 
    public static List<string> ExtractProjectFile(string projectFile, string outputDirectory)
    {
-      if (!Directory.Exists(outputDirectory))
-         // TODO: Use Ui.EnsureDirectoryExists(outputDirectory); but therefore fix template and interface for IO first
-         Directory.CreateDirectory(outputDirectory);
-
       if (!IsValidProjectFile(projectFile))
          throw new
             InvalidDataException($"Project file '{projectFile}' is not a valid Arcanum project file. Expected extension: {ARCANUM_PROJECT_FILE_EXTENSION}");
@@ -78,5 +92,17 @@ public static class ProjectFileUtil
    private static bool IsValidProjectFile(string projectFile)
    {
       return File.Exists(projectFile) && Path.GetExtension(projectFile) == ARCANUM_PROJECT_FILE_EXTENSION;
+   }
+
+   /// <summary>
+   /// Gathers all files for a project file descriptor. Any settings or metadata required for the project file
+   /// List of files which will be gathered:
+   /// - ProjectFileDescriptor
+   /// 
+   /// </summary>
+   /// <param name="descriptor"></param>
+   internal static void GatherFilesForProjectFile(ProjectFileDescriptor descriptor)
+   {
+      
    }
 }

@@ -2,5 +2,5 @@
 
 public class PathObj
 {
-   
+   public static PathObj Empty { get; } = new ();
 }

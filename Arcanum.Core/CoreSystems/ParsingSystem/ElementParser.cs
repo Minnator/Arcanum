@@ -26,20 +26,17 @@ public static class ElementParser
       var contentStart = 0;
       var elementIndex = 0;
 
-      // Use the clear state enum instead of the cryptic 'wasEquals' byte.
       var state = ParsingState.Default;
 
-      // This logic is crucial for the "heinous formatting" test and is preserved.
       var prevWordStart = -1;
       var prevWordEnd = -1;
 
-      ReadOnlySpan<char> remainingInput = input.AsSpan();
-      int lineIndex = 0;
+      var remainingInput = input.AsSpan();
+      var lineIndex = 0;
 
       while (!remainingInput.IsEmpty)
       {
-         // This line-slicing logic is correct and performant.
-         int lineBreakIndex = remainingInput.IndexOf('\n');
+         var lineBreakIndex = remainingInput.IndexOf('\n');
          ReadOnlySpan<char> line;
          if (lineBreakIndex == -1)
          {
@@ -135,7 +132,6 @@ public static class ElementParser
                   wordStart = -1;
                   wordEnd = -1;
 
-                  // OPTIMIZATION: Use the GetTrimmedRange helper to avoid ToString().Trim()
                   var (trimmedStart, trimmedLength) = GetTrimmedRange(currentContent);
                   if (trimmedLength > 0)
                   {
@@ -165,7 +161,7 @@ public static class ElementParser
                   currentContent.Clear();
                   blockStack.Push(newBlock);
                   contentStart = lineIndex;
-                  state = ParsingState.Default; // Reset state after a block starts.
+                  state = ParsingState.Default; 
                   break;
 
                case '}':
@@ -181,7 +177,6 @@ public static class ElementParser
                      return ([], []);
                   }
 
-                  // OPTIMIZATION: Use the GetTrimmedRange helper here as well.
                   var (closeTrimmedStart, closeTrimmedLength) = GetTrimmedRange(currentContent);
                   if (closeTrimmedLength > 0)
                   {
@@ -198,7 +193,7 @@ public static class ElementParser
 
                   blockStack.Pop();
                   contentStart = lineIndex;
-                  state = ParsingState.Default; // Reset state after a block closes.
+                  state = ParsingState.Default; 
                   break;
 
                case '#':
@@ -220,7 +215,7 @@ public static class ElementParser
                          currentContent[^1] != '\n')
                         currentContent.Remove(currentContent.Length - 1, 1);
                      currentContent.Append('\n');
-                     state = ParsingState.Default; // Reset state.
+                     state = ParsingState.Default; 
                   }
 
                   break;
@@ -282,11 +277,9 @@ public static class ElementParser
             charIndex++;
          }
 
-         // This logic at the end of the line is critical and preserved.
          if (currentContent.Length >= 1 && char.IsWhiteSpace(currentContent[^1]) && currentContent[^1] != '\n')
             currentContent.Remove(currentContent.Length - 1, 1);
 
-         // This correctly saves the word position for the "heinous formatting" case on the next line.
          if (wordStart >= 0 && wordEnd >= 0)
          {
             prevWordStart = wordStart;
@@ -294,18 +287,16 @@ public static class ElementParser
          }
 
          currentContent.Append('\n');
-         state = ParsingState.Default; // Reset state at the end of every line.
+         state = ParsingState.Default; 
          lineIndex++;
       }
 
-      // Final checks and content creation are preserved.
       if (!blockStack.IsEmpty)
       {
          Console.WriteLine($"Error in file {path}: Unmatched opening brace at line {blockStack.Peek().StartLine + 1}");
          return ([], []);
       }
 
-      // OPTIMIZATION: Final use of the helper.
       var (finalTrimmedStart, finalTrimmedLength) = GetTrimmedRange(currentContent);
       if (finalTrimmedLength > 0)
       {
@@ -317,16 +308,15 @@ public static class ElementParser
       return (blocks, contents);
    }
 
-   // --- New Helper Method ---
    private static (int start, int length) GetTrimmedRange(StringBuilder sb)
    {
-      int start = 0;
+      var start = 0;
       while (start < sb.Length && char.IsWhiteSpace(sb[start]))
       {
          start++;
       }
 
-      int end = sb.Length - 1;
+      var end = sb.Length - 1;
       while (end > start && char.IsWhiteSpace(sb[end]))
       {
          end--;

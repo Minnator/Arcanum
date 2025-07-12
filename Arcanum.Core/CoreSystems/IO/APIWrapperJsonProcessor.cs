@@ -9,6 +9,9 @@ public class APIWrapperJsonProcessor : IJsonProcessor
    {
    }
 
+   // We have no internal state to verify in this service, so we return Ok state.
+   public IService.ServiceState VerifyState() => IService.ServiceState.Ok;
+
    public string Serialize<T>(T value, JsonSerializationRules? rules = null) => JsonProcessor.Serialize(value, rules);
 
    public T? Deserialize<T>(string json, JsonDeserializationRules? rules = null)

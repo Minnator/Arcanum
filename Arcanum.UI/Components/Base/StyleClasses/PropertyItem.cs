@@ -2,12 +2,13 @@
 using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace Arcanum.UI.Components.Base.StyleClasses;
 
-public class PropertyItem : INotifyPropertyChanged
+public sealed class PropertyItem : INotifyPropertyChanged
 {
-   public string Name { get; init; }
+   public PropertyInfo PropertyInfo { get; init; }
    public string Category { get; init; }
    public Type Type { get; init; }
 
@@ -15,15 +16,20 @@ public class PropertyItem : INotifyPropertyChanged
 
    private readonly Func<object> _getter;
    private readonly Action<object>? _setter;
+   private object? _value;
 
-   public PropertyItem(string name, Type type, Func<object> getter, Action<object>? setter = null, string category = "")
+   internal event Action<PropertyItem, object?>? ValueChanged;
+
+   public PropertyItem(PropertyInfo propertyInfo, Type type, Func<object> getter, Action<object>? setter = null, string category = "")
    {
-      Name = name;
+      PropertyInfo = propertyInfo;
       Type = type;
       _getter = getter;
       _setter = setter;
       Category = category;
       IsReadOnly = setter == null;
+      
+      _value = _getter();
    }
 
    public object Value
@@ -31,11 +37,20 @@ public class PropertyItem : INotifyPropertyChanged
       get => _getter();
       set
       {
-         if (IsReadOnly || Equals(_getter(), value))
+         if (Equals(_value, value))
             return;
 
-         _setter?.Invoke(value);
-         PropertyChanged?.Invoke(this, new(nameof(Value)));
+         var oldValue = _value;
+         _value = value;
+
+         // 1. Call the original property's setter via the delegate
+         _setter?.Invoke(_value!);
+
+         // 2. Notify the UI that the 'Value' property has changed
+         OnPropertyChanged();
+
+         // 3. Raise our internal event to notify the PropertyGrid
+         ValueChanged?.Invoke(this, oldValue);
       }
    }
 
@@ -52,19 +67,21 @@ public class PropertyItem : INotifyPropertyChanged
       }
    }
 
-   public event PropertyChangedEventHandler? PropertyChanged;
-   
+
    public static PropertyItem FromExpression<TModel, TProp>(TModel instance, Expression<Func<TModel, TProp>> expr)
    {
       var member = (MemberExpression)expr.Body;
       var propInfo = (PropertyInfo)member.Member;
 
-      return new(
-                 name: propInfo.Name,
+      return new(propertyInfo: propInfo,
                  type: typeof(TProp),
                  getter: () => propInfo.GetValue(instance)!,
-                 setter: v => propInfo.SetValue(instance, Convert.ChangeType(v, propInfo.PropertyType))
-                );
+                 setter: v => propInfo.SetValue(instance, Convert.ChangeType(v, propInfo.PropertyType)));
    }
 
+   public event PropertyChangedEventHandler? PropertyChanged;
+   private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+   {
+      PropertyChanged?.Invoke(this, new(propertyName));
+   }
 }

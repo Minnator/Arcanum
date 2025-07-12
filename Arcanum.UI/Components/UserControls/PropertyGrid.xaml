@@ -175,7 +175,7 @@
                 <TextBlock Grid.Row = "0"
                            Grid.Column = "0"
                            Style = "{StaticResource BaseTextBlock}"
-                           Text = "{Binding Name}"
+                           Text = "{Binding PropertyInfo.Name}"
                            VerticalAlignment = "Center"
                            Margin = "7, 0, 0, 0" />
 

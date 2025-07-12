@@ -17,6 +17,8 @@
                 <ResourceDictionary Source="Components/Base/Styles/BaseDarkScrollbar.xaml" />
                 <ResourceDictionary Source="Components/Base/Styles/BaseListBox.xaml" />
                 <ResourceDictionary Source="Components/Base/Styles/BaseTextBlock.xaml" />
+                <ResourceDictionary Source="Components/Base/Styles/DarkTabControl.xaml" />
+                <ResourceDictionary Source="Components/Base/Styles/StackPanelStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

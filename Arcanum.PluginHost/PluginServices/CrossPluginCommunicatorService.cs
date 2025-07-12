@@ -1,5 +1,6 @@
 ﻿using Arcanum.API;
 using Arcanum.API.CrossPluginServices;
+using Arcanum.API.UtilServices;
 
 namespace Arcanum.PluginHost.PluginServices;
 
@@ -9,7 +10,7 @@ public class CrossPluginCommunicatorService : ICrossPluginCommunicator
    // Inner Key: Type of the service interface (e.g., typeof(IMySpecialApi))
    // Value: The actual serviceInstance
    private readonly Dictionary<Guid, Dictionary<Type, object>> _publishedServices = new();
-   private readonly object _lock = new(); // For thread safety
+   private readonly object _lock = new();
 
    private readonly IPluginHost _host;
    private readonly IPluginInfoService _infoService;
@@ -121,8 +122,13 @@ public class CrossPluginCommunicatorService : ICrossPluginCommunicator
 
    public event EventHandler<ServicePublicationEventArgs>? ServicePublished;
    public event EventHandler<ServicePublicationEventArgs>? ServiceUnpublished;
+
    public void Unload()
    {
-      
    }
+
+   // THe CrossPluginCommunicatorService is only invalid if the host or the info service is null,
+   // but since we throw exceptions in the constructor if they are null,
+   // we can safely return Ok state here.
+   public IService.ServiceState VerifyState() => IService.ServiceState.Ok;
 }

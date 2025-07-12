@@ -35,6 +35,9 @@ public static class SaveMaster
       // Show all saveables with a selection of current file objects which are valid for the given saveableType
       // TODO how do we find the file objects that are valid for the given saveable type?
 
+      // We need a list of fileObjs that are valid for the given saveableType, so we need a Dictionary of some sorts.
+      // Might make sense to have a separate window for this, where valid files are shown and where the user can add another one.
+      
       // If the saveable path is fixed, make it grayed out and only displayed with an additional checkbox
    }
 
@@ -73,6 +76,42 @@ public static class SaveMaster
       // 5.2. Changes to the categories should only affect currently shown saveables
       // 5.3. Checkboxes will affect all the saveables in the same file per default
       // 6. For fast saving, skip the user input except if new saveables are added
+
+      // We need a list of fileObjs that are valid for the given saveableType, so we need a Dictionary of some sorts.
+      // Might make sense to have a separate window for this, where valid files are shown and where the user can add another one.
+
+      // When a new fileObj is registered, the dictionary can be constructed based on the saveable type.
+      // Would need a dictionary of a list of all the files
+      // Needs to update when new files are added
+
+      // Merging issue:
+      // We have a tri state: start file, end file, internal state
+      // If the start and the end file are identical, we do not really care.
+      // However, if we merge, we have to think about the dependencies of the files
+      // If we, for example, change the province definitions, then the provinces have to be reloaded
+      // But how do we handle a province which was changed? -> also merging ? and continue? But then the user might generate a not valid mod state, which we do not want.
+      // This would be okay if we gave instant feedback, which is difficult.
+      // At the moment just implement a system which notifies the user that the file he has overridden will be overriden by us and the user should backup the file before saving.
+
+
+      // Saving:
+      // Unless a git system is present, we should not directly override the data of the files. Instead, make a backup
+      /*
+       How to handle Dependencies
+
+      FileObj is the instance of a single File
+      FileInformationProvider more or less defines the behavior of it
+
+         Where to put the Information of the dependency?
+         We have to load a folder of files anyway -> But the files should share a FileInformationProvider
+
+      So the FileInformationProvider will have to have the dependency information
+
+      Why not directly make a class for all the saveabletypes
+         -> then the dependency can be made as static?
+         -> Then we need some sort of static method, which can be inherited and generate a FileObj?
+         -> Does that make sense if we have like 50 different file types, or does it not really change since we would need 50 different IFileInformationProvider implementations anyway?
+      */
    }
 
    public static void RegisterFile(FileObj fileObj)

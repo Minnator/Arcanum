@@ -1,9 +1,9 @@
-﻿using Arcanum.API;
+﻿using System.Diagnostics;
+using Arcanum.API;
 using Arcanum.API.Events;
 using Arcanum.API.Settings;
 using Arcanum.API.UtilServices;
 using Arcanum.PluginHost.PluginServices;
-using Arcanum.PluginHost.Settings;
 
 namespace Arcanum.PluginHost;
 
@@ -15,6 +15,8 @@ public static class HostInfo
 public class PluginHost : IPluginHost
 {
    private readonly Dictionary<Type, IService> _services = new();
+
+   // Required services for the host to be functional and valid.
    private readonly ISettingsUiService _uiSettingsService;
 
    public PluginHost()
@@ -34,12 +36,35 @@ public class PluginHost : IPluginHost
       foreach (var service in _services.Values)
          service.Unload();
       _services.Clear();
+      
+      // Unload all required services.
+      _uiSettingsService.Unload();
+   }
+
+   public IService.ServiceState VerifyState()
+   {
+      var allOk = true;
+
+      foreach (var service in _services.Values)
+         IsServiceOk(service, ref allOk);
+
+      IsServiceOk(_uiSettingsService, ref allOk);
+
+      return allOk ? IService.ServiceState.Ok : IService.ServiceState.Error;
+   }
+
+   private static void IsServiceOk(IService service, ref bool allOk)
+   {
+      Debug.Assert(service != null, "Service cannot be null.");
+
+      if (service.VerifyState() != IService.ServiceState.Ok)
+         allOk = false;
    }
 
    public string GuidToName(Guid guid)
    {
-      return GetService<IPluginInfoService>().GetPluginByGuid(guid)?.Name
-         ?? throw new InvalidOperationException($"No plugin found with GUID: {guid}");
+      return GetService<IPluginInfoService>().GetPluginByGuid(guid)?.Name ??
+             throw new InvalidOperationException($"No plugin found with GUID: {guid}");
    }
 
    public T GetService<T>() where T : class, IService
@@ -64,7 +89,7 @@ public class PluginHost : IPluginHost
    public void Log(string subRoutinePreFix, string message, LoggingVerbosity verbosity = LoggingVerbosity.Info)
       => Console.WriteLine($"[{GetVerbosityPrefix(verbosity)}] [PluginHost.{subRoutinePreFix[..8]}] {message}");
 
-   private string GetVerbosityPrefix(LoggingVerbosity verbosity)
+   private static string GetVerbosityPrefix(LoggingVerbosity verbosity)
    {
       return verbosity switch
       {

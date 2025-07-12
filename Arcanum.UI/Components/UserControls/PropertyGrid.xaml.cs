@@ -11,31 +11,60 @@ using Arcanum.UI.Components.Windows.PopUp;
 
 namespace Arcanum.UI.Components.UserControls;
 
+public class PropertyValueChangedEventArgs(PropertyItem? changedItem, object? oldValue) : EventArgs
+{
+   public PropertyItem? ChangedItem { get; } = changedItem;
+
+   public object? OldValue { get; } = oldValue;
+}
+
 public partial class PropertyGrid
 {
+   public event EventHandler<PropertyValueChangedEventArgs>? PropertyValueChanged = delegate { };
+   public event EventHandler<SelectionChangedEventArgs>? PropertySelected = delegate { };
+
    public PropertyGrid()
    {
       InitializeComponent();
       Properties = [];
       BorderThickness = new(2);
       Margin = new(2);
+      PropertyList.SelectionChanged += OnPropertySelected;
       PropertyList.SelectionChanged += OnPropertyListOnSelectionChanged;
    }
 
+   public PropertyItem? SelectedPropertyItem
+   {
+      get => (PropertyItem)PropertyList.SelectedItem;
+      set
+      {
+         if (value == null!)
+            return;
+
+         PropertyList.SelectedItem = value;
+         Description = value.CollectionDescription;
+      }
+   }
+   
+   public void UpdatePropertyItem()
+   {
+      PropertyList.Items.Refresh();
+   }
+   
    private void OnPropertyListOnSelectionChanged(object sender, SelectionChangedEventArgs _)
    {
       if (sender is not ListBox { SelectedItem: PropertyItem item })
       {
-         Description = "";
+         Description = string.Empty;
          return;
       }
 
       if (SelectedObject == null)
          return;
 
-      var prop = SelectedObject.GetType().GetProperty(item.Name);
+      var prop = SelectedObject.GetType().GetProperty(item.PropertyInfo.Name);
       var attr = prop?.GetCustomAttribute<DescriptionAttribute>();
-      Description = attr?.Description ?? "No description.";
+      Description = attr?.Description ?? $"No description for {item.PropertyInfo.Name}";
    }
 
    public double LabelWidth { get; set; } = 150;
@@ -67,10 +96,7 @@ public partial class PropertyGrid
    public object? SelectedObject
    {
       get => GetValue(SelectedObjectProperty);
-      set
-      {
-         SetValue(SelectedObjectProperty, value);
-      }
+      set => SetValue(SelectedObjectProperty, value);
    }
 
    // Returns the ToString representation of the selected object
@@ -87,6 +113,8 @@ public partial class PropertyGrid
       if (d is not PropertyGrid grid)
          return;
 
+      foreach (var oldItem in grid.Properties)
+         oldItem.ValueChanged -= grid.OnPropertyValueChanged;
       grid.Properties.Clear();
 
       if (e.NewValue == null)
@@ -97,7 +125,6 @@ public partial class PropertyGrid
       {
          if (!prop.CanRead)
             continue;
-         
 
          var categoryAttr = prop.GetCustomAttribute<CategoryAttribute>();
          grid.SetValue(TitleProperty, e.NewValue.GetType().Name);
@@ -115,7 +142,9 @@ public partial class PropertyGrid
                                      }
                                      : null;
 
-         grid.Properties.Add(new(prop.Name, prop.PropertyType, Getter, setter, categoryAttr?.Category!));
+         PropertyItem newItem = new(prop, prop.PropertyType, Getter, setter, categoryAttr?.Category!);
+         newItem.ValueChanged += grid.OnPropertyValueChanged;
+         grid.Properties.Add(newItem);
          continue;
 
          object Getter() => prop.GetValue(target)!;
@@ -145,5 +174,15 @@ public partial class PropertyGrid
 
       var objectView = new PropertyGridWindow(item.Value);
       objectView.ShowDialog();
+   }
+
+   public virtual void OnPropertyValueChanged(PropertyItem propertyItem, object? oldValue)
+   {
+      PropertyValueChanged?.Invoke(this, new(propertyItem, oldValue));
+   }
+
+   protected virtual void OnPropertySelected(object sender, SelectionChangedEventArgs e)
+   {
+      PropertySelected?.Invoke(this, e);
    }
 }

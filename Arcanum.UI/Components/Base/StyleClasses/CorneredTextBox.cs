@@ -8,17 +8,17 @@ using System.Windows.Controls;
 /// </summary>
 public class CorneredTextBox : TextBox
 {
-    public CornerRadius CornerRadius
+    public CornerRadius CornerRadiusValue
     {
         get => (CornerRadius)GetValue(CornerRadiusProperty);
         set => SetValue(CornerRadiusProperty, value);
     }
     
     public static readonly DependencyProperty CornerRadiusProperty =
-        DependencyProperty.Register(nameof(CornerRadius), typeof(CornerRadius), typeof(CorneredTextBox), new (new CornerRadius(3)));
+        DependencyProperty.Register(nameof(CornerRadiusValue), typeof(CornerRadius), typeof(CorneredTextBox), new (new CornerRadius(3)));
     
     public static readonly DependencyProperty HighlightOnFocusProperty =
-        DependencyProperty.Register(nameof(HighlightOnFocus), typeof(bool), typeof(CorneredTextBox), new PropertyMetadata(true));
+        DependencyProperty.Register(nameof(HighlightOnFocus), typeof(bool), typeof(CorneredTextBox), new (true));
 
     public bool HighlightOnFocus
     {

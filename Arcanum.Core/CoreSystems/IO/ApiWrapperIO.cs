@@ -1,6 +1,7 @@
 ﻿using System.Drawing.Imaging;
 using System.Text;
 using Arcanum.API.Core.IO;
+using Arcanum.API.UtilServices;
 
 namespace Arcanum.Core.CoreSystems.IO;
 
@@ -10,6 +11,8 @@ public class APIWrapperIO : IFileOperations
    {
    }
 
+   // We have no internal state to verify in this service, so we return Ok state.
+   public IService.ServiceState VerifyState() => IService.ServiceState.Ok;
    public string GetArcanumDataPath { get; } = IO.GetArcanumDataPath;
 
    public string? SelectFolder(string startPath, string defaultFileName = "Select Folder")

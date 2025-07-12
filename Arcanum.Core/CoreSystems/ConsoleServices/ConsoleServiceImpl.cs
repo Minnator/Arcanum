@@ -9,7 +9,7 @@ namespace Arcanum.Core.CoreSystems.ConsoleServices;
 public class ConsoleServiceImpl : IConsoleService
 {
    private readonly Dictionary<string, string> _macros = [];
-   public readonly List<string> History = [];
+   private readonly List<string> _history = [];
 
    private readonly Dictionary<string, ICommandDefinition> _commands = new();
    private int _historyIndex;
@@ -28,7 +28,7 @@ public class ConsoleServiceImpl : IConsoleService
    public int HistoryIndex
    {
       get => _historyIndex;
-      private set => _historyIndex = Math.Clamp(value, 0, History.Count);
+      private set => _historyIndex = Math.Clamp(value, 0, _history.Count);
    }
    
    bool IConsoleService.HasOutputReceiver() => _outputReceiver != null;
@@ -42,7 +42,7 @@ public class ConsoleServiceImpl : IConsoleService
                              IOutputReceiver? outputReceiver = null,
                              DefaultCommands.CommandCategory category = DefaultCommands.CommandCategory.StandardUser)
    {
-      _host = host;
+      _host = host ?? throw new ArgumentNullException(nameof(host), "Plugin host cannot be null.");
       DefaultCommands.RegisterDefaultCommands(this, category);
 
       Identifier = identifier ?? throw new ArgumentNullException(nameof(identifier));
@@ -59,6 +59,10 @@ public class ConsoleServiceImpl : IConsoleService
       LoadHistory();
    }
 
+   // The critical lists are readonly and initialized in the constructor.
+   // Host and identifier are required parameters and throw if null.
+   // SO we can safely assume the service is in a valid state after construction.
+   public IService.ServiceState VerifyState() => IService.ServiceState.Ok;
    // --- Public API Methods ---
    public IReadOnlyList<ICommandDefinition> GetRegisteredCommandsWithoutAliases()
    {
@@ -178,11 +182,11 @@ public class ConsoleServiceImpl : IConsoleService
    public IReadOnlyDictionary<string, string> GetMacros() => _macros;
 
    // --- History Management ---
-   public List<string> GetHistory() => History; // Return a copy
+   public List<string> GetHistory() => _history; // Return a copy
 
    public void ClearHistory()
    {
-      History.Clear();
+      _history.Clear();
       _historyIndex = 0;
    }
 
@@ -191,7 +195,7 @@ public class ConsoleServiceImpl : IConsoleService
       if (string.IsNullOrWhiteSpace(cmd))
          return;
 
-      var historyList = History;
+      var historyList = _history;
       // Only add if different from the last command
       if (historyList.Count == 0 || !historyList[^1].Equals(cmd, StringComparison.OrdinalIgnoreCase))
       {
@@ -208,27 +212,27 @@ public class ConsoleServiceImpl : IConsoleService
 
    public string? GetPreviousHistoryEntry()
    {
-      if (History.Count == 0)
+      if (_history.Count == 0)
          return null;
 
       HistoryIndex = Math.Max(0, HistoryIndex - 1);
-      return History[HistoryIndex];
+      return _history[HistoryIndex];
    }
 
    public string? GetNextHistoryEntry()
    {
-      if (History.Count == 0)
+      if (_history.Count == 0)
          return null;
 
       // If at the end (after the last item), effectively means new command line
-      if (HistoryIndex >= History.Count - 1)
+      if (HistoryIndex >= _history.Count - 1)
       {
-         HistoryIndex = History.Count; // Position for new command
+         HistoryIndex = _history.Count; // Position for new command
          return ""; // Or null, depending on desired behavior for "next" beyond the last item
       }
 
-      HistoryIndex = Math.Min(History.Count - 1, HistoryIndex + 1);
-      return History[HistoryIndex];
+      HistoryIndex = Math.Min(_history.Count - 1, HistoryIndex + 1);
+      return _history[HistoryIndex];
    }
 
    IReadOnlyList<string> IConsoleService.GetCommandNames() => GetCommandNames();
@@ -299,7 +303,7 @@ public class ConsoleServiceImpl : IConsoleService
       if (jsonService == null || ioService == null)
          throw new InvalidOperationException("Required services for saving history are not available.");
 
-      ioService.WriteAllTextUtf8(filePath, jsonService.Serialize(History));
+      ioService.WriteAllTextUtf8(filePath, jsonService.Serialize(_history));
    }
 
    public void LoadHistory()
@@ -322,9 +326,9 @@ public class ConsoleServiceImpl : IConsoleService
 
          if (jsonService.TryDeserialize(jsonData, out List<string>? loadedHistory))
          {
-            History.Clear();
+            _history.Clear();
             if (loadedHistory != null)
-               History.AddRange(loadedHistory);
+               _history.AddRange(loadedHistory);
          }
          else
          {
@@ -332,7 +336,7 @@ public class ConsoleServiceImpl : IConsoleService
          }
       }
 
-      _historyIndex = History.Count; // Set the initial history index
+      _historyIndex = _history.Count; // Set the initial history index
    }
 
    // --- Internal Logic ---

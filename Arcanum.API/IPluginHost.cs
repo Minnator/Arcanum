@@ -54,6 +54,12 @@ public interface IPluginHost
    /// Unloads the currently loaded plugins and releases any associated services abd resources managed by the plugin host.
    /// </summary>
    void Unload();
+
+   /// <summary>
+   /// Verifies and retrieves the current state of the service.
+   /// </summary>
+   /// <returns>The current state of the service, represented as a <see cref="IService.ServiceState"/> enumeration value.</returns>
+   IService.ServiceState VerifyState();
 }
 
 public interface ISubroutineLogger

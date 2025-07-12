@@ -32,6 +32,13 @@ public class PluginManager : ISubroutineLogger
       _host.RegisterService(_cpcService);
       _events = host.GetService<IEventBus>();
    }
+   
+   #if DEBUG
+   public void InjectPluginForTesting(IPlugin plugin)
+   {
+      _plugins[plugin.Guid] = plugin;
+   }
+   #endif
 
    // How Plugins are loaded:
    // 1. Load all plugins from the specified folder.

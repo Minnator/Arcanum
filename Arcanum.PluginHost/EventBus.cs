@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using Arcanum.API.Events;
+using Arcanum.API.UtilServices;
 
 namespace Arcanum.PluginHost;
 
@@ -125,5 +126,13 @@ public class EventBus : IEventBus
 
    public void Unload()
    {
+   }
+
+   // The only invalid state for the event bus is when the _host or the _infoService is null.
+   // However, since we throw exceptions in the constructor if they are null, and they are
+   // readonly, we can safely return Ok state here.
+   public IService.ServiceState VerifyState()
+   {
+      return IService.ServiceState.Ok;
    }
 }

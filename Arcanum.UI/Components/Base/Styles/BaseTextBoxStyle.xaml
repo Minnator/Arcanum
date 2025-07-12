@@ -40,7 +40,7 @@
                             Background = "{TemplateBinding Background}"
                             BorderBrush = "{TemplateBinding BorderBrush}"
                             BorderThickness = "{TemplateBinding BorderThickness}"
-                            CornerRadius = "{Binding Path=CornerRadius, RelativeSource={RelativeSource TemplatedParent}}"
+                            CornerRadius = "{Binding Path=CornerRadiusValue, RelativeSource={RelativeSource TemplatedParent}}"
                             Padding = "{TemplateBinding Padding}">
                         <ScrollViewer x:Name = "PART_ContentHost"
                                       HorizontalScrollBarVisibility = "Hidden"

@@ -46,6 +46,16 @@ public class LifecycleManager
       //host.ShowMainMenu();
    }
    
+   #if DEBUG
+   public void InsertPluginForTesting(IPlugin plugin)
+   {
+      if (_pluginManager == null)
+         throw new InvalidOperationException("PluginManager is not initialized. Call RunStartUpSequence first.");
+
+      _pluginManager.InjectPluginForTesting(plugin);
+   }
+   #endif
+   
    public void RunShutdownSequence(IPluginHost host)
    {
       // Step 1: Unload plugins

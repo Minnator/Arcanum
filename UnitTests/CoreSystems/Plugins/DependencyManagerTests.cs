@@ -3,7 +3,7 @@ using Arcanum.API;
 using Arcanum.Core.PluginServices;
 using Moq;
 
-namespace UnitTests;
+namespace UnitTests.CoreSystems.Plugins;
 
 public class DependencyManagerTests
 {

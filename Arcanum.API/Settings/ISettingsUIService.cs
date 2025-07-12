@@ -1,11 +1,12 @@
 ﻿using Arcanum.API.Events;
+using Arcanum.API.UtilServices;
 
 namespace Arcanum.API.Settings;
 
 /// <summary>
 /// Provides an interface to manage the user interface of settings for plugins and the application.
 /// </summary>
-public interface ISettingsUiService
+public interface ISettingsUiService : IService
 {
     /// <summary>
     /// Occurs when a setting is changed within a plugin or the core system.

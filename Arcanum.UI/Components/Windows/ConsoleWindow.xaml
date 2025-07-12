@@ -25,9 +25,9 @@
                  BorderThickness = "0"
                  Style = "{StaticResource BaseTextBoxStyle}"
                  Margin = "0, 0, 0, 4"
-                 CornerRadius = "5"
                  HighlightOnFocus="False"
                  FontFamily="{StaticResource DefaultMonospacedFont}">
+                 <!-- CornerRadius = "5" -->
 
         </styleClasses:CorneredTextBox>
 
@@ -40,13 +40,13 @@
                                       IsReadOnly = "False"
                                       BorderThickness = "0"
                                       Style = "{StaticResource BaseTextBoxStyle}"
-                                      CornerRadius = "5"
                                       Margin = "0, 0, 0, 4"
                                       HighlightOnFocus="False"
                                       VerticalContentAlignment="Center"
                                       KeyDown="ConsoleInputTextBox_KeyDown"
                                       TextChanged="ConsoleInputTextBox_TextChanged"
                                       FontFamily="{StaticResource DefaultMonospacedFont}">
+                                      <!-- CornerRadius = "5" -->
 
         </styleClasses:CorneredTextBox>
 

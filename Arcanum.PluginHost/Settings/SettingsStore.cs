@@ -371,6 +371,7 @@ internal class SettingsStore : ISettingsStore
 
    public bool Save()
    {
+      // TODO: Implement a proper way to serialize settings which are interfaces without creating a security risk.
       return false; // For now until we have a proper way to serialize settings which are interfaces
       var ioService = _host.GetService<IFileOperations>();
       var jsonProcessor = _host.GetService<IJsonProcessor>();
@@ -434,4 +435,9 @@ internal class SettingsStore : ISettingsStore
    {
       Save();
    }
+
+   // State is only an error if either the settings store, the host, or the UI service is not available.
+   // All of them are either throwing exceptions or readonly and default initialized in the constructor,
+   // so we can safely return Ok state here.
+   public IService.ServiceState VerifyState() => IService.ServiceState.Ok;
 }

@@ -83,7 +83,7 @@ public class BaseWindow : Window
       DependencyProperty.Register(nameof(FooterHeight),
                                   typeof(GridLength),
                                   typeof(BaseWindow),
-                                  new(new GridLength(34.0)));
+                                  new(new GridLength(0.0)));
    
    public static readonly DependencyProperty HeaderHeightProperty =
       DependencyProperty.Register(nameof(HeaderHeight),

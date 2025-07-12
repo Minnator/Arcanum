@@ -7,6 +7,7 @@
         xmlns:view = "clr-namespace:Arcanum.UI.Components.ViewModels.Views"
         xmlns:b = "http://schemas.microsoft.com/xaml/behaviors"
         xmlns:behaviors = "clr-namespace:Arcanum.UI.Components.Behaviors"
+        xmlns:styleClasses = "clr-namespace:Arcanum.UI.Components.Base.StyleClasses"
         mc:Ignorable = "d"
         Height = "550"
         Width = "900"
@@ -83,7 +84,7 @@
                              Style = "{StaticResource MenuButtonTheme}" />
             </StackPanel>
 
-            <TextBox Grid.Row = "0"
+            <styleClasses:CorneredTextBox Grid.Row = "0"
                      Grid.Column = "1"
                      Width = "200"
                      Height = "20"
@@ -91,7 +92,7 @@
                      HorizontalAlignment = "Left"
                      Margin = "5"
                      Style = "{StaticResource BaseTextBoxStyle}">
-            </TextBox>
+            </styleClasses:CorneredTextBox>
 
             <ContentControl Grid.Row = "1"
                             Grid.Column = "1"

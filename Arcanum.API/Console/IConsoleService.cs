@@ -166,4 +166,16 @@ public interface IConsoleService : IService
    /// Clears the console service state, including macros, history, and other transient data.
    /// </summary>
    void Clear();
+
+   /// <summary>
+   /// Sets the output receiver to handle and process console output.
+   /// </summary>
+   /// <param name="outputReceiver">The output receiver implementation responsible for processing and managing console output operations.</param>
+   void SetOutputReciever(IOutputReceiver outputReceiver);
+
+   /// <summary>
+   /// Determines whether an output receiver has been set in the console service.
+   /// </summary>
+   /// <returns>True if an output receiver is set; otherwise, false.</returns>
+   public bool HasOutputReceiver();
 }

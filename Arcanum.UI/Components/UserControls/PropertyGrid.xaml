@@ -12,14 +12,14 @@
 
         <DataTemplate x:Key = "StringTemplate"
                       DataType = "{x:Type base:PropertyItem}">
-            <TextBox Text = "{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     Style = "{StaticResource BaseTextBoxStyle}"
-                     Margin = "0, 0, 6, 0"
-                     VerticalAlignment = "Center"
-                     HorizontalAlignment = "Stretch"
-                     BorderThickness = "0"
-                     Background = "Transparent"
-                     TextWrapping = "NoWrap" />
+            <base:CorneredTextBox Text = "{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          Style = "{StaticResource BaseTextBoxStyle}"
+                                          Margin = "0, 0, 6, 0"
+                                          VerticalAlignment = "Center"
+                                          HorizontalAlignment = "Stretch"
+                                          BorderThickness = "0"
+                                          Background = "Transparent"
+                                          TextWrapping = "NoWrap" />
         </DataTemplate>
 
         <DataTemplate x:Key = "BoolTemplate"

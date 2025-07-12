@@ -41,7 +41,7 @@
                    Text = "Arcanum"
                    HorizontalAlignment = "Center"
                    VerticalAlignment = "Bottom"
-                   FontSize = "72"
+                   FontSize = "90"
                    FontWeight = "Bold"
                    Margin = "2">
         </TextBlock>
@@ -64,11 +64,11 @@
                 HorizontalAlignment = "Stretch"
                 VerticalAlignment = "Stretch">
 
-            <Image Source = "../../Assets/Icons/Arcanum.png"
+            <Image Source = "../../Assets/Icons/ArcanumForeColor.png"
                    HorizontalAlignment = "Center"
                    VerticalAlignment = "Center"
                    Stretch = "Uniform"
-                   Margin = "0,0,0,0" />
+                   Margin = "0,0,25,0" />
         </Border>
 
         <TextBlock x:Name = "LoadingPercentage"
@@ -85,7 +85,7 @@
         <Border Grid.Row = "3"
                 Grid.Column = "0"
                 BorderBrush = "{StaticResource DefaultBorderColorBrush}"
-                Margin = "12, 0"
+                Margin = "12, 0, 0, 0"
                 CornerRadius = "2"
                 BorderThickness = "2"
                 Padding = "0"

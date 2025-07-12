@@ -26,7 +26,7 @@ public class PluginHost : IPluginHost
    public void RegisterDefaultServices()
    {
       RegisterService<IEventBus>(EventBus.Instance);
-      RegisterService<ISettingsStore>(new SettingsStore(_uiSettingsService, this));
+      //RegisterService<ISettingsStore>(new SettingsStore(_uiSettingsService, this));
    }
 
    public void Unload()

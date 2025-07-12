@@ -13,7 +13,7 @@ public class ConsoleServiceImpl : IConsoleService
 
    private readonly Dictionary<string, ICommandDefinition> _commands = new();
    private int _historyIndex;
-   private readonly IOutputReceiver? _outputReceiver;
+   private IOutputReceiver? _outputReceiver;
 
    public string Identifier { get; }
    public bool TrimQuotesOnArguments { get; set; } = true;
@@ -30,6 +30,8 @@ public class ConsoleServiceImpl : IConsoleService
       get => _historyIndex;
       private set => _historyIndex = Math.Clamp(value, 0, History.Count);
    }
+   
+   bool IConsoleService.HasOutputReceiver() => _outputReceiver != null;
 
    public ClearanceLevel CurrentClearance { get; set; }
 
@@ -458,6 +460,14 @@ public class ConsoleServiceImpl : IConsoleService
    {
       _outputReceiver?.Clear();
    }
+
+   public void SetOutputReciever(IOutputReceiver outputReceiver)
+   {
+      _outputReceiver = outputReceiver ??
+                        throw new ArgumentNullException(nameof(outputReceiver), "Output receiver cannot be null.");
+   }
+
+   
 
    public void Unload()
    {

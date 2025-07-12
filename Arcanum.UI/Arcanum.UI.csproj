@@ -27,12 +27,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="ConsoleUi\ConsoleUi.cs">
-        <SubType>Form</SubType>
-      </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
       <None Remove="Resources\Icons\ArrowDown.png" />
       <None Remove="Resources\Icons\ArrowUp.png" />
       <None Remove="C#.png" />
@@ -70,6 +64,8 @@
       <Resource Include="Assets\Images\ProvinceFileCreator1024x1024.png" />
       <None Remove="Assets\Icons\LinkSquare40x40.png" />
       <Resource Include="Assets\Icons\LinkSquare40x40.png" />
+      <None Remove="Assets\Icons\ArcanumForeColor.png" />
+      <Resource Include="Assets\Icons\ArcanumForeColor.png" />
     </ItemGroup>
 
     <ItemGroup>

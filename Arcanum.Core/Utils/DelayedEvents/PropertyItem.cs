@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace Arcanum.UI.Components.Base.StyleClasses;
+namespace Arcanum.Core.Utils.DelayedEvents;
 
 public sealed class PropertyItem : INotifyPropertyChanged
 {
@@ -18,7 +18,7 @@ public sealed class PropertyItem : INotifyPropertyChanged
    private readonly Action<object>? _setter;
    private object? _value;
 
-   internal event Action<PropertyItem, object?>? ValueChanged;
+   public event Action<PropertyItem, object?>? ValueChanged;
 
    public PropertyItem(PropertyInfo propertyInfo, Type type, Func<object> getter, Action<object>? setter = null, string category = "")
    {

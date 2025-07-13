@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Arcanum.Core.Utils.DelayedEvents;
 using Arcanum.UI.Components.Base.StyleClasses;
 
 namespace Arcanum.UI.Components.Windows.PopUp;

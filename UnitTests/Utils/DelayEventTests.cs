@@ -1,4 +1,5 @@
 ﻿using Arcanum.Core.Utils;
+using Arcanum.Core.Utils.DelayedEvents;
 
 namespace UnitTests.Utils;
 

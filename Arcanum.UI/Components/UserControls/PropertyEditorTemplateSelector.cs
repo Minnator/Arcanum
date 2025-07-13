@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using Arcanum.UI.Components.Base.StyleClasses;
+using Arcanum.Core.Utils.DelayedEvents;
 
 namespace Arcanum.UI.Components.UserControls;
 

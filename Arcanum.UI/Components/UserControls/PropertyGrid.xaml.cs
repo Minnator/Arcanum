@@ -5,24 +5,17 @@ using System.Globalization;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
-using Arcanum.Core.Utils;
+using Arcanum.Core.Utils.DelayedEvents;
 using Arcanum.UI.Components.Base.StyleClasses;
 using Arcanum.UI.Components.Windows;
 using Arcanum.UI.Components.Windows.PopUp;
 
 namespace Arcanum.UI.Components.UserControls;
 
-public class PropertyValueChangedEventArgs(PropertyItem? changedItem, object? oldValue) : EventArgs
-{
-   public PropertyItem? ChangedItem { get; } = changedItem;
-
-   public object? OldValue { get; } = oldValue;
-}
-
 public partial class PropertyGrid
 {
    // We only trigger this event after a delay to avoid flooding the UI with events
-   public DelayedEvent<PropertyValueChangedEventArgs> PropertyValueChanged = new(500);
+   public readonly PropGridDelayEvent PropertyValueChanged = new(500);
    public event EventHandler<SelectionChangedEventArgs>? PropertySelected = delegate { };
 
    public PropertyGrid()
@@ -178,9 +171,9 @@ public partial class PropertyGrid
       objectView.ShowDialog();
    }
 
-   public virtual void OnPropertyValueChanged(PropertyItem propertyItem, object? oldValue)
+   public virtual void OnPropertyValueChanged(PropertyItem propertyItem, object? o)
    {
-      PropertyValueChanged.Invoke(this, new(propertyItem, oldValue));
+      PropertyValueChanged.Invoke(this, new(propertyItem, o));
    }
 
    protected virtual void OnPropertySelected(object sender, SelectionChangedEventArgs e)

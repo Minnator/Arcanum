@@ -3,7 +3,8 @@
              xmlns:x = "http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:uc = "clr-namespace:Arcanum.UI.Components.UserControls"
              xmlns:base = "clr-namespace:Arcanum.UI.Components.Base.StyleClasses"
-             xmlns:conv = "clr-namespace:Arcanum.UI.Components.Base.Converters">
+             xmlns:conv = "clr-namespace:Arcanum.UI.Components.Base.Converters"
+             xmlns:delayedEvents = "clr-namespace:Arcanum.Core.Utils.DelayedEvents;assembly=Arcanum.Core">
 
 
     <UserControl.Resources>
@@ -11,7 +12,7 @@
         <conv:DecimalDoubleConverter x:Key = "DecimalDoubleConverter" />
 
         <DataTemplate x:Key = "StringTemplate"
-                      DataType = "{x:Type base:PropertyItem}">
+                      DataType = "{x:Type delayedEvents:PropertyItem}">
             <base:CorneredTextBox Text = "{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                           Style = "{StaticResource BaseTextBoxStyle}"
                                           Margin = "0, 0, 6, 0"
@@ -23,13 +24,13 @@
         </DataTemplate>
 
         <DataTemplate x:Key = "BoolTemplate"
-                      DataType = "{x:Type base:PropertyItem}">
+                      DataType = "{x:Type delayedEvents:PropertyItem}">
             <CheckBox IsChecked = "{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                       Style = "{StaticResource BaseCheckBox}" />
         </DataTemplate>
 
         <DataTemplate x:Key = "EnumTemplate"
-                      DataType = "{x:Type base:PropertyItem}">
+                      DataType = "{x:Type delayedEvents:PropertyItem}">
             <ComboBox ItemsSource = "{Binding Type, Converter={StaticResource EnumValuesConverter}}"
                       SelectedItem = "{Binding Value, Mode=TwoWay}"
                       DisplayMemberPath = "."
@@ -39,14 +40,14 @@
         </DataTemplate>
 
         <DataTemplate x:Key = "DefaultTemplate"
-                      DataType = "{x:Type base:PropertyItem}">
+                      DataType = "{x:Type delayedEvents:PropertyItem}">
             <TextBlock Text = "{Binding Value}"
                        Width = "150"
                        Margin = "1" />
         </DataTemplate>
 
         <DataTemplate x:Key = "IntTemplate"
-                      DataType = "{x:Type base:PropertyItem}">
+                      DataType = "{x:Type delayedEvents:PropertyItem}">
             <uc:BaseNumericUpDown Value = "{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                   Margin = "0, 0, 6, 0"
                                   Background = "Transparent"
@@ -57,7 +58,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key = "DecimalTemplate"
-                      DataType = "{x:Type base:PropertyItem}">
+                      DataType = "{x:Type delayedEvents:PropertyItem}">
             <uc:DecimalBaseNumericUpDown
                 Value = "{Binding Value, Mode=TwoWay, Converter={StaticResource DecimalDoubleConverter}}"
                 Margin = "0, 0, 6, 0"
@@ -69,7 +70,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key = "FloatTemplate"
-                      DataType = "{x:Type base:PropertyItem}">
+                      DataType = "{x:Type delayedEvents:PropertyItem}">
             <uc:FloatNumericUpDown Value = "{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                    Margin = "0, 0, 6, 0"
                                    Background = "Transparent"
@@ -80,7 +81,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key = "ObjectTemplate"
-                      DataType = "{x:Type base:PropertyItem}">
+                      DataType = "{x:Type delayedEvents:PropertyItem}">
 
             <Grid Margin = "3, 0, 6, 0"
                   HorizontalAlignment = "Stretch"
@@ -113,7 +114,7 @@
         </DataTemplate>
 
         <DataTemplate x:Key = "CollectionTemplate"
-                      DataType = "{x:Type base:PropertyItem}">
+                      DataType = "{x:Type delayedEvents:PropertyItem}">
             <Grid Margin = "3, 0, 6, 0"
                   HorizontalAlignment = "Stretch"
                   VerticalAlignment = "Stretch">
@@ -158,7 +159,7 @@
 
 
         <DataTemplate x:Key = "PropertyRowTemplate"
-                      DataType = "{x:Type base:PropertyItem}">
+                      DataType = "{x:Type delayedEvents:PropertyItem}">
             <Grid HorizontalAlignment = "Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition

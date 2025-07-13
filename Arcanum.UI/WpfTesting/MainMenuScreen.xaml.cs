@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using Arcanum.Core.Utils.Git;
+using Arcanum.UI.Components.ViewModels;
 
 namespace Arcanum.UI.WpfTesting;
 
@@ -12,8 +14,21 @@ public partial class MainMenuScreen
       InitializeComponent();
    }
 
-   private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+   private void CloseButton_Click(object sender, RoutedEventArgs e)
    {
+      Close();
+   }
 
+   private void CreateNewProjectButton_Click(object sender, RoutedEventArgs e)
+   {
+      var mainViewModel = (MainViewModel)DataContext;
+      ArcanumTabButton.IsChecked = true;
+      mainViewModel.ArcanumVc.Execute(null);
+   }
+
+   private async void LoadLastConfigButton_Click(object sender, RoutedEventArgs e)
+   {
+      // var (name, version) = await ArcanumGit.GetLatestReleaseNameAndVersion();
+      // MessageBox.Show($"Latest release: {name} (Version: {version})", "Latest Release", MessageBoxButton.OK, MessageBoxImage.Information);
    }
 }

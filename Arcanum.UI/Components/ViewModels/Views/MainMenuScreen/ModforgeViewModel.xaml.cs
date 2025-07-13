@@ -2,11 +2,11 @@
 
 namespace Arcanum.UI.Components.ViewModels.Views;
 
-public partial class ModforgeView
+public partial class ModforgeViewModel
 {
    private const string MODFORGE_URL = "https://github.com/Minnator/Minnators-Modforge";
    
-   public ModforgeView()
+   public ModforgeViewModel()
    {
       InitializeComponent();
    }

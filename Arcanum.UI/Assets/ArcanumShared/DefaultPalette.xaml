@@ -10,7 +10,10 @@
     <Color x:Key = "DarkerSelectedBackColor"> #484848 </Color>
     <Color x:Key = "BlueSelectionBackColor"> #2e436e </Color>
     <Color x:Key = "AggressiveRedBackColor"> #e81123 </Color>
+    <Color x:Key = "GreenColor"> #528d57 </Color>
 
+    <SolidColorBrush x:Key = "GreenColorBrush"
+                     Color = "{StaticResource GreenColor}" />
     <SolidColorBrush x:Key = "InlineBackColorBrush"
                      Color = "{StaticResource InlineBackColor}" />
     <SolidColorBrush x:Key = "DefaultBackColorBrush"

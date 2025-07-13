@@ -27,4 +27,15 @@
       <ProjectReference Include="..\Arcanum.Core\Arcanum.Core.csproj" />
     </ItemGroup>
 
+
+    <ItemGroup>
+        <ProjectReference Include="..\Nexus.Analyzer\Nexus.Analyzer.csproj"
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false" />
+        <ProjectReference Include="..\Nexus.Core\Nexus.Core.csproj" />
+        <ProjectReference Include="..\Nexus.SourceGen\Nexus.SourceGen.csproj"
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false" />
+    </ItemGroup>
+
 </Project>

@@ -1,4 +1,6 @@
-﻿namespace Arcanum.Core.CoreSystems.SavingSystem;
+﻿using Arcanum.Core.CoreSystems.SavingSystem.Util;
+
+namespace Arcanum.Core.CoreSystems.SavingSystem;
 
 public static class SaveMaster
 {

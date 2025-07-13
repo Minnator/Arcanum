@@ -57,7 +57,7 @@ public partial class SettingsWindow
             Margin = new(0), SelectedObject = settingObj,
          };
          propGrid.PropertySelected += PropertySelection_Changed;
-         propGrid.PropertyValueChanged += (_, e) => { HandleSettingChangeNotification(host, e, propGrid); };
+         propGrid.PropertyValueChanged.AddHandler((_, e) => { HandleSettingChangeNotification(host, e, propGrid); });
 
          SettingsTabControl.Items.Add(new TabItem
          {

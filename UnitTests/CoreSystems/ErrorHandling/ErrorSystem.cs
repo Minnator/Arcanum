@@ -73,9 +73,9 @@ public class ErrorSystemTestsDiagnostics
         public void DiagnosticDescriptor_IsEnabled_BehavesCorrectly()
         {
             var descriptor = new DiagnosticDescriptor(10, DiagnosticCategory.Loading, DiagnosticSeverity.Warning, "msg", "desc", DiagnosticReportSeverity.Silent);
-            Assert.IsTrue(descriptor.IsEnabled);
+            Assert.That(descriptor.IsEnabled);
 
             descriptor.ReportSeverity = DiagnosticReportSeverity.Suppressed;
-            Assert.IsFalse(descriptor.IsEnabled);
+            Assert.That(descriptor.IsEnabled, Is.False);
         }
 }

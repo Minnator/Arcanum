@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using Arcanum.Core.Utils;
 using Arcanum.UI.Components.Base.StyleClasses;
 using Arcanum.UI.Components.Windows;
 using Arcanum.UI.Components.Windows.PopUp;
@@ -20,7 +21,8 @@ public class PropertyValueChangedEventArgs(PropertyItem? changedItem, object? ol
 
 public partial class PropertyGrid
 {
-   public event EventHandler<PropertyValueChangedEventArgs>? PropertyValueChanged = delegate { };
+   // We only trigger this event after a delay to avoid flooding the UI with events
+   public DelayedEvent<PropertyValueChangedEventArgs> PropertyValueChanged = new(500);
    public event EventHandler<SelectionChangedEventArgs>? PropertySelected = delegate { };
 
    public PropertyGrid()
@@ -45,12 +47,12 @@ public partial class PropertyGrid
          Description = value.CollectionDescription;
       }
    }
-   
+
    public void UpdatePropertyItem()
    {
       PropertyList.Items.Refresh();
    }
-   
+
    private void OnPropertyListOnSelectionChanged(object sender, SelectionChangedEventArgs _)
    {
       if (sender is not ListBox { SelectedItem: PropertyItem item })
@@ -178,7 +180,7 @@ public partial class PropertyGrid
 
    public virtual void OnPropertyValueChanged(PropertyItem propertyItem, object? oldValue)
    {
-      PropertyValueChanged?.Invoke(this, new(propertyItem, oldValue));
+      PropertyValueChanged.Invoke(this, new(propertyItem, oldValue));
    }
 
    protected virtual void OnPropertySelected(object sender, SelectionChangedEventArgs e)

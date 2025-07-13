@@ -1,7 +1,6 @@
 ﻿using Arcanum.API;
 using Arcanum.API.Console;
 using Arcanum.API.Core.IO;
-using Arcanum.API.UtilServices;
 using Arcanum.Core.CoreSystems.ConsoleServices;
 using Arcanum.Core.CoreSystems.IO;
 using Arcanum.Core.PluginServices;

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using Arcanum.API;
 using Arcanum.API.CrossPluginServices;

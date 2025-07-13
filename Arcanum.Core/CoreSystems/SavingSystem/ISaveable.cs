@@ -1,6 +1,4 @@
-﻿using Arcanum.Core.CoreSystems.Common;
-
-namespace Arcanum.Core.CoreSystems.SavingSystem;
+﻿namespace Arcanum.Core.CoreSystems.SavingSystem;
 
 public readonly struct FileTypeInformation(string typeName, string fileEnding, string commentPrefix)
 {

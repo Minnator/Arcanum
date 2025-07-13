@@ -60,13 +60,13 @@ public class ConsoleServiceImplTests
       var cmd = TestCommandDefinition();
       _service.RegisterCommand(cmd);
 
-      Assert.IsTrue(_service.GetCommandNames().Contains("test"));
+      Assert.That(_service.GetCommandNames().Contains("test"));
 
       _service.GetCommandDefinition("test", out var definition);
       Assert.IsNotNull(definition);
       Assert.That(definition.Name, Is.EqualTo("test"));
-      Assert.IsTrue(definition.Aliases.Contains("alias1"));
-      Assert.IsTrue(definition.Aliases.Contains("alias2"));
+      Assert.That(definition.Aliases.Contains("alias1"));
+      Assert.That(definition.Aliases.Contains("alias2"));
    }
 
    [Test]
@@ -77,11 +77,11 @@ public class ConsoleServiceImplTests
       _service.RegisterCommand(cmd);
       _service.UnregisterCommand("test");
 
-      Assert.IsFalse(_service.GetCommandNames().Contains("test"));
+      Assert.That(_service.GetCommandNames().Contains("test"), Is.False);
       _service.GetCommandDefinition("test", out var definition);
       Assert.IsNull(definition);
-      Assert.IsFalse(_service.GetCommandNames().Any(x => x.Equals("alias1", StringComparison.OrdinalIgnoreCase)));
-      Assert.IsFalse(_service.GetCommandNames().Any(x => x.Equals("alias2", StringComparison.OrdinalIgnoreCase)));
+      Assert.That(_service.GetCommandNames().Any(x => x.Equals("alias1", StringComparison.OrdinalIgnoreCase)), Is.False);
+      Assert.That(_service.GetCommandNames().Any(x => x.Equals("alias2", StringComparison.OrdinalIgnoreCase)), Is.False);
    }
 
    [Test]
@@ -102,8 +102,8 @@ public class ConsoleServiceImplTests
    {
       var added = _service.AddMacro("key", "value");
 
-      Assert.IsTrue(added);
-      Assert.IsTrue(_service.GetMacros().ContainsKey("key"));
+      Assert.That(added);
+      Assert.That(_service.GetMacros().ContainsKey("key"));
    }
 
    [Test]

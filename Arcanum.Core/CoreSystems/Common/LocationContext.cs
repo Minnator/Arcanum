@@ -1,4 +1,6 @@
-﻿namespace Arcanum.Core.CoreSystems.Common;
+﻿using System.IO;
+
+namespace Arcanum.Core.CoreSystems.Common;
 
 /// <summary>
 /// This context will be modified and passed around during the parsing process.

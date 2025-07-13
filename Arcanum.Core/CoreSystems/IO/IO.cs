@@ -1,4 +1,5 @@
 ﻿using System.Drawing.Imaging;
+using System.IO;
 using System.Text;
 
 namespace Arcanum.Core.CoreSystems.IO

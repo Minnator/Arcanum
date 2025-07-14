@@ -1,7 +1,9 @@
 ﻿<ResourceDictionary xmlns = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x = "http://schemas.microsoft.com/winfx/2006/xaml">
 
-        <Style TargetType="ToolTip">
+    <Style TargetType = "ToolTip">
+        <Setter Property = "TextBlock.TextAlignment"
+                Value = "Left" />
         <Setter Property = "Background"
                 Value = "{StaticResource DefaultBackColorBrush}" />
         <Setter Property = "Foreground"
@@ -32,6 +34,7 @@
                         <ContentPresenter Margin = "{TemplateBinding Padding}"
                                           RecognizesAccessKey = "True"
                                           SnapsToDevicePixels = "True" />
+
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

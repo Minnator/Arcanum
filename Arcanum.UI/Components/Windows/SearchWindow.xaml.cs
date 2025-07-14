@@ -20,7 +20,7 @@
 //          new()
 //          {
 //             IconPath = "/Assets/Icons/Missing16x16.png",
-//             MainText = "OldProgram",
+//             MainText = "Program",
 //             Description = "Arcanum.UI",
 //          },
 //          new()
@@ -44,7 +44,7 @@
 //          new()
 //          {
 //             IconPath = "/Assets/Icons/Missing16x16.png",
-//             MainText = "OldProgram",
+//             MainText = "Program",
 //             Description = @"Arcanum.UI",
 //          },
 //          new()
@@ -68,7 +68,7 @@
 //          new()
 //          {
 //             IconPath = "/Assets/Icons/Missing16x16.png",
-//             MainText = "OldProgram",
+//             MainText = "Program",
 //             Description = @"Arcanum.UI",
 //          },
 //          new()
@@ -92,7 +92,7 @@
 //          new()
 //          {
 //             IconPath = "/Assets/Icons/Missing16x16.png",
-//             MainText = "OldProgram",
+//             MainText = "Program",
 //             Description = @"Arcanum.UI",
 //          },
 //          new()
@@ -116,7 +116,7 @@
 //          new()
 //          {
 //             IconPath = "/Assets/Icons/Missing16x16.png",
-//             MainText = "OldProgram",
+//             MainText = "Program",
 //             Description = @"Arcanum.UI",
 //          },
 //          new()

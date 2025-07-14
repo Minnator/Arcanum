@@ -26,9 +26,12 @@ public partial class MainMenuScreen
       mainViewModel.ArcanumVc.Execute(null);
    }
 
-   private async void LoadLastConfigButton_Click(object sender, RoutedEventArgs e)
+   private void LoadLastConfigButton_Click(object sender, RoutedEventArgs e)
    {
-      // var (name, version) = await ArcanumGit.GetLatestReleaseNameAndVersion();
-      // MessageBox.Show($"Latest release: {name} (Version: {version})", "Latest Release", MessageBoxButton.OK, MessageBoxImage.Information);
+      var text = GitDataService.GetFileFromRepositoryUrl("Minnator", "Minnators-Modforge", "master", "README.md");
+      
+      Console.WriteLine(text);
+      MessageBox.Show(text, "Modforge README", MessageBoxButton.OK, MessageBoxImage.Information);
+
    }
 }

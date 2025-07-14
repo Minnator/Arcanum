@@ -1,23 +1,34 @@
 ﻿using System.Windows;
+using Arcanum.Core;
+using Arcanum.Core.Utils.Git;
 
-namespace Arcanum.UI.Components.ViewModels.Views;
+namespace Arcanum.UI.Components.ViewModels.Views.MainMenuScreen;
 
 public partial class ModforgeViewModel
 {
    private const string MODFORGE_URL = "https://github.com/Minnator/Minnators-Modforge";
-   
+
    public ModforgeViewModel()
    {
       InitializeComponent();
+
+      SetReleaseText();
    }
 
-   private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+   private void SetReleaseText()
    {
-      // Open link in default browser
-      System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+      var latestRelease = AppData.GitDataDescriptor.LatestVersion;
+      if (latestRelease is { Data: not null })
       {
-         FileName = MODFORGE_URL,
-         UseShellExecute = true,
-      });
+         var name = latestRelease.RepositoryName.StartsWith("Minnators-")
+                       ? latestRelease.RepositoryName[10..]
+                       : latestRelease.RepositoryName;
+         LatestReleaseNameTextBox.Text =
+            $"{name} {latestRelease.Data.Name.Split(' ').FirstOrDefault(string.Empty)}";
+
+         LatestReleaseVersionTextBox.Text = $"Version {latestRelease.Data.TagName[1..]}";
+         
+         LatestReleaseNameTextBox.ToolTip = $"Release notes:\n{latestRelease.Data.Body}";
+      }
    }
 }

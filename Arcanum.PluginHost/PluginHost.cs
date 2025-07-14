@@ -38,7 +38,7 @@ public class PluginHost : IPluginHost
       _services.Clear();
       
       // Unload all required services.
-      _uiSettingsService.Unload();
+      // TODO_uiSettingsService.Unload();
    }
 
    public IService.ServiceState VerifyState()

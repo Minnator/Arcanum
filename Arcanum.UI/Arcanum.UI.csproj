@@ -29,6 +29,7 @@
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Components\Specific\Converters\"/>
+        <Folder Include="FeatureSpotlight\" />
         <Folder Include="HostUIServices\"/>
     </ItemGroup>
 

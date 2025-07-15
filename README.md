@@ -5,7 +5,7 @@ The main difference is that this tool is meant for the upcoming game **Europa Un
 It is being developed by [MelonCoaster](https://github.com/mel-co) and [Minnator](https://github.com/Minnator).
 We develop this in our spare freetime so the speed of progress may vary from time to time.
 
-![Lines of Code](https://tokei.rs/b1/github/Minnator/Arcanum)
+![Lines of Code](https://tokei.rs/b1/github/Minnator/Arcanum) ![Repo Size](https://img.shields.io/github/repo-size/Minnator/Arcanum) ![GitHub release (latest by date)](https://img.shields.io/github/v/release/Minnator/Arcanum) ![GitHub all releases](https://img.shields.io/github/downloads/Minnator/Arcanum/total)
 
 ## What are we aiming for?
 Minnator's Modforge already has a nice suite of tools and decent performance, but we want to shadow this:

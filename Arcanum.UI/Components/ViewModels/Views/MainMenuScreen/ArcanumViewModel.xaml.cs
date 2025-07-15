@@ -7,5 +7,6 @@ public partial class ArcanumViewModel : UserControl
    public ArcanumViewModel()
    {
       InitializeComponent();
+      
    }
 }

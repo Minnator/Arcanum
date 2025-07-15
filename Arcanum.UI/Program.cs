@@ -4,6 +4,7 @@ using Arcanum.Core;
 using Arcanum.Core.CoreSystems.IO;
 using Arcanum.Core.CoreSystems.ParsingSystem;
 using Arcanum.Core.FlowControlServices;
+using Arcanum.Core.Utils.vdfParser;
 using Arcanum.UI.HostUIServices.SettingsGUI;
 using Arcanum.UI.WpfTesting;
 using Nexus.Core;
@@ -46,6 +47,8 @@ internal static class Program
       {
          lifecycleManager.RunShutdownSequence(pluginHost);
       };
+
+      Console.WriteLine("Eu4 location: " + VdfParser.GetEu5Path());
       
       app.MainWindow = mw;
       app.MainWindow.ShowDialog();

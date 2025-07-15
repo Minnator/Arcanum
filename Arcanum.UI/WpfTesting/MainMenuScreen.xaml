@@ -114,8 +114,6 @@
                   Column = "1">
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width = "40" />
-                    <ColumnDefinition Width = "40" />
                     <ColumnDefinition Width = "*" />
                     <ColumnDefinition Width = "100" />
                 </Grid.ColumnDefinitions>
@@ -184,7 +182,12 @@
                                          Style = "{StaticResource BaseDarkButtonStyle}"
                                          Background = "Transparent"
                                          Click = "CloseButton_Click">
-                    <Image Source = "../../Assets/Icons/40x40/Close40x40.png"> </Image>
+                    <Image Source = "../../Assets/Icons/40x40/Close40x40.png"
+                           Stretch = "None"
+                           Margin = "0"
+                           VerticalAlignment = "Center"
+                           HorizontalAlignment = "Center">
+                    </Image>
                 </styleClasses:BaseButton>
             </Grid>
 

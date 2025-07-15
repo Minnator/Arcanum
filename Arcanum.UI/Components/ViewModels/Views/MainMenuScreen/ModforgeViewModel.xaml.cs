@@ -1,13 +1,13 @@
 ﻿using System.Windows;
+using System.Windows.Input;
 using Arcanum.Core;
+using Arcanum.Core.Utils;
 using Arcanum.Core.Utils.Git;
 
 namespace Arcanum.UI.Components.ViewModels.Views.MainMenuScreen;
 
 public partial class ModforgeViewModel
 {
-   private const string MODFORGE_URL = "https://github.com/Minnator/Minnators-Modforge";
-
    public ModforgeViewModel()
    {
       InitializeComponent();
@@ -29,6 +29,24 @@ public partial class ModforgeViewModel
          LatestReleaseVersionTextBox.Text = $"Version {latestRelease.Data.TagName[1..]}";
          
          LatestReleaseNameTextBox.ToolTip = $"Release notes:\n{latestRelease.Data.Body}";
+      }
+   }
+
+   private void DiscordTextBlock_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+   {
+      if (e.ChangedButton == MouseButton.Left)
+      {
+         e.Handled = true;
+         ProcessHelper.OpenDiscordLinkIfDiscordRunning(GitDataService.MODFORGE_DISCORD_URL);
+      }
+   }
+
+   private void GitHubTextBlock_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+   {
+      if (e.ChangedButton == MouseButton.Left)
+      {
+         e.Handled = true;
+         ProcessHelper.OpenLink(GitDataService.MODFORGE_REPOSITORY_URL);
       }
    }
 }

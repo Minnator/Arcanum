@@ -122,13 +122,19 @@
                         <TextBlock Text = "Arcanum News"
                                    Style = "{StaticResource TitleText}"
                                    Margin = "20,20,20,0" />
-                        <TextBlock Text = "Editor go BRRRR:&#x0a;Increasing performance of the Selection"
-                                   Width = "250"
-                                   HorizontalAlignment = "Left"
-                                   Foreground = "White"
-                                   TextWrapping = "WrapWithOverflow"
-                                   FontSize = "18"
-                                   Margin = "20,15,20,20" />
+                        <ScrollViewer HorizontalScrollBarVisibility = "Disabled"
+                                      VerticalScrollBarVisibility = "Auto"
+                                      Height = "120"
+                                      Margin = "20, 10, 120, 20">
+                            <TextBlock x:Name = "LatestNewsText"
+                                       Text = "Missing content"
+                                       Width = "250"
+                                       HorizontalAlignment = "Left"
+                                       Foreground = "White"
+                                       TextWrapping = "WrapWithOverflow"
+                                       FontSize = "12"
+                                       VerticalAlignment = "Stretch" />
+                        </ScrollViewer>
                     </StackPanel>
                     <Image Width = "120"
                            Height = "120"
@@ -201,7 +207,8 @@
                             <StackPanel Orientation = "Horizontal">
                                 <Image Source = "../../../../Assets/Images/ProvinceFileCreator1024x1024.png"
                                        Style = "{StaticResource SocialIconStyle}" />
-                                <TextBlock Style = "{StaticResource SocialHeaderText}">
+                                <TextBlock Style = "{StaticResource SocialHeaderText}"
+                                           PreviewMouseUp = "DiscordTextBlock_PreviewMouseUp">
                                     <Bold> Discord </Bold>
                                 </TextBlock>
                             </StackPanel>
@@ -217,7 +224,8 @@
                             <StackPanel Orientation = "Horizontal">
                                 <Image Source = "../../../../Assets/Images/ProvinceFileCreator1024x1024.png"
                                        Style = "{StaticResource SocialIconStyle}" />
-                                <TextBlock Style = "{StaticResource SocialHeaderText}">
+                                <TextBlock Style = "{StaticResource SocialHeaderText}"
+                                           PreviewMouseUp = "GitHubTextBlock_PreviewMouseUp">
                                     <Bold> GitHub </Bold>
                                 </TextBlock>
                             </StackPanel>

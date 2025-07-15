@@ -32,6 +32,5 @@ public partial class MainMenuScreen
       
       Console.WriteLine(text);
       MessageBox.Show(text, "Modforge README", MessageBoxButton.OK, MessageBoxImage.Information);
-
    }
 }

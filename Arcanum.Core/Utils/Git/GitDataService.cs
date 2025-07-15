@@ -8,13 +8,29 @@ public static class GitDataService
    public const string MOD_FORGE_LATEST_VERSION_KEY = "ModForgeLatestVersion";
    private const string GIT_OWNER = "Minnator";
    private const string MOD_FORGE_GIT_REPOSITORY = "Minnators-Modforge";
-   private const string ARCANUM_REPOSITORY_URL = "https://github.com/Minnator/Minnators-Modforge";
+   public const string ARCANUM_REPOSITORY_URL = "https://github.com/Minnator/Arcanum";
+   public const string MODFORGE_REPOSITORY_URL = "https://github.com/Minnator/Minnators-Modforge";
+   
+   public const string MODFORGE_DISCORD_URL = "https://discord.gg/22AhD5qkme";
+   
+   private const string RELEASE_NOTES_FILE_PATH = "Arcanum.Core/ReleaseNotes";
 
    public static string GetFileFromRepositoryUrl(string owner, string repository, string branch, string filePath)
    {
       var client = new HttpClient();
       var url = $"https://raw.githubusercontent.com/{owner}/{repository}/{branch}/{filePath}";
-      return client.GetAsync(url).Result.Content.ReadAsStringAsync().Result;
+
+      var result = client.GetAsync(url).Result;
+      if (result.IsSuccessStatusCode)
+         return result.Content.ReadAsStringAsync().Result;
+
+      return "Unable to fetch file";
+   }
+
+   public static string GetReleaseNotesForVersion(string version, string owner, string repository, string branch)
+   {
+      var filePath = $"{RELEASE_NOTES_FILE_PATH}/{version}.md";
+      return GetFileFromRepositoryUrl(owner, repository, branch, filePath);
    }
 
    public static GitReleaseObject GetLatestVersion()

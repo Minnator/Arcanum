@@ -203,7 +203,8 @@
                             <StackPanel Orientation = "Horizontal">
                                 <Image Source = "../../../../Assets/Images/ProvinceFileCreator1024x1024.png"
                                        Style = "{StaticResource SocialIconStyle}" />
-                                <TextBlock Style = "{StaticResource SocialHeaderText}">
+                                <TextBlock Style = "{StaticResource SocialHeaderText}"
+                                           PreviewMouseUp="DiscordTextBlock_PreviewMouseUp">
                                     <Bold> Discord </Bold>
                                 </TextBlock>
                             </StackPanel>
@@ -219,7 +220,8 @@
                             <StackPanel Orientation = "Horizontal">
                                 <Image Source = "../../../../Assets/Images/ProvinceFileCreator1024x1024.png"
                                        Style = "{StaticResource SocialIconStyle}" />
-                                <TextBlock Style = "{StaticResource SocialHeaderText}">
+                                <TextBlock Style = "{StaticResource SocialHeaderText}"
+                                           PreviewMouseUp="GitHubTextBlock_PreviewMouseUp">
                                     <Bold> GitHub </Bold>
                                 </TextBlock>
                             </StackPanel>

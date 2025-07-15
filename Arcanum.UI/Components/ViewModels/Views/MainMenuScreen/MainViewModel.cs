@@ -19,7 +19,7 @@ public class MainViewModel : ObservableObject
    public FeatureViewModel FeatureFm { get; set; }
    public ArcanumViewModel ArcanumVm { get; set; }
    public AboutUsViewModel AboutUsVm { get; set; }
-   public AttributionsViewModel AttributionsesVm { get; set; }
+   public AttributionsViewModel AttributionsVm { get; set; }
    private object _currentView = null!;
 
    public object CurrentView
@@ -39,15 +39,15 @@ public class MainViewModel : ObservableObject
       FeatureFm = new();
       ArcanumVm = new();
       AboutUsVm = new();
-      AttributionsesVm = new();
+      AttributionsVm = new();
 
       CurrentView = HomeVm;
 
       HomeVc = new(() => { CurrentView = HomeVm; });
       FeatureVc = new(() => { CurrentView = FeatureFm; });
       ModforgeVc = new(() => { CurrentView = ModforgeVm; });
-      ArcanumVc = new(() => { CurrentView = ModforgeVm; });
+      ArcanumVc = new(() => { CurrentView = ArcanumVm; });
       AboutUsVc = new(() => { CurrentView = AboutUsVm; });
-      AttributionsVc = new(() => { CurrentView = AttributionsesVm; });
+      AttributionsVc = new(() => { CurrentView = AttributionsVm; });
    }
 }

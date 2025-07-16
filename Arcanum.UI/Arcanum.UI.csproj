@@ -80,6 +80,21 @@
         <Resource Include="Assets\Icons\30x30\Play30x30.png" />
         <None Remove="Assets\Icons\30x30\AddBordered30x30.png" />
         <Resource Include="Assets\Icons\30x30\AddBordered30x30.png" />
+        <None Remove="Assets\Icons\30x30\Folder30x30.png" />
+        <Resource Include="Assets\Icons\30x30\Folder30x30.png" />
+        <None Remove="Assets\Icons\20x20\Folder20x20.png" />
+        <Resource Include="Assets\Icons\20x20\Folder20x20.png" />
+        <None Remove="Assets\Icons\20x20\VanillaIcon.png" />
+        <Resource Include="Assets\Icons\20x20\VanillaIcon.png" />
+        <None Remove="Assets\Icons\20x20\ModIcon.png" />
+        <Resource Include="Assets\Icons\20x20\ModIcon.png" />
+        <None Remove="Assets\Icons\20x20\BaseModIcon.png" />
+        <Resource Include="Assets\Icons\20x20\BaseModIcon.png" />
+        <None Remove="Assets\Icons\30x30\AddFolder30x30.png" />
+        <Resource Include="Assets\Icons\30x30\AddFolder30x30.png" />
+        <None Remove="Assets\Icons\30x30\AddFolder26x26.png" />
+        <None Remove="Assets\Icons\20x20\AddFolder20x20.png" />
+        <Resource Include="Assets\Icons\20x20\AddFolder20x20.png" />
     </ItemGroup>
 
     <ItemGroup>

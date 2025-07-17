@@ -104,7 +104,7 @@
                              Height = "30"
                              Foreground = "{StaticResource DefaultForeColorBrush}"
                              FontSize = "14"
-                             Command = "{Binding FeatureVc}"
+                             Command = "{Binding AttributionsVc}"
                              Style = "{StaticResource MenuButtonTheme}" />
                 <Image Source = "../../Assets/Icons/ArcanumForeColor.png"
                        Margin = "40, 73, 40, 40" />

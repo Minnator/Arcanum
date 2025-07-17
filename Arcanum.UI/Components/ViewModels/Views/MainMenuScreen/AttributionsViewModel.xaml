@@ -20,8 +20,7 @@
                    FontWeight = "Bold"
                    Margin = "10,0,0,0"
                    VerticalAlignment = "Bottom"
-                   HorizontalAlignment = "Left"
-                   Style = "{StaticResource BaseTextBlock}" />
+                   HorizontalAlignment = "Left"/>
 
         <Rectangle Grid.Row = "1"
                    Fill = "{StaticResource DefaultBorderColorBrush}"
@@ -32,7 +31,6 @@
         </Rectangle>
 
         <TextBlock Grid.Row = "2"
-                   Style = "{StaticResource BaseTextBlock}"
                    Margin = "10,10,10,10"
                    IsEnabled = "True"
                    Focusable="True">

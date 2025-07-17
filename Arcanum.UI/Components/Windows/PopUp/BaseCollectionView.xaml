@@ -56,8 +56,7 @@
                                        Text = "{Binding}"
                                        Margin = "5, 2, 2,2"
                                        VerticalAlignment = "Center"
-                                       HorizontalAlignment = "Stretch"
-                                       Style = "{StaticResource BaseTextBlock}" />
+                                       HorizontalAlignment = "Stretch"/>
                             <styleClasses:BaseButton Grid.Column = "1"
                                                      Margin = "2"
                                                      Padding = "0"
@@ -66,7 +65,7 @@
                                                      Click = "ViewCollection_Button_Click"
                                                      HorizontalAlignment = "Right"
                                                      Visibility = "{Binding Converter={StaticResource IsListTypeVisibilityConverter}}">
-                                <Image Source = "../../../Assets/Icons/Eye20x20.png"
+                                <Image Source = "/Assets/Icons/20x20/Eye20x20.png"
                                        VerticalAlignment = "Center"
                                        HorizontalAlignment = "Center"
                                        Stretch = "UniformToFill"

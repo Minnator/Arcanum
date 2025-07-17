@@ -37,7 +37,6 @@
         <TextBlock Grid.Row = "0"
                    Grid.Column = "0"
                    x:Name = "LoadingTitleTextBlock"
-                   Style = "{StaticResource BaseTextBlock}"
                    Text = "Arcanum"
                    HorizontalAlignment = "Center"
                    VerticalAlignment = "Bottom"
@@ -48,8 +47,6 @@
 
         <TextBlock Grid.Row = "1"
                    Grid.Column = "0"
-                   Style = "{StaticResource
-                   BaseTextBlock}"
                    Text = "By Minnator and Mel-co"
                    HorizontalAlignment = "Center"
                    VerticalAlignment = "Top"
@@ -75,7 +72,6 @@
                    Grid.Column = "0"
                    Grid.Row = "2"
                    Text = "0% - Initializing Lifecycle Manager"
-                   Style="{StaticResource BaseTextBlock}"
                    TextAlignment="Center"
                    VerticalAlignment = "Center"
                    HorizontalAlignment = "Stretch"
@@ -96,7 +92,6 @@
         <TextBlock Grid.Row = "4"
                    Grid.Column = "0"
                    x:Name = "LoadingTipTextBlock"
-                   Style = "{StaticResource BaseTextBlock}"
                    VerticalAlignment = "Top"
                    HorizontalAlignment = "Stretch"
                    TextAlignment = "Center"

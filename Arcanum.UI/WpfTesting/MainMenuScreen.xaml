@@ -14,7 +14,7 @@
         WindowStyle = "None"
         ResizeMode = "NoResize"
         WindowStartupLocation = "CenterScreen"
-        Icon="../../Assets/Icons/ArcanumSimplified.ico">
+        Icon = "../../Assets/Icons/ArcanumSimplified.ico">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -97,7 +97,7 @@
                              Height = "30"
                              Foreground = "{StaticResource DefaultForeColorBrush}"
                              FontSize = "14"
-                             Command = "{Binding FeatureVc}"
+                             Command = "{Binding AboutUsVc}"
                              Style = "{StaticResource MenuButtonTheme}" />
                 <RadioButton Margin = "40,0,40,10"
                              Content = "Attributions"
@@ -131,8 +131,7 @@
                                 VerticalAlignment = "Center"
                                 HorizontalAlignment = "Center">
 
-                        <TextBlock Style = "{StaticResource BaseTextBlock}"
-                                   VerticalAlignment = "Center"
+                        <TextBlock VerticalAlignment = "Center"
                                    Margin = "4"
                                    FontSize = "14">
                             New Project:
@@ -151,8 +150,7 @@
                             <Image Source = "../../Assets/Icons/30x30/AddBordered30x30.png" />
 
                         </styleClasses:BaseButton>
-                        <TextBlock Style = "{StaticResource BaseTextBlock}"
-                                   VerticalAlignment = "Center"
+                        <TextBlock VerticalAlignment = "Center"
                                    Margin = "10, 4, 4,4"
                                    FontSize = "14">
                             Last Project:
@@ -165,7 +163,7 @@
                                                  Height = "25"
                                                  Width = "25"
                                                  Click = "LoadLastConfigButton_Click"
-                                                 MouseEnter="LoadLastConfigButton_MouseEnter"
+                                                 MouseEnter = "LoadLastConfigButton_MouseEnter"
                                                  Background = "{StaticResource GreenColorBrush}"
                                                  Style = "{StaticResource BaseDarkButtonStyle}">
                             <Image Source = "../../Assets/Icons/30x30/Play30x30.png" />

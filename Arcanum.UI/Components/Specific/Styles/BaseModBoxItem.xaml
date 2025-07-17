@@ -29,8 +29,7 @@
                        HorizontalAlignment = "Stretch"
                        FontSize = "12"
                        Margin="5, 0, 0, 0"
-                       Text = "{Binding Path}"
-                       Style = "{StaticResource BaseTextBlock}">
+                       Text = "{Binding Path}">
             </TextBlock>
             
             <sc:BaseButton Grid.Column = "1"

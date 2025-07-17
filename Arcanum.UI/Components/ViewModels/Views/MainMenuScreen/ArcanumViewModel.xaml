@@ -138,7 +138,6 @@
 
                 <TextBlock Grid.Column = "0"
                            Grid.Row = "0"
-                           Style = "{StaticResource BaseTextBlock}"
                            Text = "Base Mods:"
                            FontSize = "18"
                            Margin = "7,0,0,0"
@@ -227,7 +226,6 @@
 
             <TextBlock Grid.Column = "0"
                        Grid.Row = "0"
-                       Style = "{StaticResource BaseTextBlock}"
                        Text = "Recent Projects:"
                        FontSize = "18"
                        Margin = "7,0,0,0"

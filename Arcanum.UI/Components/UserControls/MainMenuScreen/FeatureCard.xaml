@@ -17,14 +17,12 @@
                            FontSize = "16"
                            FontWeight = "Bold"
                            Margin = "0,0,10,0"
-                           Style = "{StaticResource BaseTextBlock}"
                            TextWrapping="Wrap"/>
             </StackPanel>
 
             <!-- Description -->
             <TextBlock Text = "{Binding Description, RelativeSource={RelativeSource AncestorType=UserControl}}"
                        FontSize = "14"
-                       Style = "{StaticResource BaseTextBlock}" 
                        TextWrapping="Wrap"
                        />
         </StackPanel>

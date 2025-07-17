@@ -63,7 +63,6 @@
             </Rectangle>
 
             <TextBlock Grid.Row = "2"
-                       Style = "{StaticResource BaseTextBlock}"
                        x:Name = "ModNameTextBlock"
                        VerticalAlignment = "Center"
                        HorizontalAlignment = "Center">

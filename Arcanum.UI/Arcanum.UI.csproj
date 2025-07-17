@@ -99,6 +99,12 @@
         <Resource Include="Assets\Icons\20x20\ModAdd20x20.png" />
         <None Remove="Assets\Icons\20x20\Box20x20.png" />
         <Resource Include="Assets\Icons\20x20\Box20x20.png" />
+        <None Remove="Assets\Icons\PATREON_SYMBOL_1_WHITE_RGB.png" />
+        <Resource Include="Assets\Icons\PATREON_SYMBOL_1_WHITE_RGB.png" />
+        <None Remove="Assets\Icons\github_mark_white.png" />
+        <Resource Include="Assets\Icons\github_mark_white.png" />
+        <None Remove="Assets\Icons\Discord-Symbol-White.png" />
+        <Resource Include="Assets\Icons\Discord-Symbol-White.png" />
     </ItemGroup>
 
     <ItemGroup>

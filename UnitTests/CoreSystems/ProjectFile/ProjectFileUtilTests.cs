@@ -1,5 +1,6 @@
 ﻿using System.IO.Compression;
 using Arcanum.Core.CoreSystems.ProjectFileUtil;
+using Arcanum.Core.CoreSystems.ProjectFileUtil.Mod;
 
 namespace UnitTests.CoreSystems.ProjectFile;
 

@@ -4,7 +4,6 @@
         xmlns:d = "http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc = "http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModel = "clr-namespace:Arcanum.UI.Components.ViewModels"
-        xmlns:view = "clr-namespace:Arcanum.UI.Components.ViewModels.Views"
         xmlns:b = "http://schemas.microsoft.com/xaml/behaviors"
         xmlns:behaviors = "clr-namespace:Arcanum.UI.Components.Behaviors"
         xmlns:styleClasses = "clr-namespace:Arcanum.UI.Components.Base.StyleClasses"
@@ -14,7 +13,8 @@
         Width = "900"
         WindowStyle = "None"
         ResizeMode = "NoResize"
-        WindowStartupLocation = "CenterScreen">
+        WindowStartupLocation = "CenterScreen"
+        Icon="../../Assets/Icons/ArcanumSimplified.ico">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -32,7 +32,7 @@
     </Window.Resources>
 
     <Window.DataContext>
-        <viewModel:MainViewModel />
+        <mainMenuScreen:MainViewModel />
     </Window.DataContext>
     <!-- #272537 -->
     <Border Background = "{StaticResource AccentGradientBrush}"
@@ -165,9 +165,9 @@
                                                  Height = "25"
                                                  Width = "25"
                                                  Click = "LoadLastConfigButton_Click"
+                                                 MouseEnter="LoadLastConfigButton_MouseEnter"
                                                  Background = "{StaticResource GreenColorBrush}"
-                                                 Style = "{StaticResource BaseDarkButtonStyle}"
-                                                 ToolTip = "Load last Arcanum configuration">
+                                                 Style = "{StaticResource BaseDarkButtonStyle}">
                             <Image Source = "../../Assets/Icons/30x30/Play30x30.png" />
                         </styleClasses:BaseButton>
                     </StackPanel>

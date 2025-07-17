@@ -1,4 +1,4 @@
-﻿namespace Arcanum.Core.CoreSystems.ProjectFileUtil;
+﻿namespace Arcanum.Core.CoreSystems.ProjectFileUtil.Arcanum;
 
 /// <summary>
 /// This class contains information on which files should be found n the default

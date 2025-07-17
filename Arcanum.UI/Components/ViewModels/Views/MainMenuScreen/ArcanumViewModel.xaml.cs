@@ -1,41 +1,48 @@
-﻿using System.Collections;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Windows;
 using System.Windows.Data;
 using Arcanum.Core.CoreSystems.IO;
+using Arcanum.Core.CoreSystems.ProjectFileUtil.Mod;
 using Arcanum.Core.Utils.vdfParser;
 using Arcanum.UI.Components.Specific.StyleClasses;
+using Arcanum.UI.Components.UserControls.MainMenuScreen;
 
 namespace Arcanum.UI.Components.ViewModels.Views.MainMenuScreen;
 
 public partial class ArcanumViewModel
 {
    public ObservableCollection<BaseModItem> BaseMods { get; set; } = [];
+   
+   private readonly MainViewModel _mainViewModel;
 
-   public ArcanumViewModel()
+   public ArcanumViewModel(List<ProjectFileDescriptor> descriptors, MainViewModel mainViewModel)
    {
+      _mainViewModel = mainViewModel;
       InitializeComponent();
 
       DataContext = this;
+      VanillaFolderTextBox.Text = VdfParser.GetEu5Path();
+
+      descriptors.Sort();
+
+      SetRecentProjects(descriptors);
+   }
+
+   private void SetRecentProjects(List<ProjectFileDescriptor> descriptors)
+   {
+      for (var i = 0; i < Math.Min(4, descriptors.Count); i++)
+         RecentProjectsPanel.Children.Add(new RecentProjectCard(descriptors[i], _mainViewModel));
    }
 
    private void AddBaseMod(BaseModItem item) => BaseMods.Add(item);
 
    private void RemoveBaseMod(BaseModItem item) => BaseMods.Remove(item);
 
-   private BaseModItem GetBaseBaseModItem()
-   {
-      var newItem = new BaseModItem(RemoveBaseMod) { Path = string.Empty, };
-
-      return newItem;
-   }
-
    private void VanillaFolderButton_Click(object sender, RoutedEventArgs e)
    {
       var defaultPath = VdfParser.GetEu5Path();
-      defaultPath = defaultPath.Replace(@"\\", @"\");
       var path = IO.SelectFolder(defaultPath, "Select the EU5 vanilla folder");
       VanillaFolderTextBox.Text = path ?? string.Empty;
    }

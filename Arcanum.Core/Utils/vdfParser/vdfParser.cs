@@ -22,7 +22,7 @@ public static partial class VdfParser
       if (string.IsNullOrEmpty(libPath))
          return string.Empty;
       
-      return Path.Combine(libPath, "steamapps", "common", EU4_FOLDER_NAME);
+      return Path.Combine(libPath, "steamapps", "common", EU4_FOLDER_NAME).Replace(@"\\", @"\");
    }
    
    public static Dictionary<string, List<string>> GetLibrariesAndGames()

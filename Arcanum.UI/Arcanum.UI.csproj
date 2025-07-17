@@ -30,50 +30,50 @@
     <ItemGroup>
         <Folder Include="Components\Specific\Converters\"/>
         <Folder Include="FeatureSpotlight\" />
-        <Folder Include="HostUIServices\"/>
+        <Folder Include="HostUIServices\" />
     </ItemGroup>
 
 
     <ItemGroup>
-        <None Remove="Resources\Icons\ArrowDown.png"/>
-        <None Remove="Resources\Icons\ArrowUp.png"/>
-        <None Remove="C#.png"/>
-        <None Remove="Assets\Icons\Missing16x16.png"/>
+        <None Remove="Resources\Icons\ArrowDown.png" />
+        <None Remove="Resources\Icons\ArrowUp.png" />
+        <None Remove="C#.png" />
+        <None Remove="Assets\Icons\Missing16x16.png" />
         <Resource Include="Assets\Icons\20x20\Eye20x20.png" />
         <Resource Include="Assets\Icons\20x20\Missing16x16.png" />
         <Resource Include="Assets\Icons\40x40\LinkSquare40x40.png" />
-        <None Remove="Assets\Icons\Missing64x64.png"/>
-        <None Remove="Assets\Icons\Settings14x14.png"/>
+        <None Remove="Assets\Icons\Missing64x64.png" />
+        <None Remove="Assets\Icons\Settings14x14.png" />
         <Resource Include="Assets\Icons\64x64\Missing64x64.png" />
-        <Resource Include="Assets\Icons\Settings.png"/>
-        <None Remove="Assets\Icons\Quit Full Screen.png"/>
-        <None Remove="Assets\Icons\Full Screen.png"/>
-        <None Remove="Assets\Icons\Minimize.png"/>
-        <Resource Include="Assets\Icons\Minimize.png"/>
-        <None Remove="Assets\Icons\Close.png"/>
-        <Resource Include="Assets\Icons\Close.png"/>
-        <None Remove="Assets\Icons\FullScreen.png"/>
-        <Resource Include="Assets\Icons\FullScreen.png"/>
-        <None Remove="Assets\Icons\CheckSquare.png"/>
-        <Resource Include="Assets\Icons\CheckSquare.png"/>
-        <None Remove="Assets\Icons\CloseSquare.png"/>
-        <Resource Include="Assets\Icons\CloseSquare.png"/>
-        <None Remove="Assets\Icons\ArrowDown.png"/>
-        <Resource Include="Assets\Icons\ArrowDown.png"/>
-        <None Remove="Assets\Icons\ArrowUp.png"/>
-        <Resource Include="Assets\Icons\ArrowUp.png"/>
-        <None Remove="Assets\Icons\Eye20x20.png"/>
-        <Resource Include="Assets\Icons\SplashTest.png"/>
-        <None Remove="Assets\Icons\ArcanumSimplified.png"/>
-        <Resource Include="Assets\Icons\ArcanumSimplified.png"/>
-        <Resource Include="Assets\Icons\Arcanum.png"/>
-        <None Remove="Assets\Icons\ArcanumSimplified.ico"/>
-        <Resource Include="Assets\Icons\ArcanumSimplified.ico"/>
-        <None Remove="Assets\Images\ProvinceFileCreator1024x1024.png"/>
-        <Resource Include="Assets\Images\ProvinceFileCreator1024x1024.png"/>
-        <None Remove="Assets\Icons\LinkSquare40x40.png"/>
-        <None Remove="Assets\Icons\ArcanumForeColor.png"/>
-        <Resource Include="Assets\Icons\ArcanumForeColor.png"/>
+        <Resource Include="Assets\Icons\Settings.png" />
+        <None Remove="Assets\Icons\Quit Full Screen.png" />
+        <None Remove="Assets\Icons\Full Screen.png" />
+        <None Remove="Assets\Icons\Minimize.png" />
+        <Resource Include="Assets\Icons\Minimize.png" />
+        <None Remove="Assets\Icons\Close.png" />
+        <Resource Include="Assets\Icons\Close.png" />
+        <None Remove="Assets\Icons\FullScreen.png" />
+        <Resource Include="Assets\Icons\FullScreen.png" />
+        <None Remove="Assets\Icons\CheckSquare.png" />
+        <Resource Include="Assets\Icons\CheckSquare.png" />
+        <None Remove="Assets\Icons\CloseSquare.png" />
+        <Resource Include="Assets\Icons\CloseSquare.png" />
+        <None Remove="Assets\Icons\ArrowDown.png" />
+        <Resource Include="Assets\Icons\ArrowDown.png" />
+        <None Remove="Assets\Icons\ArrowUp.png" />
+        <Resource Include="Assets\Icons\ArrowUp.png" />
+        <None Remove="Assets\Icons\Eye20x20.png" />
+        <Resource Include="Assets\Icons\SplashTest.png" />
+        <None Remove="Assets\Icons\ArcanumSimplified.png" />
+        <Resource Include="Assets\Icons\ArcanumSimplified.png" />
+        <Resource Include="Assets\Icons\Arcanum.png" />
+        <None Remove="Assets\Icons\ArcanumSimplified.ico" />
+        <Resource Include="Assets\Icons\ArcanumSimplified.ico" />
+        <None Remove="Assets\Images\ProvinceFileCreator1024x1024.png" />
+        <Resource Include="Assets\Images\ProvinceFileCreator1024x1024.png" />
+        <None Remove="Assets\Icons\LinkSquare40x40.png" />
+        <None Remove="Assets\Icons\ArcanumForeColor.png" />
+        <Resource Include="Assets\Icons\ArcanumForeColor.png" />
         <None Remove="Assets\Icons\40x40\Close40x40.png" />
         <Resource Include="Assets\Icons\40x40\Close40x40.png" />
         <None Remove="Assets\Icons\30x30\Play30x30.png" />
@@ -95,6 +95,10 @@
         <None Remove="Assets\Icons\30x30\AddFolder26x26.png" />
         <None Remove="Assets\Icons\20x20\AddFolder20x20.png" />
         <Resource Include="Assets\Icons\20x20\AddFolder20x20.png" />
+        <None Remove="Assets\Icons\20x20\ModAdd20x20.png" />
+        <Resource Include="Assets\Icons\20x20\ModAdd20x20.png" />
+        <None Remove="Assets\Icons\20x20\Box20x20.png" />
+        <Resource Include="Assets\Icons\20x20\Box20x20.png" />
     </ItemGroup>
 
     <ItemGroup>
@@ -183,6 +187,11 @@
           <SubType>Designer</SubType>
         </Page>
         <Page Update="Components\ViewModels\Views\MainMenuScreen\ModforgeViewModel.xaml">
+          <Generator>MSBuild:Compile</Generator>
+          <XamlRuntime>Wpf</XamlRuntime>
+          <SubType>Designer</SubType>
+        </Page>
+        <Page Update="Components\UserControls\MainMenuScreen\FeatureCard.xaml">
           <Generator>MSBuild:Compile</Generator>
           <XamlRuntime>Wpf</XamlRuntime>
           <SubType>Designer</SubType>

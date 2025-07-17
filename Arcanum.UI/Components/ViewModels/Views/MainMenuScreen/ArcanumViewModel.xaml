@@ -65,7 +65,7 @@
                 Margin = "3"
                 ClipToBounds = "True">
 
-            <Image Source = "/Assets/Icons/20x20/VanillaIcon.png"
+            <Image Source = "/Assets/Icons/20x20/Box20x20.png"
                    Stretch = "None"
                    ToolTip = "Vanilla Game Folder">
 
@@ -106,7 +106,7 @@
                 Margin = "3"
                 ClipToBounds = "True">
 
-            <Image Source = "/Assets/Icons/20x20/ModIcon.png"
+            <Image Source = "/Assets/Icons/20x20/ModAdd20x20.png"
                    Stretch = "None"
                    ToolTip = "The folder of the mod you want to edit">
 
@@ -125,7 +125,7 @@
 
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
+                    <ColumnDefinition Width = "*" />
                     <ColumnDefinition Width = "34" />
                 </Grid.ColumnDefinitions>
 
@@ -208,11 +208,37 @@
                            Height = "1"
                            HorizontalAlignment = "Stretch">
                 </Rectangle>
-            </Grid>
 
+            </Grid>
 
         </Border>
 
         <!-- Fourth Row -->
+
+        <Grid Grid.Row = "3"
+              Grid.Column = "0"
+              Grid.ColumnSpan = "3">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height = "34" />
+                <RowDefinition Height = "*" />
+            </Grid.RowDefinitions>
+
+
+            <TextBlock Grid.Column = "0"
+                       Grid.Row = "0"
+                       Style = "{StaticResource BaseTextBlock}"
+                       Text = "Recent Projects:"
+                       FontSize = "18"
+                       Margin = "7,0,0,0"
+                       VerticalAlignment = "Center"
+                       HorizontalAlignment = "Left" />
+
+            <StackPanel Orientation = "Horizontal"
+                        Grid.Column = "0"
+                        Grid.Row = "1"
+                        x:Name="RecentProjectsPanel">
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

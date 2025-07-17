@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Input;
 using Arcanum.Core;
+using Arcanum.Core.Globals;
 using Arcanum.Core.Utils;
 using Arcanum.Core.Utils.Git;
 

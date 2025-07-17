@@ -1,10 +1,10 @@
 ﻿using System.IO;
 using System.Text;
 using Arcanum.Core.CoreSystems.IO;
+using Arcanum.Core.Globals;
 using Arcanum.Core.Utils.Git;
-using Octokit;
 
-namespace Arcanum.Core.CoreSystems.ProjectFileUtil;
+namespace Arcanum.Core.CoreSystems.ProjectFileUtil.Arcanum;
 
 public static class ArcanumDataHandler
 {

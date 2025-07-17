@@ -4,6 +4,7 @@ using Arcanum.API.Core.IO;
 using Arcanum.Core.CoreSystems.ConsoleServices;
 using Arcanum.Core.CoreSystems.IO;
 using Arcanum.Core.CoreSystems.ProjectFileUtil;
+using Arcanum.Core.CoreSystems.ProjectFileUtil.Arcanum;
 using Arcanum.Core.PluginServices;
 
 namespace Arcanum.Core.FlowControlServices;
@@ -70,11 +71,14 @@ public class LifecycleManager
 
       // Shutdown the core application
       ArcanumDataHandler.SaveAllGitData(new());
+
+      MainMenuScreenDescriptor.SaveData();
    }
 
    private static void InitializeApplicationCore()
    {
       ArcanumDataHandler.LoadDefaultDescriptor(new());
+      MainMenuScreenDescriptor.LoadData();
    }
 
    private static void InitializeCoreServices(IPluginHost host)

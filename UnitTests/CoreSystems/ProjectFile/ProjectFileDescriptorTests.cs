@@ -1,4 +1,5 @@
 ﻿using Arcanum.Core.CoreSystems.ProjectFileUtil;
+using Arcanum.Core.CoreSystems.ProjectFileUtil.Mod;
 
 namespace UnitTests.CoreSystems.ProjectFile;
 
@@ -21,7 +22,7 @@ public class ProjectFileDescriptorTests
    public void Constructor_WithRequiredMods_InitializesCorrectly()
    {
       var mods = new List<string> { "ReqMod1", "ReqMod2" };
-      var desc = new ProjectFileDescriptor("MainMod", string.Empty, true, mods);
+      var desc = new ProjectFileDescriptor("MainMod", string.Empty, mods);
 
       Assert.That(desc.ModName, Is.EqualTo("MainMod"));
       Assert.That(desc.IsSubMod, Is.True);
@@ -43,8 +44,8 @@ public class ProjectFileDescriptorTests
    [Test]
    public void Equals_ReturnsTrueForSameData()
    {
-      var a = new ProjectFileDescriptor("X", string.Empty, false, ["A", "B"]);
-      var b = new ProjectFileDescriptor("X", string.Empty, false, ["A", "B"]);
+      var a = new ProjectFileDescriptor("X", string.Empty, ["A", "B"]);
+      var b = new ProjectFileDescriptor("X", string.Empty, ["A", "B"]);
 
       Assert.That(a, Is.EqualTo(b));
    }
@@ -52,8 +53,8 @@ public class ProjectFileDescriptorTests
    [Test]
    public void Equals_ReturnsFalseForDifferentData()
    {
-      var a = new ProjectFileDescriptor("X", string.Empty, false, ["A"]);
-      var b = new ProjectFileDescriptor("X", string.Empty, true, ["A"]);
+      var a = new ProjectFileDescriptor("X", string.Empty, ["A"]);
+      var b = new ProjectFileDescriptor("X", string.Empty, []);
 
       Assert.That(a, Is.Not.EqualTo(b));
    }
@@ -61,8 +62,8 @@ public class ProjectFileDescriptorTests
    [Test]
    public void GetHashCode_ConsistentWithEquals()
    {
-      var a = new ProjectFileDescriptor("X", string.Empty, false, ["A", "B"]);
-      var b = new ProjectFileDescriptor("X", string.Empty, false, ["A", "B"]);
+      var a = new ProjectFileDescriptor("X", string.Empty, ["A", "B"]);
+      var b = new ProjectFileDescriptor("X", string.Empty, ["A", "B"]);
 
       Assert.That(a.GetHashCode(), Is.EqualTo(b.GetHashCode()));
    }

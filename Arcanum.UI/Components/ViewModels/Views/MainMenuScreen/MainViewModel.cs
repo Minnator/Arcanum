@@ -1,9 +1,12 @@
-﻿using Arcanum.UI.Components.ViewModels.Views;
-using Arcanum.UI.Components.ViewModels.Views.MainMenuScreen;
+﻿using System.IO;
+using System.Windows;
+using Arcanum.Core;
+using Arcanum.Core.CoreSystems.ProjectFileUtil.Mod;
+using Arcanum.Core.Globals;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
-namespace Arcanum.UI.Components.ViewModels;
+namespace Arcanum.UI.Components.ViewModels.Views.MainMenuScreen;
 
 public class MainViewModel : ObservableObject
 {
@@ -25,7 +28,7 @@ public class MainViewModel : ObservableObject
    public object CurrentView
    {
       get => _currentView;
-      set
+      private set
       {
          _currentView = value;
          OnPropertyChanged();
@@ -37,7 +40,7 @@ public class MainViewModel : ObservableObject
       HomeVm = new();
       ModforgeVm = new();
       FeatureFm = new();
-      ArcanumVm = new();
+      ArcanumVm = new(AppData.MainMenuScreenDescriptor.ProjectFiles, this);
       AboutUsVm = new();
       AttributionsVm = new();
 
@@ -49,5 +52,53 @@ public class MainViewModel : ObservableObject
       ArcanumVc = new(() => { CurrentView = ArcanumVm; });
       AboutUsVc = new(() => { CurrentView = AboutUsVm; });
       AttributionsVc = new(() => { CurrentView = AttributionsVm; });
+   }
+
+   internal bool GetDescriptorFromInput(out ProjectFileDescriptor descriptor)
+   {
+      descriptor = new(Path.GetFileName(ArcanumVm.ModFolderTextBox.Text.TrimEnd(Path.DirectorySeparatorChar)),
+                       ArcanumVm.ModFolderTextBox.Text,
+                       ArcanumVm.BaseMods.Select(mod => mod.Path).ToList());
+
+      return descriptor.IsValid();
+   }
+
+   // This is the main entry point for the Arcanum application from the main menu.
+   // When creating a new project, this method will be called.
+   // It validates the project file and launches into the main window of Arcanum
+   // if all requirements are met.
+   internal void LaunchArcanum(ProjectFileDescriptor descriptor)
+   {
+      if (!descriptor.IsValid() || !Directory.Exists(ArcanumVm.VanillaFolderTextBox.Text))
+      {
+         MessageBox.Show("Could not create a valid 'ProjectDescriptor'.\n" +
+                         "Please make sure to have valid paths for the mod- and the vanilla folder.\n\n " +
+                         "If you are using base mods make sure that they are valid, too.",
+                         "Invalid Project Data",
+                         MessageBoxButton.OK,
+                         MessageBoxImage.Error);
+         return;
+      }
+
+      // Save the paths to the MainMenuScreenDescriptor
+      AppData.MainMenuScreenDescriptor.LastVanillaPath =
+         ArcanumVm.VanillaFolderTextBox.Text;
+      AppData.MainMenuScreenDescriptor.LastProjectFile = descriptor.ModName;
+
+      if (AppData.MainMenuScreenDescriptor.ProjectFiles
+                 .Any(x => x.ModName.Equals(descriptor.ModName, StringComparison.OrdinalIgnoreCase)))
+      {
+         AppData.MainMenuScreenDescriptor.ProjectFiles.RemoveAll(x => x.ModName.Equals(descriptor.ModName,
+                                                                  StringComparison.OrdinalIgnoreCase));
+      }
+
+      AppData.MainMenuScreenDescriptor.ProjectFiles.Add(descriptor);
+
+      // Launch ArcanumMW
+      MessageBox.Show("Launching Arcanum with the selected project:\n" +
+                      $"{descriptor.ModName}",
+                      "Launching Arcanum",
+                      MessageBoxButton.OK,
+                      MessageBoxImage.Information);
    }
 }

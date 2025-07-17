@@ -8,31 +8,32 @@
 
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width = "30" />
+                <!-- <ColumnDefinition Width = "30" /> -->
                 <ColumnDefinition Width = "*" />
                 <ColumnDefinition Width = "30" />
             </Grid.ColumnDefinitions>
+            <!-- -->
+            <!-- <sc:BaseButton Grid.Column = "0" -->
+            <!--                x:Name = "OpenFolderDialog" -->
+            <!--                Style = "{StaticResource BaseDarkButtonStyle}" -->
+            <!--                HoverBackground = "{StaticResource BlueSelectionBackColorBrush}" -->
+            <!--                Margin = "3" -->
+            <!--                Command = "{Binding SelectFolderCommand}"> -->
+            <!--     <Image Source = "../../../Assets/Icons/20x20/Folder20x20.png" -->
+            <!--            Stretch = "None" /> -->
+            <!-- </sc:BaseButton> -->
 
-            <sc:BaseButton Grid.Column = "0"
-                           x:Name = "OpenFolderDialog"
-                           Style = "{StaticResource BaseDarkButtonStyle}"
-                           HoverBackground = "{StaticResource BlueSelectionBackColorBrush}"
-                           Margin = "3"
-                           Command = "{Binding SelectFolderCommand}">
-                <Image Source = "../../../Assets/Icons/20x20/Folder20x20.png"
-                       Stretch = "None" />
-            </sc:BaseButton>
-
-            <TextBlock Grid.Column = "1"
+            <TextBlock Grid.Column = "0"
                        x:Name = "BaseModTextBlock"
                        VerticalAlignment = "Center"
                        HorizontalAlignment = "Stretch"
                        FontSize = "12"
+                       Margin="5, 0, 0, 0"
                        Text = "{Binding Path}"
                        Style = "{StaticResource BaseTextBlock}">
             </TextBlock>
             
-            <sc:BaseButton Grid.Column = "2"
+            <sc:BaseButton Grid.Column = "1"
                            Grid.Row = "0"
                            Background = "{StaticResource AggressiveRedBackColorBrush}"
                            HoverBackground = "{StaticResource BlueSelectionBackColorBrush}"
@@ -75,7 +76,7 @@
         <Setter Property = "Margin"
                 Value = "0, 0" />
         <Setter Property = "Background"
-                Value = "{StaticResource DefaultBackColorBrush}" />
+                Value = "{StaticResource LightBackColorBrush}" />
 
         <Setter Property = "Template">
             <Setter.Value>
@@ -95,17 +96,20 @@
                         <Trigger Property = "IsMouseOver"
                                  Value = "true">
                             <Setter TargetName = "Bd"
-                                    Property = "Background"
-                                    Value = "{StaticResource DarkerSelectedBackColorBrush}" />
-                        </Trigger>
-                        <Trigger Property = "IsSelected"
-                                 Value = "true">
-                            <Setter TargetName = "Bd"
-                                    Property = "Background"
+                                    Property = "BorderBrush"
                                     Value = "{StaticResource BlueSelectionBackColorBrush}" />
-                            <Setter Property = "Foreground"
-                                    Value = "{StaticResource DefaultForeColorBrush}" />
+                            <Setter TargetName = "Bd"
+                                    Property = "BorderThickness"
+                                    Value = "2" />
                         </Trigger>
+                        <!-- <Trigger Property = "IsSelected" -->
+                        <!--          Value = "true"> -->
+                        <!--     <Setter TargetName = "Bd" -->
+                        <!--             Property = "Background" -->
+                        <!--             Value = "{StaticResource BlueSelectionBackColorBrush}" /> -->
+                        <!--     <Setter Property = "Foreground" -->
+                        <!--             Value = "{StaticResource DefaultForeColorBrush}" /> -->
+                        <!-- </Trigger> -->
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

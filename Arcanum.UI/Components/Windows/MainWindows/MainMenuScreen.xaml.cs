@@ -14,13 +14,15 @@ namespace Arcanum.UI.Components.Windows.MainWindows;
 public partial class MainMenuScreen
 {
    private readonly MainViewModel _mainViewModel;
-   
+
    public MainMenuScreen()
    {
       InitializeComponent();
       _mainViewModel = new();
       DataContext = _mainViewModel;
       
+      Closed += OnClosed;
+
       _mainViewModel.PropertyChanged += (sender, args) =>
       {
          if (args.PropertyName == nameof(MainViewModel.IsWindowVisible))
@@ -30,6 +32,11 @@ public partial class MainMenuScreen
       };
 
       Debug.Assert(_mainViewModel != null, "MainViewModel should not be null");
+   }
+
+   private void OnClosed(object? sender, EventArgs? e)
+   {
+      Application.Current.Shutdown();
    }
 
    private void CloseButton_Click(object sender, RoutedEventArgs e)

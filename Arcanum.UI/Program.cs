@@ -56,6 +56,7 @@ internal static class Program
       
       app.MainWindow = mw;
       
+      mw.Show();
       app.Run();
    }
 

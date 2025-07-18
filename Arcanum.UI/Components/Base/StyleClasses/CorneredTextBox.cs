@@ -1,4 +1,6 @@
-﻿namespace Arcanum.UI.Components.Base.StyleClasses;
+﻿using System.Windows.Input;
+
+namespace Arcanum.UI.Components.Base.StyleClasses;
 
 using System.Windows;
 using System.Windows.Controls;
@@ -20,6 +22,13 @@ public class CorneredTextBox : TextBox
     public static readonly DependencyProperty HighlightOnFocusProperty =
         DependencyProperty.Register(nameof(HighlightOnFocus), typeof(bool), typeof(CorneredTextBox), new (true));
 
+    // For some reason the textbox bubble the events from underneath up
+    protected override void OnMouseMove(MouseEventArgs e)
+    {
+        base.OnMouseMove(e);
+        e.Handled = true;
+    }
+    
     public bool HighlightOnFocus
     {
         get => (bool)GetValue(HighlightOnFocusProperty);

@@ -89,9 +89,24 @@
                                      FontSize = "16"
                                      Click = "OpenPatreonButton_Click"
                                      Background = "Transparent"
-                                     HoverBackground="Transparent"
-                                     Style="{StaticResource BaseDarkButtonStyle}">
-                <Image Source="../../../../Assets/Icons/PATREON_SYMBOL_1_WHITE_RGB.png"/>
+                                     HoverBackground = "Transparent">
+                <styleClasses:BaseButton.Style>
+                    <Style TargetType = "styleClasses:BaseButton"
+                           BasedOn = "{StaticResource BaseDarkButtonStyle}">
+                        <Setter Property = "Background"
+                                Value = "Transparent" />
+                        <Style.Triggers>
+                            <Trigger Property = "IsMouseOver"
+                                     Value = "True">
+                                <Setter Property = "Cursor"
+                                        Value = "Hand" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </styleClasses:BaseButton.Style>
+
+                <Image Source = "../../../../Assets/Icons/PATREON_SYMBOL_1_WHITE_RGB.png" />
+
             </styleClasses:BaseButton>
             <styleClasses:BaseButton x:Name = "OpenDiscordButton"
                                      Grid.Column = "1"
@@ -100,9 +115,22 @@
                                      FontSize = "16"
                                      Click = "OpenGithubButton_OnClick"
                                      Background = "Transparent"
-                                     HoverBackground="Transparent"
-                                     Style="{StaticResource BaseDarkButtonStyle}">
-                <Image Source="../../../../Assets/Icons/github_mark_white.png"/>
+                                     HoverBackground = "Transparent">
+                <styleClasses:BaseButton.Style>
+                    <Style TargetType = "styleClasses:BaseButton"
+                           BasedOn = "{StaticResource BaseDarkButtonStyle}">
+                        <Setter Property = "Background"
+                                Value = "Transparent" />
+                        <Style.Triggers>
+                            <Trigger Property = "IsMouseOver"
+                                     Value = "True">
+                                <Setter Property = "Cursor"
+                                        Value = "Hand" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </styleClasses:BaseButton.Style>
+                <Image Source = "../../../../Assets/Icons/github_mark_white.png" />
             </styleClasses:BaseButton>
             <styleClasses:BaseButton x:Name = "OpenGithubButton"
                                      Grid.Column = "2"
@@ -111,9 +139,22 @@
                                      FontSize = "16"
                                      Click = "OpenDiscordButton_OnClick"
                                      Background = "Transparent"
-                                     HoverBackground="Transparent"
-                                     Style="{StaticResource BaseDarkButtonStyle}">
-                <Image Source="../../../../Assets/Icons/Discord-Symbol-White.png"/>
+                                     HoverBackground = "Transparent">
+                <styleClasses:BaseButton.Style>
+                    <Style TargetType = "styleClasses:BaseButton"
+                           BasedOn = "{StaticResource BaseDarkButtonStyle}">
+                        <Setter Property = "Background"
+                                Value = "Transparent" />
+                        <Style.Triggers>
+                            <Trigger Property = "IsMouseOver"
+                                     Value = "True">
+                                <Setter Property = "Cursor"
+                                        Value = "Hand" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </styleClasses:BaseButton.Style>
+                <Image Source = "../../../../Assets/Icons/Discord-Symbol-White.png" />
             </styleClasses:BaseButton>
         </Grid>
     </Grid>

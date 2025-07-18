@@ -23,7 +23,7 @@ public partial class MainMenuScreen
       
       Closed += OnClosed;
 
-      _mainViewModel.PropertyChanged += (sender, args) =>
+      _mainViewModel.PropertyChanged += (_, args) =>
       {
          if (args.PropertyName == nameof(MainViewModel.IsWindowVisible))
          {

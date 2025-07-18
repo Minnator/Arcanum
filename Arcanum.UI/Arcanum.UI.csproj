@@ -29,6 +29,7 @@
     </ItemGroup>
     <ItemGroup>
         <Folder Include="Components\Specific\Converters\"/>
+        <Folder Include="Components\MVVM\Views\MainWindow\" />
         <Folder Include="FeatureSpotlight\" />
         <Folder Include="HostUIServices\" />
     </ItemGroup>
@@ -176,11 +177,6 @@
             <XamlRuntime>Wpf</XamlRuntime>
             <SubType>Designer</SubType>
         </Page>
-        <Page Update="Components\Windows\SearchWindow.xaml">
-            <Generator>MSBuild:Compile</Generator>
-            <XamlRuntime>Wpf</XamlRuntime>
-            <SubType>Designer</SubType>
-        </Page>
         <Page Update="Components\Themes\Generic.xaml">
             <Generator>MSBuild:Compile</Generator>
         </Page>
@@ -198,6 +194,31 @@
           <SubType>Designer</SubType>
         </Page>
         <Page Update="Components\UserControls\MainMenuScreen\FeatureCard.xaml">
+          <Generator>MSBuild:Compile</Generator>
+          <XamlRuntime>Wpf</XamlRuntime>
+          <SubType>Designer</SubType>
+        </Page>
+        <Page Update="Components\Windows\PopUp\PropertyGridWindow.xaml">
+          <Generator>MSBuild:Compile</Generator>
+          <XamlRuntime>Wpf</XamlRuntime>
+          <SubType>Designer</SubType>
+        </Page>
+        <Page Update="Components\Windows\MinorFeatures\ConsoleWindow.xaml">
+          <Generator>MSBuild:Compile</Generator>
+          <XamlRuntime>Wpf</XamlRuntime>
+          <SubType>Designer</SubType>
+        </Page>
+        <Page Update="Components\Windows\MinorFeatures\SearchWindow.xaml">
+          <Generator>MSBuild:Compile</Generator>
+          <XamlRuntime>Wpf</XamlRuntime>
+          <SubType>Designer</SubType>
+        </Page>
+        <Page Update="Components\Windows\MainWindows\MainMenuScreen.xaml">
+          <Generator>MSBuild:Compile</Generator>
+          <XamlRuntime>Wpf</XamlRuntime>
+          <SubType>Designer</SubType>
+        </Page>
+        <Page Update="Components\Windows\MainWindows\LoadingScreen.xaml">
           <Generator>MSBuild:Compile</Generator>
           <XamlRuntime>Wpf</XamlRuntime>
           <SubType>Designer</SubType>

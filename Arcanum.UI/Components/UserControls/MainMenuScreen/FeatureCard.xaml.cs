@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Arcanum.UI.Components.UserControls;
+namespace Arcanum.UI.Components.UserControls.MainMenuScreen;
 
 public partial class FeatureCard
 {

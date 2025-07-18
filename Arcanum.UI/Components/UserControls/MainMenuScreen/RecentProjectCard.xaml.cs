@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 using Arcanum.Core.CoreSystems.ProjectFileUtil.Mod;
-using Arcanum.UI.Components.ViewModels.Views.MainMenuScreen;
+using Arcanum.UI.Components.MVVM.Views.MainMenuScreen;
 
 namespace Arcanum.UI.Components.UserControls.MainMenuScreen;
 
@@ -24,6 +24,6 @@ public partial class RecentProjectCard
       if (e.ChangedButton != MouseButton.Left)
          return;
       
-      _mainViewModel.LaunchArcanum(_projectFileDescriptor);
+      _ = _mainViewModel.LaunchArcanum(_projectFileDescriptor);
    }
 }

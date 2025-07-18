@@ -3,13 +3,13 @@
              xmlns:x = "http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:uc = "clr-namespace:Arcanum.UI.Components.UserControls"
              xmlns:base = "clr-namespace:Arcanum.UI.Components.Base.StyleClasses"
-             xmlns:conv = "clr-namespace:Arcanum.UI.Components.Base.Converters"
-             xmlns:delayedEvents = "clr-namespace:Arcanum.Core.Utils.DelayedEvents;assembly=Arcanum.Core">
+             xmlns:delayedEvents = "clr-namespace:Arcanum.Core.Utils.DelayedEvents;assembly=Arcanum.Core"
+             xmlns:converters = "clr-namespace:Arcanum.UI.Components.MVVM.Converters">
 
 
     <UserControl.Resources>
-        <conv:EnumValuesConverter x:Key = "EnumValuesConverter" />
-        <conv:DecimalDoubleConverter x:Key = "DecimalDoubleConverter" />
+        <converters:EnumValuesConverter x:Key = "EnumValuesConverter" />
+        <converters:DecimalDoubleConverter x:Key = "DecimalDoubleConverter" />
 
         <DataTemplate x:Key = "StringTemplate"
                       DataType = "{x:Type delayedEvents:PropertyItem}">

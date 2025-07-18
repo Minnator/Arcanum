@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x = "http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:converters = "clr-namespace:Arcanum.UI.Components.Base.Converters">
+                    xmlns:converters = "clr-namespace:Arcanum.UI.Components.MVVM.Converters">
 
     <converters:WidthMinusConverter x:Key = "DropdownWidthMinusConverter"
                                     Subtract = "28" />

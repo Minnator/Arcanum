@@ -5,6 +5,8 @@ using Arcanum.Core.CoreSystems.IO;
 using Arcanum.Core.CoreSystems.ParsingSystem;
 using Arcanum.Core.FlowControlServices;
 using Arcanum.Core.Utils.vdfParser;
+using Arcanum.UI.Components.MVVM.Converters;
+using Arcanum.UI.Components.Windows.MainWindows;
 using Arcanum.UI.HostUIServices.SettingsGUI;
 using Arcanum.UI.WpfTesting;
 using Nexus.Core;
@@ -20,6 +22,8 @@ internal static class Program
    private static void Main()
    {
       var app = new Application();
+      
+      app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
 
       var resources = new[]
       {
@@ -31,7 +35,7 @@ internal static class Program
          "Components/Base/Styles/DarkTabControl.xaml", "Components/Base/Styles/StackPanelStyle.xaml",
          "Components/Base/Styles/BaseToolTip.xaml", 
       };
-
+      
       foreach (var path in resources)
       {
          var dict = new ResourceDictionary { Source = new (path, UriKind.Relative) };
@@ -51,7 +55,8 @@ internal static class Program
       Console.WriteLine("Eu4 location: " + VdfParser.GetEu5Path());
       
       app.MainWindow = mw;
-      app.MainWindow.ShowDialog();
+      
+      app.Run();
    }
 
 }

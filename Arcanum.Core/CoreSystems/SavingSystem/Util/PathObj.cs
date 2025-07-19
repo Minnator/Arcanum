@@ -11,19 +11,19 @@ namespace Arcanum.Core.CoreSystems.SavingSystem.Util;
 /// <param name="filename">
 ///     The filename as a string including the file extension.
 /// </param>
-/// <param name="rootPosition">
+/// <param name="dataSpace">
 ///     The root position indicating whether the path is relative to the vanilla game files or a mod.
 /// </param>
-public class PathObj(string[] localPath, string filename, FileManager.RootPosition rootPosition)
+public class PathObj(string[] localPath, string filename, DataSpace dataSpace)
 {
-    public static readonly PathObj Empty = new PathObj([], string.Empty, FileManager.RootPosition.Vanilla);
+    public static readonly PathObj Empty = new PathObj([], string.Empty, DataSpace.Empty);
 
     public readonly string[] LocalPath = localPath;
     public readonly string Filename = filename;
-    public readonly FileManager.RootPosition RootPosition = rootPosition;
+    public readonly DataSpace DataSpace = dataSpace;
     
     /// <summary>
     /// The full path as a string, combining the root position, local path, and filename.
     /// </summary>
-    public string FullPath => string.Join(Path.DirectorySeparatorChar, FileManager.GetPath(RootPosition), LocalPath, Filename);
+    public string FullPath => string.Join(Path.DirectorySeparatorChar, DataSpace.Path, LocalPath, Filename);
 }

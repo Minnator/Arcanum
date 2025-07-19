@@ -1,40 +1,57 @@
-﻿namespace Arcanum.Core.CoreSystems.SavingSystem;
+﻿using Arcanum.Core.CoreSystems.SavingSystem.Util;
+using Arcanum.Core.CoreSystems.SavingSystem.Util.InformationStructs;
+
+namespace Arcanum.Core.CoreSystems.SavingSystem;
 
 /// <summary>
 /// The FileManager class is responsible for managing file paths for both vanilla and modded content.
 /// </summary>
 public static class FileManager
 {
-    /// <summary>
-    /// Enumeration representing the root position of a file path.
-    /// </summary>
-    public enum RootPosition
-    {
-        Vanilla,
-        Mod,
-    }
+    public static DataSpace ModDataSpace = DataSpace.Empty;
+    public static DataSpace[] DependendDataSpaces = [DataSpace.Empty];
+    public static DataSpace VanillaDataSpace => DependendDataSpaces[0];
 
-    /// <summary>
-    /// Retrieves the file path based on the specified root position.
-    /// </summary>
-    /// <param name="rootPosition">
-    /// Represents the root position of the file path, indicating whether it is relative to the vanilla game files or a mod.
-    /// </param>
-    /// <returns>
-    /// String array representing the file path components based on the root position.
-    /// </returns>
-    /// <exception cref="ArgumentOutOfRangeException"></exception>
-    public static string[] GetPath(RootPosition rootPosition)
+    public static List<ISaveable> NewSaveables = [];
+    public static void GenerateCustomSavingCatalog()
     {
-        return rootPosition switch
+        // TODO: Implement for existing saveables
+        
+        // For new saveable, we need to set the file dropdown to a new default value
+        // List of a tuple of a string and corresponding FileObj
+        // The default option is marked with the FileObj.Empty
+
+        Dictionary<FileInformation, List<(string, FileObj)>> groupedSaveables = [];
+
+        foreach (var fileInformation in NewSaveables.Select(saveable => saveable.GetFileInformation()))
         {
-            RootPosition.Mod => ModPath,
-            RootPosition.Vanilla => VanillaPath,
-            _ => throw new ArgumentOutOfRangeException(nameof(rootPosition), rootPosition, null)
-        };
+            if (groupedSaveables.TryGetValue(fileInformation, out var fileList)) continue;
+            fileList = GenerateFileSelection(fileInformation);
+            groupedSaveables[fileInformation] = fileList;
+        }
+        
     }
-    
-    public static string[] ModPath { get; set; }
 
-    public static string[] VanillaPath { get;  set; }
+    public static List<(string, FileObj)> GenerateFileSelection(FileInformation fileInformation)
+    {
+        var descriptor = fileInformation.Descriptor;
+        var allowsOverwrite = fileInformation.AllowsOverwrite;
+        if (!allowsOverwrite)
+        {
+            // We need to Test if a file with the given name already exists for the descriptor
+            var files = descriptor.Files;
+            if (files.Count > 0)
+            {
+                // There exist at least one file, so we need to check if the file name already exists
+                if (files.Any(file => !file.AllowMultipleInstances && file.Path.Filename == fileInformation.FileName))
+                {
+                    throw new InvalidOperationException(
+                        $"A file with the name '{fileInformation.FileName}' already exists for the Path '{descriptor.GetFilePath()}' and does not allow multiple instances.");
+                }
+            }
+
+        }
+
+        return [];
+    }
 }

@@ -38,7 +38,6 @@ public class MainViewModel : ObservableObject
             return;
 
          _isWindowVisible = value;
-         Console.WriteLine($"IsWindowVisible: {value}");
          OnPropertyChanged();
       }
    }
@@ -116,6 +115,10 @@ public class MainViewModel : ObservableObject
       IsWindowVisible = Visibility.Collapsed;
       var loadingScreen = new Windows.MainWindows.LoadingScreen();
       await loadingScreen.ShowLoadingAsync();
+      var mw = new Windows.MainWindows.MainWindow();
+      mw.ShowDialog();
+      GC.Collect();
+      GC.WaitForPendingFinalizers();
       IsWindowVisible = Visibility.Visible;
    }
 }

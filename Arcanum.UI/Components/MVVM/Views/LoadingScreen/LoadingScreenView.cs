@@ -27,7 +27,7 @@ public class LoadingScreenView : INotifyPropertyChanged
          if (_loadingTip != value)
          {
             _loadingTip = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(LoadingTip)));
+            PropertyChanged?.Invoke(this, new(nameof(LoadingTip)));
          }
       }
    }

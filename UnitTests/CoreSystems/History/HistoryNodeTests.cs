@@ -1,11 +1,7 @@
 ﻿using Arcanum.Core.CoreSystems.History;
-
-namespace UnitTests;
-
-using NUnit.Framework;
 using Moq;
-using System;
-using System.Linq;
+
+namespace UnitTests.CoreSystems.History;
 
 [TestFixture]
 public class HistoryTests

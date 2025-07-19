@@ -1,15 +1,65 @@
 ﻿<base:BaseWindow x:Class = "Arcanum.UI.Components.Windows.MainWindows.MainWindow"
-        xmlns = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x = "http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:mc = "http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:d = "http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:local = "clr-namespace:Arcanum.UI.Components.Windows.MainWindows"
-        xmlns:base = "clr-namespace:Arcanum.UI.Components.Base"
-        mc:Ignorable = "d"
-        Title = "MainWindow"
-        Height = "450"
-        Width = "800">
+                 xmlns = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x = "http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:base = "clr-namespace:Arcanum.UI.Components.Base"
+                 xmlns:mainWindow = "clr-namespace:Arcanum.UI.Components.MVVM.Views.MainWindow"
+                 Title = "Arcanum"
+                 Height = "1080"
+                 Width = "1920"
+                 FooterHeight = "30"
+                 HeaderHeight = "30">
+
+    <base:BaseWindow.DataContext>
+        <mainWindow:MainWindowView />
+    </base:BaseWindow.DataContext>
+    
+    <Window.CommandBindings>
+        <CommandBinding Command="mainWindow:MwCommands.CloseProjectFileCommand"
+                        Executed="CloseCommand_Executed"
+                        CanExecute="CanCloseCommand_CanExecute" />
+    </Window.CommandBindings>
+
+    <base:BaseWindow.HeaderContent>
+        <Menu>
+            <MenuItem Header = "File">
+
+                <MenuItem Header = "Create new Project"
+                          Command = "{Binding CloseAndCreateNewCommand}" />
+                <MenuItem Header = "Close Project"
+                          Command = "mainWindow:MwCommands.CloseProjectFileCommand" />
+                <Separator />
+                <MenuItem Header = "Save All Modifications"
+                          Command = "{Binding CloseProjectFileCommand}" />
+
+                <MenuItem Header = "Custom Saving Selector"
+                          Command = "{Binding CustomSavingSelectorCommand}" />
+                <Separator />
+            </MenuItem>
+        </Menu>
+    </base:BaseWindow.HeaderContent>
+
+    <base:BaseWindow.FooterContent>
+        <TextBlock Text = "PerformanceCounters"> </TextBlock>
+    </base:BaseWindow.FooterContent>
+
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height = "30" />
+            <RowDefinition Height = "*" />
+            <RowDefinition Height = "30" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width = "20" />
+            <ColumnDefinition Width = "*" />
+            <ColumnDefinition Width = "20" /> <!-- Tool item Column -->
+        </Grid.ColumnDefinitions>
+
+        <Image Grid.Row = "1"
+               Grid.Column = "1"
+               Source = "pack://application:,,,/Assets/Icons/ArcanumForeColor.png">
+        </Image>
     </Grid>
+
+
 </base:BaseWindow>

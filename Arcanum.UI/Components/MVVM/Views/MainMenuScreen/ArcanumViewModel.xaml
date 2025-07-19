@@ -185,8 +185,11 @@
                              ItemsSource = "{Binding BaseMods, RelativeSource={RelativeSource AncestorType=UserControl}}"
                              ItemTemplate = "{StaticResource BaseModDataTemplate}"
                              ItemContainerStyle = "{StaticResource BaseModItemStyle}"
-                             BorderThickness = "0">
-
+                             BorderThickness = "0"
+                             AllowDrop = "True"
+                             PreviewMouseLeftButtonDown = "ListBox_PreviewMouseLeftButtonDown"
+                             PreviewMouseMove = "ListBox_PreviewMouseMove"
+                             Drop = "ListBox_Drop">
 
                     </ListBox>
 
@@ -235,7 +238,7 @@
             <StackPanel Orientation = "Horizontal"
                         Grid.Column = "0"
                         Grid.Row = "1"
-                        x:Name="RecentProjectsPanel">
+                        x:Name = "RecentProjectsPanel">
             </StackPanel>
         </Grid>
     </Grid>

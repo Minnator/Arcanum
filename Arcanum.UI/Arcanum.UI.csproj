@@ -16,6 +16,11 @@
         <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+      <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+
     <ItemGroup>
         <ProjectReference Include="..\Arcanum.Core\Arcanum.Core.csproj"/>
         <ProjectReference Include="..\Arcanum.PluginHost\Arcanum.PluginHost.csproj"/>
@@ -28,8 +33,9 @@
         <ProjectReference Include="..\Nexus.Core\Nexus.Core.csproj"/>
     </ItemGroup>
     <ItemGroup>
+        <Folder Include="Components\MVVM\Helpers\" />
+        <Folder Include="Components\MVVM\Models\MainWindowModels\" />
         <Folder Include="Components\Specific\Converters\"/>
-        <Folder Include="Components\MVVM\Views\MainWindow\" />
         <Folder Include="FeatureSpotlight\" />
         <Folder Include="HostUIServices\" />
     </ItemGroup>
@@ -65,8 +71,6 @@
         <Resource Include="Assets\Icons\ArrowUp.png" />
         <None Remove="Assets\Icons\Eye20x20.png" />
         <Resource Include="Assets\Icons\SplashTest.png" />
-        <None Remove="Assets\Icons\ArcanumSimplified.png" />
-        <Resource Include="Assets\Icons\ArcanumSimplified.png" />
         <Resource Include="Assets\Icons\Arcanum.png" />
         <None Remove="Assets\Icons\ArcanumSimplified.ico" />
         <Resource Include="Assets\Icons\ArcanumSimplified.ico" />
@@ -106,6 +110,8 @@
         <Resource Include="Assets\Icons\github_mark_white.png" />
         <None Remove="Assets\Icons\Discord-Symbol-White.png" />
         <Resource Include="Assets\Icons\Discord-Symbol-White.png" />
+        <None Remove="Assets\Icons\ArcanumSimplified.png" />
+        <Resource Include="Assets\Icons\ArcanumSimplified.png" />
     </ItemGroup>
 
     <ItemGroup>

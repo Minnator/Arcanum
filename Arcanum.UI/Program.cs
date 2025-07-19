@@ -21,9 +21,7 @@ internal static class Program
    [STAThread]
    private static void Main()
    {
-      var app = new Application();
-      
-      app.ShutdownMode = ShutdownMode.OnExplicitShutdown;
+      var app = new Application { ShutdownMode = ShutdownMode.OnExplicitShutdown };
 
       var resources = new[]
       {
@@ -33,12 +31,13 @@ internal static class Program
          "Components/Base/Styles/BaseCheckBox.xaml", "Components/Base/Styles/BaseDarkScrollbar.xaml",
          "Components/Base/Styles/BaseListBox.xaml", "Components/Base/Styles/BaseTextBlock.xaml",
          "Components/Base/Styles/DarkTabControl.xaml", "Components/Base/Styles/StackPanelStyle.xaml",
-         "Components/Base/Styles/BaseToolTip.xaml", 
+         "Components/Base/Styles/BaseToolTip.xaml", "Components/Base/Styles/BaseMenuStyle.xaml",
+         "Components/Base/Styles/BaseMenuItemStyle.xaml", 
       };
-      
+
       foreach (var path in resources)
       {
-         var dict = new ResourceDictionary { Source = new (path, UriKind.Relative) };
+         var dict = new ResourceDictionary { Source = new(path, UriKind.Relative) };
          app.Resources.MergedDictionaries.Add(dict);
       }
 
@@ -47,18 +46,13 @@ internal static class Program
       lifecycleManager.RunStartUpSequence(pluginHost);
 
       var mw = new MainMenuScreen();
-      mw.Closing += (_, _) =>
-      {
-         lifecycleManager.RunShutdownSequence(pluginHost);
-      };
+      mw.Closing += (_, _) => { lifecycleManager.RunShutdownSequence(pluginHost); };
 
       Console.WriteLine("Eu4 location: " + VdfParser.GetEu5Path());
-      
+
       app.MainWindow = mw;
-      
+
       mw.Show();
       app.Run();
    }
-
 }
-   

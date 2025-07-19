@@ -8,7 +8,7 @@ public class LoadingScreenModel
    {
       for (var i = 0; i <= 100; i += 10)
       {
-         await Task.Delay(200); // simulate work
+         await Task.Delay(10); // simulate work
          ProgressChanged?.Invoke($"Loading step {i / 10 + 1}/10");
       }
    }

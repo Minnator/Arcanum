@@ -12,6 +12,7 @@ public static partial class VdfParser
    private const string EU4_STEAM_ID = "236850";
    private const string EU4_FOLDER_NAME = "Europa Universalis IV";
    
+   // TODO Fix this to use the correct path for EU5
    public static string GetEu5Path()
    {
       var libraries = GetLibrariesAndGames();

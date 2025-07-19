@@ -7,7 +7,9 @@
                  Height = "1080"
                  Width = "1920"
                  FooterHeight = "30"
-                 HeaderHeight = "30">
+                 HeaderHeight = "30"
+                 Loaded="MainWindow_OnLoaded"
+                 WindowStartupLocation = "CenterScreen">
 
     <base:BaseWindow.DataContext>
         <mainWindow:MainWindowView />
@@ -16,7 +18,16 @@
     <Window.CommandBindings>
         <CommandBinding Command="mainWindow:MwCommands.CloseProjectFileCommand"
                         Executed="CloseCommand_Executed"
-                        CanExecute="CanCloseCommand_CanExecute" />
+                        CanExecute="CommandCanAlwaysExecute" />
+        <CommandBinding Command="mainWindow:MwCommands.OpenProjectFileCommand"
+                        Executed="GoToArcanumMenuScreenCommand_Executed"
+                        CanExecute="CommandCanAlwaysExecute" />
+        <CommandBinding Command="mainWindow:MwCommands.NewProjectFileCommand"
+                        Executed="GoToArcanumMenuScreenCommand_Executed"
+                        CanExecute="CommandCanAlwaysExecute" />
+        <CommandBinding Command="mainWindow:MwCommands.ExitArcanumCommand"
+                        Executed="ExitArcanum_OnExecuted"
+                        CanExecute="CommandCanAlwaysExecute" />
     </Window.CommandBindings>
 
     <base:BaseWindow.HeaderContent>
@@ -24,9 +35,14 @@
             <MenuItem Header = "File">
 
                 <MenuItem Header = "Create new Project"
-                          Command = "{Binding CloseAndCreateNewCommand}" />
-                <MenuItem Header = "Close Project"
+                          Command = "mainWindow:MwCommands.NewProjectFileCommand" />
+                <MenuItem Header = "Open Project"
+                          Command = "mainWindow:MwCommands.OpenProjectFileCommand" />
+                <MenuItem Header = "Close current Project"
                           Command = "mainWindow:MwCommands.CloseProjectFileCommand" />
+                <Separator />
+                <MenuItem Header = "Exit"
+                          Command = "mainWindow:MwCommands.ExitArcanumCommand" />
                 <Separator />
                 <MenuItem Header = "Save All Modifications"
                           Command = "{Binding CloseProjectFileCommand}" />

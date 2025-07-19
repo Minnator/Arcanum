@@ -22,6 +22,7 @@ public class PluginManager : ISubroutineLogger
    private readonly ICrossPluginCommunicator _cpcService;
    private IPluginInfoService PInfoService { get; }
 
+   public IPluginHost Host => _host;
    public PluginManager(IPluginHost host)
    {
       _host = host;

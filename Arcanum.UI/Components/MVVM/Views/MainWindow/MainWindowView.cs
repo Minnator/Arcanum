@@ -6,6 +6,7 @@ public class MainWindowView : ObservableObject
 {
    public MainWindowView()
    {
+      
    }
    
 }

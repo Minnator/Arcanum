@@ -11,6 +11,8 @@ namespace Arcanum.Core.FlowControlServices;
 
 public class LifecycleManager
 {
+   public static LifecycleManager Instance => LfmInstance;
+
    /* --- Bootup Sequence ---
     *
     *  0. Initialization of the plugin host
@@ -27,6 +29,8 @@ public class LifecycleManager
     */
 
    private PluginManager _pluginManager = null!;
+   private static readonly LifecycleManager LfmInstance = new();
+   
 
    public void RunStartUpSequence(IPluginHost host)
    {
@@ -58,13 +62,13 @@ public class LifecycleManager
    }
 #endif
 
-   public void RunShutdownSequence(IPluginHost host)
+   public void RunShutdownSequence()
    {
       // Step 1: Unload plugins
       _pluginManager.UnloadAll();
 
       // Step 2: Unload core services
-      host.Unload();
+      _pluginManager.Host.Unload();
 
       // Step 3: Perform any additional cleanup if necessary
       // This might include saving state, closing files, etc.

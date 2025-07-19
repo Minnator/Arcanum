@@ -13,7 +13,8 @@
         WindowStyle = "None"
         ResizeMode = "NoResize"
         WindowStartupLocation = "CenterScreen"
-        Icon = "/Assets/Icons/ArcanumSimplified.ico">
+        Icon = "/Assets/Icons/ArcanumSimplified.ico"
+        Activated="MainMenuScreen_OnActivated">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -51,7 +52,8 @@
                        FontWeight = "Bold">
             </TextBlock>
 
-            <StackPanel Grid.Row = "1"
+            <StackPanel x:Name = "MenuBarStackPanel"
+                Grid.Row = "1"
                         Grid.Column = "0">
                 <RadioButton IsChecked = "True"
                              Margin = "40,0,40,10"

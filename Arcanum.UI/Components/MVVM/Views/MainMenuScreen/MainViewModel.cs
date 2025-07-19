@@ -1,18 +1,25 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using Arcanum.Core.CoreSystems.ProjectFileUtil.Mod;
 using Arcanum.Core.Globals;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using static Arcanum.UI.Components.Windows.MainWindows.MainMenuScreen;
 
 namespace Arcanum.UI.Components.MVVM.Views.MainMenuScreen;
 
 public class MainViewModel : ObservableObject
 {
+   internal MainMenuScreenView TargetedView { get; set; } = MainMenuScreenView.Home;
+
+   internal StackPanel MainMenuStackPanel { get; set; } = null!;
+
    public RelayCommand HomeVc { get; set; }
    public RelayCommand ModforgeVc { get; set; }
    public RelayCommand FeatureVc { get; set; }
@@ -63,12 +70,50 @@ public class MainViewModel : ObservableObject
 
       CurrentView = HomeVm;
 
-      HomeVc = new(() => { CurrentView = HomeVm; });
-      FeatureVc = new(() => { CurrentView = FeatureFm; });
-      ModforgeVc = new(() => { CurrentView = ModforgeVm; });
-      ArcanumVc = new(() => { CurrentView = ArcanumVm; });
-      AboutUsVc = new(() => { CurrentView = AboutUsVm; });
-      AttributionsVc = new(() => { CurrentView = AttributionsVm; });
+      HomeVc = new(() => { SetCurrentView(MainMenuScreenView.Home); });
+      FeatureVc = new(() => { SetCurrentView(MainMenuScreenView.Feature); });
+      ModforgeVc = new(() => { SetCurrentView(MainMenuScreenView.Modforge); });
+      ArcanumVc = new(() => { SetCurrentView(MainMenuScreenView.Arcanum); });
+      AboutUsVc = new(() => { SetCurrentView(MainMenuScreenView.AboutUs); });
+      AttributionsVc = new(() => { SetCurrentView(MainMenuScreenView.Attributions); });
+   }
+
+   internal void SetCurrentView(MainMenuScreenView view)
+   {
+      Debug.Assert(MainMenuStackPanel != null, "MainMenuStackPanel should not be null");
+
+      switch (view)
+      {
+         case MainMenuScreenView.Home:
+            CurrentView = HomeVm;
+            break;
+         case MainMenuScreenView.Modforge:
+            CurrentView = ModforgeVm;
+            break;
+         case MainMenuScreenView.Feature:
+            CurrentView = FeatureFm;
+            break;
+         case MainMenuScreenView.Arcanum:
+            CurrentView = ArcanumVm;
+            break;
+         case MainMenuScreenView.AboutUs:
+            CurrentView = AboutUsVm;
+            break;
+         case MainMenuScreenView.Attributions:
+            CurrentView = AttributionsVm;
+            break;
+         default:
+            throw new ArgumentOutOfRangeException(nameof(view), view, null);
+      }
+
+      // Update the button state of the MainMenuStackPanel
+      var buttons = MainMenuStackPanel.Children.OfType<RadioButton>().ToList();
+      buttons.ForEach(button => button.IsChecked = false);
+      
+      if (MainMenuStackPanel.Children.Count > (int)view)
+         ((RadioButton)MainMenuStackPanel.Children[(int)view]).IsChecked = true;
+
+      TargetedView = view;
    }
 
    internal bool GetDescriptorFromInput(out ProjectFileDescriptor descriptor)
@@ -106,12 +151,11 @@ public class MainViewModel : ObservableObject
                  .Any(x => x.ModName.Equals(descriptor.ModName, StringComparison.OrdinalIgnoreCase)))
       {
          AppData.MainMenuScreenDescriptor.ProjectFiles.RemoveAll(x => x.ModName.Equals(descriptor.ModName,
-                                                                  StringComparison.OrdinalIgnoreCase));
+                                                                     StringComparison.OrdinalIgnoreCase));
       }
 
       AppData.MainMenuScreenDescriptor.ProjectFiles.Add(descriptor);
 
-      
       IsWindowVisible = Visibility.Collapsed;
       var loadingScreen = new Windows.MainWindows.LoadingScreen();
       await loadingScreen.ShowLoadingAsync();

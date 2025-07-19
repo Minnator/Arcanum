@@ -42,11 +42,10 @@ internal static class Program
       }
 
       var pluginHost = new PluginHost.PluginHost();
-      var lifecycleManager = new LifecycleManager();
-      lifecycleManager.RunStartUpSequence(pluginHost);
+      LifecycleManager.Instance.RunStartUpSequence(pluginHost);
 
       var mw = new MainMenuScreen();
-      mw.Closing += (_, _) => { lifecycleManager.RunShutdownSequence(pluginHost); };
+      mw.Closing += (_, _) => { LifecycleManager.Instance.RunShutdownSequence(); };
 
       Console.WriteLine("Eu4 location: " + VdfParser.GetEu5Path());
 

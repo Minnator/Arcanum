@@ -13,25 +13,33 @@ namespace Arcanum.UI.Components.Windows.MainWindows;
 /// </summary>
 public partial class MainMenuScreen
 {
-   private readonly MainViewModel _mainViewModel;
+   public enum MainMenuScreenView
+   {
+      Home = 0,
+      Arcanum = 1,
+      Feature = 2,
+      Modforge = 3,
+      AboutUs = 4,
+      Attributions = 5,
+   }
+
+   public readonly MainViewModel MainViewModel;
 
    public MainMenuScreen()
    {
       InitializeComponent();
-      _mainViewModel = new();
-      DataContext = _mainViewModel;
-      
+      MainViewModel = new() { MainMenuStackPanel = MenuBarStackPanel };
+      DataContext = MainViewModel;
+
       Closed += OnClosed;
 
-      _mainViewModel.PropertyChanged += (_, args) =>
+      MainViewModel.PropertyChanged += (_, args) =>
       {
-         if (args.PropertyName == nameof(MainViewModel.IsWindowVisible))
-         {
-            Visibility = _mainViewModel.IsWindowVisible;
-         }
+         if (args.PropertyName == nameof(MVVM.Views.MainMenuScreen.MainViewModel.IsWindowVisible))
+            Visibility = MainViewModel.IsWindowVisible;
       };
 
-      Debug.Assert(_mainViewModel != null, "MainViewModel should not be null");
+      Debug.Assert(MainViewModel != null, "MainViewModel should not be null");
    }
 
    private void OnClosed(object? sender, EventArgs? e)
@@ -47,14 +55,14 @@ public partial class MainMenuScreen
    private void CreateNewProjectButton_Click(object sender, RoutedEventArgs e)
    {
       ArcanumTabButton.IsChecked = true;
-      _mainViewModel.ArcanumVc.Execute(null);
+      MainViewModel.ArcanumVc.Execute(null);
    }
 
    private async void LoadLastConfigButton_Click(object sender, RoutedEventArgs e)
    {
       ProjectFileDescriptor? descriptor;
       // If we are not in the arcanum view model we launch the last project if there is one
-      if (_mainViewModel.CurrentView is not ArcanumViewModel)
+      if (MainViewModel.CurrentView is not ArcanumViewModel)
       {
          descriptor = AppData.MainMenuScreenDescriptor.GetLastDescriptor();
          if (descriptor is null)
@@ -66,7 +74,7 @@ public partial class MainMenuScreen
             return;
          }
       }
-      else if (!_mainViewModel.GetDescriptorFromInput(out descriptor))
+      else if (!MainViewModel.GetDescriptorFromInput(out descriptor))
       {
          MessageBox.Show("Could not create a valid 'ProjectDescriptor'.\n" +
                          "Please make sure to have valid paths for the mod- and the vanilla folder.\n\n " +
@@ -77,13 +85,13 @@ public partial class MainMenuScreen
          return;
       }
 
-      await _mainViewModel.LaunchArcanum(descriptor);
+      await MainViewModel.LaunchArcanum(descriptor);
    }
 
    private void LoadLastConfigButton_MouseEnter(object sender, MouseEventArgs e)
    {
       // Set the tooltip to the profile which will be loaded
-      if (_mainViewModel.CurrentView is not ArcanumViewModel)
+      if (MainViewModel.CurrentView is not ArcanumViewModel)
       {
          var descriptor = AppData.MainMenuScreenDescriptor.GetLastDescriptor();
          if (descriptor is not null)
@@ -100,5 +108,10 @@ public partial class MainMenuScreen
       {
          LoadLastConfigButton.ToolTip = "Load the current project configuration";
       }
+   }
+
+   private void MainMenuScreen_OnActivated(object? sender, EventArgs e)
+   {
+      MainViewModel.SetCurrentView(MainViewModel.TargetedView);
    }
 }

@@ -249,48 +249,43 @@ public class AllocatorViewModel : ViewModelBase
 
    private void PastePopsFromLocationWithVariation(Location? obj)
    {
-      if (ArcClipboard.CurrentPayload == null || ArcClipboard.CurrentPayload.Value is not Location cl)
+      if (ArcClipboard.CurrentPayload?.Value is not Location cl)
          return;
 
       var diff = 0d;
       var random = new Random();
 
-      if (PasteInEntireSelection)
-         foreach (var location in Selection.GetSelectedLocations)
-            if (location != cl)
-               foreach (var pop in cl.Pops)
-               {
-                  var newPop = (PopDefinition)pop.DeepClone();
-                  var step1 = (float)random.NextDouble() * (PasteVariationMax - PasteVariationMin) + PasteVariationMin;
-                  var variation = 1 + step1 / 100f;
-                  ArcLog.WritePure($"Applying variation of {step1:F2}% to pop of size {pop.Size} results in multiplier {variation:F4}");
-                  newPop.Size *= variation;
+      var targetLocations = PasteInEntireSelection
+                               ? Selection.GetSelectedLocations.ToList()
+                               : [LoadedLocation];
 
-                  Nx.AddToCollection(location, Location.Field.Pops, newPop);
-                  diff += newPop.Size;
-               }
-            else
-            {
-               if (LoadedLocation == Location.Empty || LoadedLocation == cl)
-                  return;
+      foreach (var location in targetLocations)
+      {
+         if (location == Location.Empty || location == cl)
+            continue;
 
-               foreach (var pop in cl.Pops)
-               {
-                  var newPop = (PopDefinition)pop.DeepClone();
-                  var step1 = (float)random.NextDouble() * (PasteVariationMax - PasteVariationMin) + PasteVariationMin;
-                  var variation = 1 + step1 / 100f;
-                  ArcLog.WritePure($"Applying variation of {step1:F2}% to pop of size {pop.Size} results in multiplier {variation:F4}");
-                  newPop.Size *= variation;
+         foreach (var pop in cl.Pops)
+         {
+            var newPop = (PopDefinition)pop.DeepClone();
 
+            var step1 = (float)random.NextDouble() * (PasteVariationMax - PasteVariationMin) + PasteVariationMin;
+            step1 *= random.NextDouble() < 0.5f ? -1 : 1;
+            var variation = 1 + step1 / 100f;
 
-                  Nx.AddToCollection(LoadedLocation, Location.Field.Pops, newPop);
-                  AddItem(newPop, false);
-                  diff += newPop.Size;
-               }
-            }
+            newPop.Size *= Math.Max(0.001f, variation);
+
+            ArcLog.WritePure($"Variation: {step1:F2}% | Multiplier: {variation:F4} | Final Size: {newPop.Size}");
+
+            Nx.AddToCollection(location, Location.Field.Pops, newPop);
+
+            if (location == LoadedLocation)
+               AddItem(newPop, false);
+
+            diff += newPop.Size;
+         }
+      }
 
       _totalLimit += (int)(diff * 1000);
-
       RunAutoLogScale();
       OnPropertyChanged(nameof(TotalLimit));
    }

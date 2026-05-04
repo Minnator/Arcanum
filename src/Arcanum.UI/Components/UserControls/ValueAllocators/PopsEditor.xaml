@@ -720,11 +720,13 @@
                     <TextBlock Text = "Min Variation:" VerticalAlignment = "Center" HorizontalAlignment = "Right"
                                Margin = "0,0,5,0" />
                     <baseControls:FloatNumericUpDown MinValue = "0" MaxValue = "1000"
+                                                     ToolTip = "The minimum random offset applied to the size of each pasted Pop, in percent. For example, a value of 10 means each Pop will have a random offset between -10% and +10% of its size."
                                                      Value = "{Binding PasteVariationMin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                      HorizontalAlignment = "Left" Margin = "5,0,15,0" Width = "60" />
                     <TextBlock Text = "Max Variation:" VerticalAlignment = "Center" HorizontalAlignment = "Right"
                                Margin = "0,0,5,0" />
                     <baseControls:FloatNumericUpDown MinValue = "0" MaxValue = "1000"
+                                                     ToolTip = "The maximum random offset applied to the size of each pasted Pop, in percent. For example, a value of 10 means each Pop will have a random offset between -10% and +10% of its size."
                                                      Value = "{Binding PasteVariationMax, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                      HorizontalAlignment = "Left" Margin = "5,0,0,0" Width = "60" />
 

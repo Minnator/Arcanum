@@ -250,18 +250,32 @@ public class AllocatorViewModel : ViewModelBase
 
    private void PastePopsFromLocationWithVariation(Location? obj)
    {
+      PastePops(true);
+   }
+
+   private void PastePopsFromLocation(Location? obj)
+   {
+      PastePops(false);
+   }
+
+   private void PastePops(bool withVariation)
+   {
       if (ArcClipboard.CurrentPayload?.Value is not Location cl)
          return;
 
-      var diff = 0d;
       var random = new Random();
+      var diff = 0d;
+      var targets = PasteInEntireSelection
+                       ? Selection.GetSelectedLocations.ToList()
+                       : [LoadedLocation];
 
-      var targetLocations = PasteInEntireSelection
-                               ? Selection.GetSelectedLocations.ToList()
-                               : [LoadedLocation];
+      foreach (var location in targets)
+      {
+         // Skip invalid locations or pasting into the source itself
+         if (location == null! || location == Location.Empty || location == cl || !Globals.DefaultMapDefinition.IsLand(location))
+            continue;
 
-      if (ReplaceExistingPops)
-         foreach (var location in targetLocations)
+         if (ReplaceExistingPops)
          {
             Nx.RemoveRangeFromCollection(location, Location.Field.Pops, location.Pops);
             if (location == LoadedLocation)
@@ -271,77 +285,26 @@ public class AllocatorViewModel : ViewModelBase
             }
          }
 
-      foreach (var location in targetLocations)
-      {
-         if (location == Location.Empty || location == cl)
-            continue;
-
          foreach (var pop in cl.Pops)
          {
             var newPop = (PopDefinition)pop.DeepClone();
+            if (withVariation)
+            {
+               var step1 = (float)random.NextDouble() * (PasteVariationMax - PasteVariationMin) + PasteVariationMin;
+               step1 *= random.NextDouble() < 0.5f ? -1 : 1;
+               var variation = 1 + step1 / 100f;
 
-            var step1 = (float)random.NextDouble() * (PasteVariationMax - PasteVariationMin) + PasteVariationMin;
-            step1 *= random.NextDouble() < 0.5f ? -1 : 1;
-            var variation = 1 + step1 / 100f;
-
-            newPop.Size *= Math.Max(0.001f, variation);
-
-            ArcLog.WritePure($"Variation: {step1:F2}% | Multiplier: {variation:F4} | Final Size: {newPop.Size}");
+               newPop.Size *= Math.Max(0.001f, variation);
+            }
 
             AddToExistingOrNew(newPop, location);
 
+            // Only update the UI list if we are looking at this location
             if (location == LoadedLocation)
-               AddItem(newPop, false);
-
-            diff += newPop.Size;
-         }
-      }
-
-      _totalLimit += (int)(diff * 1000);
-      RunAutoLogScale();
-      OnPropertyChanged(nameof(TotalLimit));
-   }
-
-   private void PastePopsFromLocation(Location? obj)
-   {
-      if (ArcClipboard.CurrentPayload == null || ArcClipboard.CurrentPayload.Value is not Location cl)
-         return;
-
-      var diff = 0d;
-      if (PasteInEntireSelection)
-      {
-         foreach (var location in Selection.GetSelectedLocations)
-            if (location != cl)
             {
-               Nx.RemoveRangeFromCollection(location, Location.Field.Pops, location.Pops);
-               if (location == LoadedLocation)
-               {
-                  Items.Clear();
-                  _totalLimit = 0;
-               }
-
-               foreach (var pop in cl.Pops)
-               {
-                  var newPop = (PopDefinition)pop.DeepClone();
-                  AddToExistingOrNew(newPop, location);
-                  diff += newPop.Size;
-               }
+               AddItem(newPop, false);
+               diff += newPop.Size;
             }
-      }
-      else
-      {
-         if (LoadedLocation == Location.Empty || LoadedLocation == cl)
-            return;
-
-         Nx.RemoveRangeFromCollection(LoadedLocation, Location.Field.Pops, LoadedLocation.Pops);
-         _totalLimit = 0;
-
-         foreach (var pop in cl.Pops)
-         {
-            var newPop = (PopDefinition)pop.DeepClone();
-            AddToExistingOrNew(newPop, LoadedLocation);
-            AddItem(newPop, false);
-            diff += newPop.Size;
          }
       }
 

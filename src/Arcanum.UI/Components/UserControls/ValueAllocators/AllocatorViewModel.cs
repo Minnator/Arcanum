@@ -9,6 +9,7 @@ using System.Windows.Media;
 using Arcanum.Core.CoreSystems.Clipboard;
 using Arcanum.Core.CoreSystems.Nexus;
 using Arcanum.Core.CoreSystems.Parsing.ParsingHelpers.ArcColor;
+using Arcanum.Core.CoreSystems.Selection;
 using Arcanum.Core.GameObjects.BaseTypes;
 using Arcanum.Core.GlobalStates;
 using Arcanum.UI.Components.Charts.DonutChart;
@@ -39,6 +40,7 @@ public class AllocatorViewModel : ViewModelBase
    public ICommand DeleteCommand { get; }
    public ICommand ApplyChangesCommand { get; }
    public ICommand PasteFromLocationCommand { get; }
+   public ICommand PasteFromLocationVariationCommand { get; }
 
    public ObservableCollection<BasicChartItem> ReligionStats { get; } = [];
    public ObservableCollection<BasicChartItem> CultureStats { get; } = [];
@@ -205,6 +207,31 @@ public class AllocatorViewModel : ViewModelBase
          OnPropertyChanged();
       }
    } = string.Empty;
+   public bool PasteInEntireSelection { get; set; }
+   public float PasteVariationMax
+   {
+      get;
+      set
+      {
+         if (value.Equals(field))
+            return;
+
+         field = value;
+         OnPropertyChanged();
+      }
+   }
+   public float PasteVariationMin
+   {
+      get;
+      set
+      {
+         if (value.Equals(field))
+            return;
+
+         field = value;
+         OnPropertyChanged();
+      }
+   }
 
    public AllocatorViewModel(Location location)
    {
@@ -217,28 +244,87 @@ public class AllocatorViewModel : ViewModelBase
       DeleteCommand = new RelayCommand<AllocationItem>(Delete);
       ApplyChangesCommand = new RelayCommand(ApplyChanges);
       PasteFromLocationCommand = new RelayCommand<Location>(PastePopsFromLocation);
+      PasteFromLocationVariationCommand = new RelayCommand<Location>(PastePopsFromLocationWithVariation);
    }
 
-   private void PastePopsFromLocation(Location? obj)
+   private void PastePopsFromLocationWithVariation(Location? obj)
    {
-      if (ArcClipboard.CurrentPayload != null && ArcClipboard.CurrentPayload.Value is Location cl)
+      if (ArcClipboard.CurrentPayload == null || ArcClipboard.CurrentPayload.Value is not Location cl)
+         return;
+
+      var diff = 0d;
+      var random = new Random();
+
+      if (PasteInEntireSelection)
+         foreach (var location in Selection.GetSelectedLocations)
+            foreach (var pop in cl.Pops)
+            {
+               var newPop = (PopDefinition)pop.DeepClone();
+               var variation = 1 + ((float)random.NextDouble() * (PasteVariationMax - PasteVariationMin) + PasteVariationMin) / 100f;
+               newPop.Size *= variation;
+
+               Nx.AddToCollection(location, Location.Field.Pops, newPop);
+               AddItem(newPop, false);
+               diff += newPop.Size;
+            }
+      else
       {
          if (LoadedLocation == Location.Empty || LoadedLocation == cl)
             return;
 
-         var diff = 0d;
          foreach (var pop in cl.Pops)
          {
-            Nx.AddToCollection(LoadedLocation, Location.Field.Pops, pop);
-            AddItem(pop, balanceToTotal: false);
-            diff += pop.Size;
+            var newPop = (PopDefinition)pop.DeepClone();
+            var variation = 1 + ((float)random.NextDouble() * (PasteVariationMax - PasteVariationMin) + PasteVariationMin) / 100f;
+            newPop.Size *= variation;
+
+            Nx.AddToCollection(LoadedLocation, Location.Field.Pops, newPop);
+            AddItem(newPop, false);
+            diff += newPop.Size;
          }
-
-         _totalLimit += (int)(diff * 1000);
-
-         RunAutoLogScale();
-         OnPropertyChanged(nameof(TotalLimit));
       }
+
+      _totalLimit += (int)(diff * 1000);
+
+      RunAutoLogScale();
+      OnPropertyChanged(nameof(TotalLimit));
+   }
+
+   private void PastePopsFromLocation(Location? obj)
+   {
+      if (ArcClipboard.CurrentPayload == null || ArcClipboard.CurrentPayload.Value is not Location cl)
+         return;
+
+      var diff = 0d;
+      if (PasteInEntireSelection)
+      {
+         foreach (var location in Selection.GetSelectedLocations)
+            foreach (var pop in cl.Pops)
+            {
+               var newPop = (PopDefinition)pop.DeepClone();
+               Nx.AddToCollection(location, Location.Field.Pops, newPop);
+               AddItem(newPop, false);
+               diff += newPop.Size;
+            }
+      }
+      else
+      {
+         if (LoadedLocation == Location.Empty || LoadedLocation == cl)
+            return;
+
+         foreach (var pop in cl.Pops)
+         {
+            var newPop = (PopDefinition)pop.DeepClone();
+            Nx.AddToCollection(LoadedLocation, Location.Field.Pops, newPop);
+            AddItem(newPop, false);
+            diff += newPop.Size;
+         }
+      }
+
+      _totalLimit += (int)(diff * 1000);
+
+      RunAutoLogScale();
+      OnPropertyChanged(nameof(TotalLimit));
    }
 
    private void InitializeLocationData(Location location)

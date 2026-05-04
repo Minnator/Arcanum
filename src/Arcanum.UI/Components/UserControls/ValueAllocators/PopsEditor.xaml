@@ -682,6 +682,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height = "Auto" />
                     <RowDefinition Height = "Auto" />
+                    <RowDefinition Height = "Auto" />
                 </Grid.RowDefinitions>
 
                 <!-- Separator Line -->
@@ -698,7 +699,48 @@
                                              local:InteractionMonitor.AllocatorVm = "{Binding}"
                                              Style = "{StaticResource ThinBaseButtonStyle}"
                                              ToolTip = "Fetch Pop composition from another location and append it here." />
+
+                    <CheckBox DockPanel.Dock = "Left" VerticalAlignment = "Center" Margin = "5, 0, 5, 0"
+                              Content = "Paste in all selected Locations"
+                              IsChecked = "{Binding PasteInEntireSelection}" />
                 </DockPanel>
+
+                <Grid Grid.Row = "2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height = "Auto" />
+                        <RowDefinition Height = "Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width = "*" />
+                        <ColumnDefinition Width = "*" />
+                        <ColumnDefinition Width = "*" />
+                        <ColumnDefinition Width = "*" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row = "0" Grid.Column = "0" Text = "Paste with Variation:"
+                               VerticalAlignment = "Center" HorizontalAlignment = "Left" Margin = "0,0,5,0" />
+
+                    <styleClasses:BaseButton Grid.Row = "0" Grid.Column = "1" DockPanel.Dock = "Left" Content = "📋"
+                                             Width = "91" Height = "24"
+                                             Command = "{Binding PasteFromLocationVariationCommand}"
+                                             HorizontalAlignment = "Left" Margin = "15,0,0,0"
+                                             local:InteractionMonitor.AllocatorVm = "{Binding}"
+                                             Style = "{StaticResource ThinBaseButtonStyle}"
+                                             ToolTip = "Fetch Pop composition from another location and append it here." />
+
+                    <!-- Min Variation / Max Variation Inputs -->
+                    <TextBlock Grid.Row = "1" Grid.Column = "0" Text = "Min Variation:" VerticalAlignment = "Center"
+                               HorizontalAlignment = "Right" Margin = "0,0,5,0" />
+                    <baseControls:FloatNumericUpDown Grid.Row = "1" Grid.Column = "1"
+                                                     Value = "{Binding PasteVariationMin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                     HorizontalAlignment = "Left" Margin = "5,0,15,0" Width = "60" />
+                    <TextBlock Grid.Row = "1" Grid.Column = "2" Text = "Max Variation:" VerticalAlignment = "Center"
+                               HorizontalAlignment = "Right" Margin = "0,0,5,0" />
+                    <baseControls:FloatNumericUpDown Grid.Row = "1" Grid.Column = "3"
+                                                     Value = "{Binding PasteVariationMax, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                     HorizontalAlignment = "Left" Margin = "5,0,0,0" Width = "60" />
+                </Grid>
 
             </Grid>
 

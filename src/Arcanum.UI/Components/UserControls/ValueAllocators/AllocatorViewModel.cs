@@ -257,31 +257,32 @@ public class AllocatorViewModel : ViewModelBase
 
       if (PasteInEntireSelection)
          foreach (var location in Selection.GetSelectedLocations)
-            foreach (var pop in cl.Pops)
+            if (location != cl)
+               foreach (var pop in cl.Pops)
+               {
+                  var newPop = (PopDefinition)pop.DeepClone();
+                  var variation = 1 + ((float)random.NextDouble() * (PasteVariationMax - PasteVariationMin) + PasteVariationMin) / 100f;
+                  newPop.Size *= variation;
+
+                  Nx.AddToCollection(location, Location.Field.Pops, newPop);
+                  diff += newPop.Size;
+               }
+            else
             {
-               var newPop = (PopDefinition)pop.DeepClone();
-               var variation = 1 + ((float)random.NextDouble() * (PasteVariationMax - PasteVariationMin) + PasteVariationMin) / 100f;
-               newPop.Size *= variation;
+               if (LoadedLocation == Location.Empty || LoadedLocation == cl)
+                  return;
 
-               Nx.AddToCollection(location, Location.Field.Pops, newPop);
-               diff += newPop.Size;
+               foreach (var pop in cl.Pops)
+               {
+                  var newPop = (PopDefinition)pop.DeepClone();
+                  var variation = 1 + ((float)random.NextDouble() * (PasteVariationMax - PasteVariationMin) + PasteVariationMin) / 100f;
+                  newPop.Size *= variation;
+
+                  Nx.AddToCollection(LoadedLocation, Location.Field.Pops, newPop);
+                  AddItem(newPop, false);
+                  diff += newPop.Size;
+               }
             }
-      else
-      {
-         if (LoadedLocation == Location.Empty || LoadedLocation == cl)
-            return;
-
-         foreach (var pop in cl.Pops)
-         {
-            var newPop = (PopDefinition)pop.DeepClone();
-            var variation = 1 + ((float)random.NextDouble() * (PasteVariationMax - PasteVariationMin) + PasteVariationMin) / 100f;
-            newPop.Size *= variation;
-
-            Nx.AddToCollection(LoadedLocation, Location.Field.Pops, newPop);
-            AddItem(newPop, false);
-            diff += newPop.Size;
-         }
-      }
 
       _totalLimit += (int)(diff * 1000);
 
@@ -298,12 +299,13 @@ public class AllocatorViewModel : ViewModelBase
       if (PasteInEntireSelection)
       {
          foreach (var location in Selection.GetSelectedLocations)
-            foreach (var pop in cl.Pops)
-            {
-               var newPop = (PopDefinition)pop.DeepClone();
-               Nx.AddToCollection(location, Location.Field.Pops, newPop);
-               diff += newPop.Size;
-            }
+            if (location != cl)
+               foreach (var pop in cl.Pops)
+               {
+                  var newPop = (PopDefinition)pop.DeepClone();
+                  Nx.AddToCollection(location, Location.Field.Pops, newPop);
+                  diff += newPop.Size;
+               }
       }
       else
       {

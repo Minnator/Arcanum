@@ -350,6 +350,10 @@ public class AllocatorViewModel : ViewModelBase
       OnPropertyChanged(nameof(TotalLimit));
    }
 
+   private void AddToExistingOrNew(PopDefinition pop, Location target)
+   {
+   }
+
    private void InitializeLocationData(Location location)
    {
       LoadedLocation = location;

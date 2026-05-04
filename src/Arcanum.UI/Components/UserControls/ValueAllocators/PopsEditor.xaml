@@ -715,18 +715,18 @@
                 </DockPanel>
 
                 <DockPanel Grid.Row = "3" LastChildFill = "False" Margin = "0, 0, 0, 3">
-                    
+
                     <!-- Min Variation / Max Variation Inputs -->
-                    <TextBlock Text = "Min Variation:" VerticalAlignment = "Center"
-                               HorizontalAlignment = "Right" Margin = "0,0,5,0" />
-                    <baseControls:FloatNumericUpDown
-                        Value = "{Binding PasteVariationMin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        HorizontalAlignment = "Left" Margin = "5,0,15,0" Width = "60" />
-                    <TextBlock Text = "Max Variation:" VerticalAlignment = "Center"
-                               HorizontalAlignment = "Right" Margin = "0,0,5,0" />
-                    <baseControls:FloatNumericUpDown
-                        Value = "{Binding PasteVariationMax, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        HorizontalAlignment = "Left" Margin = "5,0,0,0" Width = "60" />
+                    <TextBlock Text = "Min Variation:" VerticalAlignment = "Center" HorizontalAlignment = "Right"
+                               Margin = "0,0,5,0" />
+                    <baseControls:FloatNumericUpDown MinValue = "0" MaxValue = "1000"
+                                                     Value = "{Binding PasteVariationMin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                     HorizontalAlignment = "Left" Margin = "5,0,15,0" Width = "60" />
+                    <TextBlock Text = "Max Variation:" VerticalAlignment = "Center" HorizontalAlignment = "Right"
+                               Margin = "0,0,5,0" />
+                    <baseControls:FloatNumericUpDown MinValue = "0" MaxValue = "1000"
+                                                     Value = "{Binding PasteVariationMax, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                     HorizontalAlignment = "Left" Margin = "5,0,0,0" Width = "60" />
 
                     <CheckBox DockPanel.Dock = "Left" VerticalAlignment = "Center" Margin = "5, 0, 5, 0"
                               Content = "Paste in all selected Locations"

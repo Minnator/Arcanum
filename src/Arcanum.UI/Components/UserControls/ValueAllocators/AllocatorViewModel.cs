@@ -261,7 +261,9 @@ public class AllocatorViewModel : ViewModelBase
                foreach (var pop in cl.Pops)
                {
                   var newPop = (PopDefinition)pop.DeepClone();
-                  var variation = 1 + ((float)random.NextDouble() * (PasteVariationMax - PasteVariationMin) + PasteVariationMin) / 100f;
+                  var step1 = (float)random.NextDouble() * (PasteVariationMax - PasteVariationMin) + PasteVariationMin;
+                  var variation = 1 + step1 / 100f;
+                  ArcLog.WritePure($"Applying variation of {step1:F2}% to pop of size {pop.Size} results in multiplier {variation:F4}");
                   newPop.Size *= variation;
 
                   Nx.AddToCollection(location, Location.Field.Pops, newPop);
@@ -275,8 +277,11 @@ public class AllocatorViewModel : ViewModelBase
                foreach (var pop in cl.Pops)
                {
                   var newPop = (PopDefinition)pop.DeepClone();
-                  var variation = 1 + ((float)random.NextDouble() * (PasteVariationMax - PasteVariationMin) + PasteVariationMin) / 100f;
+                  var step1 = (float)random.NextDouble() * (PasteVariationMax - PasteVariationMin) + PasteVariationMin;
+                  var variation = 1 + step1 / 100f;
+                  ArcLog.WritePure($"Applying variation of {step1:F2}% to pop of size {pop.Size} results in multiplier {variation:F4}");
                   newPop.Size *= variation;
+
 
                   Nx.AddToCollection(LoadedLocation, Location.Field.Pops, newPop);
                   AddItem(newPop, false);

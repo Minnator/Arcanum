@@ -288,7 +288,7 @@ public class AllocatorViewModel : ViewModelBase
 
             ArcLog.WritePure($"Variation: {step1:F2}% | Multiplier: {variation:F4} | Final Size: {newPop.Size}");
 
-            Nx.AddToCollection(location, Location.Field.Pops, newPop);
+            AddToExistingOrNew(newPop, location);
 
             if (location == LoadedLocation)
                AddItem(newPop, false);
@@ -319,10 +319,11 @@ public class AllocatorViewModel : ViewModelBase
                   Items.Clear();
                   _totalLimit = 0;
                }
+
                foreach (var pop in cl.Pops)
                {
                   var newPop = (PopDefinition)pop.DeepClone();
-                  Nx.AddToCollection(location, Location.Field.Pops, newPop);
+                  AddToExistingOrNew(newPop, location);
                   diff += newPop.Size;
                }
             }
@@ -334,11 +335,11 @@ public class AllocatorViewModel : ViewModelBase
 
          Nx.RemoveRangeFromCollection(LoadedLocation, Location.Field.Pops, LoadedLocation.Pops);
          _totalLimit = 0;
-         
+
          foreach (var pop in cl.Pops)
          {
             var newPop = (PopDefinition)pop.DeepClone();
-            Nx.AddToCollection(LoadedLocation, Location.Field.Pops, newPop);
+            AddToExistingOrNew(newPop, LoadedLocation);
             AddItem(newPop, false);
             diff += newPop.Size;
          }
@@ -350,8 +351,16 @@ public class AllocatorViewModel : ViewModelBase
       OnPropertyChanged(nameof(TotalLimit));
    }
 
-   private void AddToExistingOrNew(PopDefinition pop, Location target)
+   private void AddToExistingOrNew(PopDefinition @new, Location target)
    {
+      foreach (var pop in target.Pops)
+         if (pop.Culture == @new.Culture && pop.Religion == @new.Religion && pop.PopType == @new.PopType)
+         {
+            Nx.Set(pop, PopDefinition.Field.Size, pop.Size + @new.Size);
+            return;
+         }
+
+      Nx.AddToCollection(target, Location.Field.Pops, @new);
    }
 
    private void InitializeLocationData(Location location)

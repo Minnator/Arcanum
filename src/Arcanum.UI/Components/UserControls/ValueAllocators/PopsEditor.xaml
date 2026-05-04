@@ -684,6 +684,7 @@
                     <RowDefinition Height = "Auto" />
                     <RowDefinition Height = "Auto" />
                     <RowDefinition Height = "Auto" />
+                    <RowDefinition Height = "Auto" />
                 </Grid.RowDefinitions>
 
                 <!-- Separator Line -->
@@ -729,10 +730,14 @@
                                                      ToolTip = "The maximum random offset applied to the size of each pasted Pop, in percent. For example, a value of 10 means each Pop will have a random offset between -10% and +10% of its size."
                                                      Value = "{Binding PasteVariationMax, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                      HorizontalAlignment = "Left" Margin = "5,0,0,0" Width = "60" />
-
+                </DockPanel>
+                <DockPanel Grid.Row = "4" LastChildFill = "False" Margin = "0, 0, 0, 3">
                     <CheckBox DockPanel.Dock = "Left" VerticalAlignment = "Center" Margin = "5, 0, 5, 0"
                               Content = "Paste in all selected Locations"
                               IsChecked = "{Binding PasteInEntireSelection}" />
+
+                    <CheckBox DockPanel.Dock = "Left" VerticalAlignment = "Center" Margin = "5, 0, 5, 0"
+                              Content = "Replace all existing pops" IsChecked = "{Binding ReplaceExistingPops}" />
                 </DockPanel>
 
             </Grid>

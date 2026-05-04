@@ -208,6 +208,7 @@ public class AllocatorViewModel : ViewModelBase
       }
    } = string.Empty;
    public bool PasteInEntireSelection { get; set; }
+   public bool ReplaceExistingPops { get; set; }
    public float PasteVariationMax
    {
       get;
@@ -259,6 +260,17 @@ public class AllocatorViewModel : ViewModelBase
                                ? Selection.GetSelectedLocations.ToList()
                                : [LoadedLocation];
 
+      if (ReplaceExistingPops)
+         foreach (var location in targetLocations)
+         {
+            Nx.RemoveRangeFromCollection(location, Location.Field.Pops, location.Pops);
+            if (location == LoadedLocation)
+            {
+               Items.Clear();
+               _totalLimit = 0;
+            }
+         }
+
       foreach (var location in targetLocations)
       {
          if (location == Location.Empty || location == cl)
@@ -300,18 +312,29 @@ public class AllocatorViewModel : ViewModelBase
       {
          foreach (var location in Selection.GetSelectedLocations)
             if (location != cl)
+            {
+               Nx.RemoveRangeFromCollection(location, Location.Field.Pops, location.Pops);
+               if (location == LoadedLocation)
+               {
+                  Items.Clear();
+                  _totalLimit = 0;
+               }
                foreach (var pop in cl.Pops)
                {
                   var newPop = (PopDefinition)pop.DeepClone();
                   Nx.AddToCollection(location, Location.Field.Pops, newPop);
                   diff += newPop.Size;
                }
+            }
       }
       else
       {
          if (LoadedLocation == Location.Empty || LoadedLocation == cl)
             return;
 
+         Nx.RemoveRangeFromCollection(LoadedLocation, Location.Field.Pops, LoadedLocation.Pops);
+         _totalLimit = 0;
+         
          foreach (var pop in cl.Pops)
          {
             var newPop = (PopDefinition)pop.DeepClone();

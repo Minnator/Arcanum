@@ -264,7 +264,6 @@ public class AllocatorViewModel : ViewModelBase
                newPop.Size *= variation;
 
                Nx.AddToCollection(location, Location.Field.Pops, newPop);
-               AddItem(newPop, false);
                diff += newPop.Size;
             }
       else
@@ -303,7 +302,6 @@ public class AllocatorViewModel : ViewModelBase
             {
                var newPop = (PopDefinition)pop.DeepClone();
                Nx.AddToCollection(location, Location.Field.Pops, newPop);
-               AddItem(newPop, false);
                diff += newPop.Size;
             }
       }

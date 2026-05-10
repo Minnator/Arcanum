@@ -5,7 +5,10 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using Arcanum.Core.CoreSystems.IO;
 using Arcanum.Core.CoreSystems.Nexus;
+using Arcanum.Core.CoreSystems.Parsing.ParsingMaster;
+using Arcanum.Core.CoreSystems.Parsing.Steps.InGame.Map;
 using Arcanum.Core.CoreSystems.Queastor;
 using Arcanum.Core.GameObjects.InGame.Map;
 using Arcanum.Core.GameObjects.InGame.Map.LocationCollections;
@@ -32,6 +35,7 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
       CopyHexCommand = new RelayCommand(_ => Clipboard.SetText(HexText));
 
       _usedColors = Globals.Locations.Values.Select(x => x.Color.AsInt()).ToHashSet();
+      (DescriptorDefinitions.LocationDescriptor.LoadingService[0] as LocationFileLoading)!.AddPlaceholders(_usedColors);
    }
 
    public Color SelectedColor
@@ -149,11 +153,37 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
 
       Nx.Set(newLocation, Location.Field.TemplateData, template);
       Nx.AddToCollection(TargetProvince, Province.Field.Locations, newLocation);
+      ((Location)newLocation).ColorIndex = LocationFileLoading.ColorIndex++;
 
       template.UniqueId = newLocation.UniqueId;
       Globals.LocationTemplateData.Add(template.UniqueId, template);
 
       Queastor.GlobalInstance.AddToIndex(template);
+
+      AppendDefinition((Location)newLocation);
+   }
+
+   private void AppendDefinition(Location newLocation)
+   {
+      var files = DescriptorDefinitions.LocationDescriptor.Files;
+      if (files.Count == 0)
+         throw new InvalidOperationException("No location files found to append to.");
+
+      var fileObj = files[^1];
+
+      var oldPath = fileObj.GetFullPath();
+      var moved = false;
+      if (!fileObj.IsModded && Config.Settings.SavingConfig.MoveFilesToModdedDataSpaceOnSaving)
+      {
+         fileObj.Path.MoveToMod();
+         moved = true;
+      }
+
+      fileObj.Path.UnregisterWatcher();
+      if (moved)
+         IO.CopyTo(oldPath, fileObj.GetFullPath());
+      IO.WriteAllTextUtf8WithBom(fileObj.GetFullPath(), $"\n{newLocation.UniqueId} = {newLocation.Color.AsHex().ToString().ToLower()}", true);
+      fileObj.Path.RegisterWatcher();
    }
 
    private void OnPropertyChanged([CallerMemberName] string name = null!) => PropertyChanged?.Invoke(this, new(name));

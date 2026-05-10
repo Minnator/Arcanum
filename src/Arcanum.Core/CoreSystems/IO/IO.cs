@@ -1,9 +1,13 @@
-﻿using System.Drawing;
+﻿#region
+
+using System.Drawing;
 using System.Drawing.Imaging;
 using System.Text;
 using Arcanum.Core.CoreSystems.SavingSystem.FileWatcher;
 using Arcanum.Core.CoreSystems.SavingSystem.Util;
 using Microsoft.Win32;
+
+#endregion
 
 namespace Arcanum.Core.CoreSystems.IO;
 
@@ -514,5 +518,25 @@ public static class IO
    {
       var newFileName = GetNextAvailableFileName(name, folder);
       return Path.Combine(folder, newFileName);
+   }
+
+   public static void CopyTo(string oldPath, string newPath)
+   {
+      if (string.IsNullOrEmpty(oldPath) || string.IsNullOrEmpty(newPath) || !File.Exists(oldPath))
+         return;
+
+      try
+      {
+         if (!EnsureFileDirectoryExists(newPath))
+            return;
+
+         File.Copy(oldPath, newPath, true);
+      }
+      catch (IOException)
+      {
+      }
+      catch (UnauthorizedAccessException)
+      {
+      }
    }
 }

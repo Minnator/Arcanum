@@ -1,9 +1,12 @@
-﻿using System.Windows;
+﻿#region
+
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using Arcanum.Core.CoreSystems.History.Commands;
 using Arcanum.Core.CoreSystems.Map;
 using Arcanum.Core.CoreSystems.Nexus;
+using Arcanum.Core.CoreSystems.Queastor;
 using Arcanum.Core.GameObjects.BaseTypes;
 using Arcanum.Core.GlobalStates;
 using Arcanum.Core.Registry;
@@ -12,6 +15,8 @@ using Arcanum.UI.Components.Windows.PopUp;
 using Arcanum.UI.NUI.Generator;
 using Arcanum.UI.NUI.UserControls.BaseControls;
 using Common.UI.MBox;
+
+#endregion
 
 namespace Arcanum.UI.Components.Windows.MinorWindows;
 
@@ -183,6 +188,15 @@ public partial class Eu5ObjectCreator
       return window.CreatedObject;
    }
 
+   public static IEu5Object? ShowOnlyNamePickingPopUp(Type type, Action<IEu5Object> postCreationAction, bool addToGlobals = true)
+   {
+      if (!CreateAndPromptForUniqueIdInput(type, addToGlobals, out _, out var newObj))
+         return null;
+
+      postCreationAction(newObj);
+      return newObj;
+   }
+
    private static bool CreateAndPromptForUniqueIdInput(Type type, bool addToGlobals, out bool hasUniqueIdBasedGlobalItems, out IEu5Object newObj)
    {
       var globals1 = ((IEu5Object)EmptyRegistry.Empties[type]).GetGlobalItemsNonGeneric();
@@ -238,6 +252,7 @@ public partial class Eu5ObjectCreator
       createCommand.Execute();
       AppData.HistoryManager.AddCommand(createCommand);
 
+      Queastor.GlobalInstance.AddToIndex(newObj);
       return true;
    }
 }

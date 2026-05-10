@@ -1,4 +1,6 @@
-﻿using System.Collections.Specialized;
+﻿#region
+
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -27,6 +29,7 @@ using Arcanum.UI.Components.Views.MainWindow;
 using Arcanum.UI.Components.Windows.DebugWindows;
 using Arcanum.UI.Components.Windows.MainWindows.MainWindowsHelpers;
 using Arcanum.UI.Components.Windows.MinorWindows;
+using Arcanum.UI.Components.Windows.MinorWindows.LocationColorPicker;
 using Arcanum.UI.Components.Windows.PopUp;
 using Arcanum.UI.HostUIServices.SettingsGUI;
 using Arcanum.UI.NUI.Generator.SpecificGenerators;
@@ -40,6 +43,8 @@ using Common.UI.MBox;
 using Application = System.Windows.Application;
 using HorizontalAlignment = System.Windows.HorizontalAlignment;
 using NUINavigation = Arcanum.UI.NUI.NUINavigation;
+
+#endregion
 
 namespace Arcanum.UI.Components.Windows.MainWindows;
 
@@ -776,5 +781,11 @@ public sealed partial class MainWindow : IPerformanceMeasured, INotifyPropertyCh
          return;
 
       SelectionManager.SelectWater = selectWater.IsChecked ?? true;
+   }
+
+   private void OpenLocationColorPickerCommand_OnExecuted(object sender, ExecutedRoutedEventArgs e)
+   {
+      var colorPicker = new LocationColorPicker();
+      colorPicker.ShowDialog();
    }
 }

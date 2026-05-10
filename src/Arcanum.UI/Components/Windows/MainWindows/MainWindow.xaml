@@ -157,6 +157,10 @@
         <CommandBinding Command = "mainWindow:MwCommands.GoToNextINUICommand" Executed = "GoToNextINUICommand_Executed"
                         CanExecute = "CanGoToNextINUICommand_Executed" />
 
+        <!-- Command Bindings for Map Editing -->
+        <CommandBinding Command = "mainWindow:MwCommands.OpenLocationColorPickerCommand"
+                        Executed = "OpenLocationColorPickerCommand_OnExecuted" CanExecute = "CommandCanAlwaysExecute" />
+
     </Window.CommandBindings>
 
     <styleClasses:BaseWindow.HeaderContent>
@@ -322,6 +326,11 @@
                                            Command = "mainWindow:MwCommands.ViewINUIObjectsCommand" />
                     <Separator />
                     <uc:SearchableMenuItem Header = "Parser Test" Command = "mainWindow:MwCommands.ExecuteLexer" />
+                </uc:SearchableMenuItem>
+
+                <uc:SearchableMenuItem Header = "Map Editing">
+                    <uc:SearchableMenuItem Header = "Location Color Picker"
+                                           Command = "mainWindow:MwCommands.OpenLocationColorPickerCommand" />
                 </uc:SearchableMenuItem>
             </Menu>
 

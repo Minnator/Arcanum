@@ -85,6 +85,8 @@ public sealed class LocationMapMode : LocationBasedMapMode
 
    private string ExportAdj(bool isLand, Vector2 position2)
    {
+      if (Selection.Selection.SelectedLocationCount < 1)
+         return "Invalid selection";
       var location2 = Selection.Selection.GetSelectedLocations[0];
       var typeStr = isLand ? "land" : "sea";
       return

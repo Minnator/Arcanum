@@ -6,10 +6,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows.Input;
 using System.Windows.Media;
-using Arcanum.Core.CoreSystems.Clipboard;
 using Arcanum.Core.CoreSystems.Nexus;
 using Arcanum.Core.CoreSystems.Parsing.ParsingHelpers.ArcColor;
-using Arcanum.Core.CoreSystems.Selection;
 using Arcanum.Core.GameObjects.BaseTypes;
 using Arcanum.Core.GlobalStates;
 using Arcanum.UI.Components.Charts.DonutChart;
@@ -26,9 +24,9 @@ using Religion = Arcanum.Core.GameObjects.InGame.Religious.Religion;
 
 namespace Arcanum.UI.Components.UserControls.ValueAllocators;
 
-public class AllocatorViewModel : ViewModelBase
+public sealed class AllocatorViewModel : ViewModelBase
 {
-   private int _totalLimit;
+   internal int _totalLimit;
    private int _maxTotalLimit;
    private bool? _areAllLocked;
    private bool _suppressCalculation;
@@ -39,8 +37,6 @@ public class AllocatorViewModel : ViewModelBase
    public ICommand UndoCommand { get; }
    public ICommand DeleteCommand { get; }
    public ICommand ApplyChangesCommand { get; }
-   public ICommand PasteFromLocationCommand { get; }
-   public ICommand PasteFromLocationVariationCommand { get; }
 
    public ObservableCollection<BasicChartItem> ReligionStats { get; } = [];
    public ObservableCollection<BasicChartItem> CultureStats { get; } = [];
@@ -207,32 +203,7 @@ public class AllocatorViewModel : ViewModelBase
          OnPropertyChanged();
       }
    } = string.Empty;
-   public bool PasteInEntireSelection { get; set; }
-   public bool ReplaceExistingPops { get; set; }
-   public float PasteVariationMax
-   {
-      get;
-      set
-      {
-         if (value.Equals(field))
-            return;
-
-         field = value;
-         OnPropertyChanged();
-      }
-   }
-   public float PasteVariationMin
-   {
-      get;
-      set
-      {
-         if (value.Equals(field))
-            return;
-
-         field = value;
-         OnPropertyChanged();
-      }
-   }
+   
 
    public AllocatorViewModel(Location location)
    {
@@ -244,87 +215,8 @@ public class AllocatorViewModel : ViewModelBase
       UndoCommand = new RelayCommand(Undo);
       DeleteCommand = new RelayCommand<AllocationItem>(Delete);
       ApplyChangesCommand = new RelayCommand(ApplyChanges);
-      PasteFromLocationCommand = new RelayCommand<Location>(PastePopsFromLocation);
-      PasteFromLocationVariationCommand = new RelayCommand<Location>(PastePopsFromLocationWithVariation);
    }
 
-   private void PastePopsFromLocationWithVariation(Location? obj)
-   {
-      PastePops(true);
-   }
-
-   private void PastePopsFromLocation(Location? obj)
-   {
-      PastePops(false);
-   }
-
-   private void PastePops(bool withVariation)
-   {
-      if (ArcClipboard.CurrentPayload?.Value is not Location cl)
-         return;
-
-      var random = new Random();
-      var diff = 0d;
-      var targets = PasteInEntireSelection
-                       ? Selection.GetSelectedLocations.ToList()
-                       : [LoadedLocation];
-
-      foreach (var location in targets)
-      {
-         // Skip invalid locations or pasting into the source itself
-         if (location == null! || location == Location.Empty || location == cl || !Globals.DefaultMapDefinition.IsLand(location))
-            continue;
-
-         if (ReplaceExistingPops)
-         {
-            Nx.RemoveRangeFromCollection(location, Location.Field.Pops, location.Pops);
-            if (location == LoadedLocation)
-            {
-               Items.Clear();
-               _totalLimit = 0;
-            }
-         }
-
-         foreach (var pop in cl.Pops)
-         {
-            var newPop = (PopDefinition)pop.DeepClone();
-            if (withVariation)
-            {
-               var step1 = (float)random.NextDouble() * (PasteVariationMax - PasteVariationMin) + PasteVariationMin;
-               step1 *= random.NextDouble() < 0.5f ? -1 : 1;
-               var variation = 1 + step1 / 100f;
-
-               newPop.Size *= Math.Max(0.001f, variation);
-            }
-
-            AddToExistingOrNew(newPop, location);
-
-            // Only update the UI list if we are looking at this location
-            if (location == LoadedLocation)
-            {
-               AddItem(newPop, false);
-               diff += newPop.Size;
-            }
-         }
-      }
-
-      _totalLimit += (int)(diff * 1000);
-
-      RunAutoLogScale();
-      OnPropertyChanged(nameof(TotalLimit));
-   }
-
-   private void AddToExistingOrNew(PopDefinition @new, Location target)
-   {
-      foreach (var pop in target.Pops)
-         if (pop.Culture == @new.Culture && pop.Religion == @new.Religion && pop.PopType == @new.PopType)
-         {
-            Nx.Set(pop, PopDefinition.Field.Size, pop.Size + @new.Size);
-            return;
-         }
-
-      Nx.AddToCollection(target, Location.Field.Pops, @new);
-   }
 
    private void InitializeLocationData(Location location)
    {
@@ -369,7 +261,7 @@ public class AllocatorViewModel : ViewModelBase
       PopTypeStats.Clear();
    }
 
-   private void ApplyChanges()
+   public void ApplyChanges()
    {
       if (LoadedLocation == Location.Empty)
          return;
@@ -516,7 +408,7 @@ public class AllocatorViewModel : ViewModelBase
       }
    }
 
-   private void Undo()
+   public void Undo()
    {
       if (_undoStack.Count == 0)
          return;
@@ -598,7 +490,7 @@ public class AllocatorViewModel : ViewModelBase
       RunAutoLogScale();
    }
 
-   private void RunAutoLogScale()
+   internal void RunAutoLogScale()
    {
       if (!AutoDetectLogScale)
          return;

@@ -2,9 +2,6 @@
 
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Input;
-using Arcanum.UI.Components.Windows.PopUp;
 using Arcanum.UI.SpecializedEditors.Management;
 using Location = Arcanum.Core.GameObjects.InGame.Map.LocationCollections.Location;
 
@@ -12,45 +9,64 @@ using Location = Arcanum.Core.GameObjects.InGame.Map.LocationCollections.Locatio
 
 namespace Arcanum.UI.Components.UserControls.ValueAllocators;
 
-public partial class PopsEditor : ISpecializedEditor
+public sealed partial class PopsEditor : ISpecializedEditor
 {
+   public PopEditorVm MainVm => (PopEditorVm)DataContext;
+
    public PopsEditor()
    {
       InitializeComponent();
-      DataContext = new AllocatorViewModel(Location.Empty);
+      DataContext = new PopEditorVm();
    }
 
    public bool Enabled { get; set; } = false;
    public string DisplayName => "Pops";
    public string? IconResource => null;
    public int Priority => 0;
-   public bool SupportsMultipleTargets => false;
+   public bool SupportsMultipleTargets => true;
    public bool CanEdit(object[] targets, Enum? prop) => true;
 
    public void Reset()
    {
-      if (DataContext is AllocatorViewModel vm)
-         vm.Reset();
-      else
-         throw new NotSupportedException();
+      if (MainVm.ActiveEditor is AllocatorViewModel singleVm)
+         singleVm.Reset();
    }
 
    public void ResetFor(object[] targets)
    {
-      if (DataContext is AllocatorViewModel vm)
+      var selectedLocations = targets.OfType<Location>().ToArray();
+      if (selectedLocations.Length == 0)
+         MainVm.ActiveEditor = null;
+      else if (selectedLocations.Length == 1)
       {
-         if (targets.Length < 1)
+         if (MainVm.ActiveEditor is AllocatorViewModel singleVm && singleVm.LoadedLocation == selectedLocations[0])
+         {
+            singleVm.ResetFor(selectedLocations[0]);
             return;
+         }
 
-         var first = targets[0];
-         if (first is not Location location)
-            MBox.Show("IntValueAllocator can only edit Location targets.", "Error");
-         else
-            vm.ResetFor(location);
+         (MainVm.ActiveEditor as MassPopPainterViewModel)?.SaveState();
+         MainVm.ActiveEditor = new AllocatorViewModel(selectedLocations[0]);
       }
       else
-         throw new NotSupportedException();
+      {
+         if (MainVm.ActiveEditor is MassPopPainterViewModel)
+         {
+            (MainVm.ActiveEditor as MassPopPainterViewModel)?.ResetFor(selectedLocations);
+            return;
+         }
+
+         MainVm.ActiveEditor = new MassPopPainterViewModel(selectedLocations);
+      }
+
+      MainVm.Title = selectedLocations.Length switch
+      {
+         0 => "Pops",
+         1 => $"Pops - {selectedLocations[0].UniqueId}",
+         _ => $"Pops - {selectedLocations.Length} Locations",
+      };
    }
+
 
    public FrameworkElement GetEditorControl() => this;
 
@@ -58,38 +74,5 @@ public partial class PopsEditor : ISpecializedEditor
 
    public void OnEnabledChanged(bool value)
    {
-   }
-
-   private void Border_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
-   {
-      Console.WriteLine("Right click detected!");
-   }
-
-   private void PopupContent_PreviewKeyDown(object sender, KeyEventArgs e)
-   {
-      if (e.Key != Key.Escape)
-         return;
-
-      if (sender is FrameworkElement element)
-      {
-         var parent = element.Parent;
-         while (parent != null && parent is not Popup)
-            parent = LogicalTreeHelper.GetParent(parent);
-
-         if (parent is Popup popup)
-         {
-            popup.IsOpen = false;
-            e.Handled = true;
-         }
-      }
-   }
-
-   private void Selector_SelectionChanged(object sender, SelectionChangedEventArgs e)
-   {
-      if (sender is ComboBox selector)
-      {
-         var be = selector.GetBindingExpression(Selector.SelectedItemProperty);
-         be?.UpdateSource();
-      }
    }
 }

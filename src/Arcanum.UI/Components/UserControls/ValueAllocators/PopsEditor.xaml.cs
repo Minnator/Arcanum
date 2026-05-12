@@ -42,7 +42,7 @@ public sealed partial class PopsEditor : ISpecializedEditor
          if (MainVm.ActiveEditor is AllocatorViewModel singleVm && singleVm.LoadedLocation == selectedLocations[0])
          {
             singleVm.ResetFor(selectedLocations[0]);
-            return;
+            goto setTitle;
          }
 
          (MainVm.ActiveEditor as MassPopPainterViewModel)?.SaveState();
@@ -53,12 +53,13 @@ public sealed partial class PopsEditor : ISpecializedEditor
          if (MainVm.ActiveEditor is MassPopPainterViewModel)
          {
             (MainVm.ActiveEditor as MassPopPainterViewModel)?.ResetFor(selectedLocations);
-            return;
+            goto setTitle;
          }
 
          MainVm.ActiveEditor = new MassPopPainterViewModel(selectedLocations);
       }
 
+   setTitle:
       MainVm.Title = selectedLocations.Length switch
       {
          0 => "Pops",
@@ -66,7 +67,6 @@ public sealed partial class PopsEditor : ISpecializedEditor
          _ => $"Pops - {selectedLocations.Length} Locations",
       };
    }
-
 
    public FrameworkElement GetEditorControl() => this;
 

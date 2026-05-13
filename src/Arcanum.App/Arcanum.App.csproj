@@ -19,7 +19,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <BaseAssemblyName>Arcanum Aer Pre-Release</BaseAssemblyName>
+        <BaseAssemblyName>Arcanum Aer</BaseAssemblyName>
         <AssemblyName>$(BaseAssemblyName)</AssemblyName>
         <Product>Arcanum Aer</Product>
         <Version>1.0.7.2</Version>

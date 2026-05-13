@@ -163,9 +163,9 @@ public sealed class MassPopPainterViewModel : ViewModelBase
    {
       return loc.Pops.Where(pop =>
                  {
-                    var cMatch = !ModifyCulture || !FilterByCulture || pop.Culture == SourceCulture;
-                    var rMatch = !ModifyReligion || !FilterByReligion || pop.Religion == SourceReligion;
-                    var tMatch = !ModifyPopType || !FilterByPopType || pop.PopType == SourcePopType;
+                    var cMatch = !ModifyCulture || SourceCulture == Culture.Empty || pop.Culture == SourceCulture;
+                    var rMatch = !ModifyReligion || SourceReligion == Religion.Empty || pop.Religion == SourceReligion;
+                    var tMatch = !ModifyPopType || SourcePopType == PopType.Empty || pop.PopType == SourcePopType;
                     return cMatch && rMatch && tMatch;
                  })
                 .ToArray();
@@ -225,18 +225,16 @@ public sealed class MassPopPainterViewModel : ViewModelBase
 
    public void SaveState()
    {
-      _lastState = new PopPainterState(FilterByCulture,
+      _lastState = new PopPainterState(ModifyCulture,
                                        SourceCulture,
                                        TargetCulture,
-                                       CultureTransferPercent,
-                                       FilterByReligion,
+                                       ModifyReligion,
                                        SourceReligion,
                                        TargetReligion,
-                                       ReligionTransferPercent,
-                                       FilterByPopType,
+                                       ModifyPopType,
                                        SourcePopType,
                                        TargetPopType,
-                                       TypeTransferPercent);
+                                       GlobalTransferPercent);
    }
 
    public void LoadState()
@@ -244,41 +242,36 @@ public sealed class MassPopPainterViewModel : ViewModelBase
       if (_lastState == null)
          return;
 
-      FilterByCulture = _lastState.Value.FilterByCulture;
-      SourceCulture = _lastState.Value.SourceCulture;
-      TargetCulture = _lastState.Value.TargetCulture;
-      CultureTransferPercent = _lastState.Value.CultureTransferPercent;
-      FilterByReligion = _lastState.Value.FilterByReligion;
-      SourceReligion = _lastState.Value.SourceReligion;
-      TargetReligion = _lastState.Value.TargetReligion;
-      ReligionTransferPercent = _lastState.Value.ReligionTransferPercent;
-      FilterByPopType = _lastState.Value.FilterByPopType;
-      SourcePopType = _lastState.Value.SourcePopType;
-      TargetPopType = _lastState.Value.TargetPopType;
-      TypeTransferPercent = _lastState.Value.TypeTransferPercent;
+      var state = _lastState.Value;
+
+      ModifyCulture = state.ModifyCulture;
+      SourceCulture = state.SourceCulture;
+      TargetCulture = state.TargetCulture;
+
+      ModifyReligion = state.ModifyReligion;
+      SourceReligion = state.SourceReligion;
+      TargetReligion = state.TargetReligion;
+
+      ModifyPopType = state.ModifyPopType;
+      SourcePopType = state.SourcePopType;
+      TargetPopType = state.TargetPopType;
+
+      GlobalTransferPercent = state.GlobalTransferPercent;
    }
 
-   internal record struct PopPainterState(
-      bool FilterByCulture,
+   private record struct PopPainterState(
+      bool ModifyCulture,
       Culture SourceCulture,
       Culture TargetCulture,
-      double CultureTransferPercent,
-      bool FilterByReligion,
+      bool ModifyReligion,
       Religion SourceReligion,
       Religion TargetReligion,
-      double ReligionTransferPercent,
-      bool FilterByPopType,
+      bool ModifyPopType,
       PopType SourcePopType,
       PopType TargetPopType,
-      double TypeTransferPercent);
+      double GlobalTransferPercent);
 
    #region Culture Properties
-
-   public bool FilterByCulture
-   {
-      get;
-      set => SetField(ref field, value);
-   }
 
    public Culture SourceCulture
    {
@@ -304,12 +297,6 @@ public sealed class MassPopPainterViewModel : ViewModelBase
 
    #region Religion Properties
 
-   public bool FilterByReligion
-   {
-      get;
-      set => SetField(ref field, value);
-   }
-
    public Religion SourceReligion
    {
       get;
@@ -333,12 +320,6 @@ public sealed class MassPopPainterViewModel : ViewModelBase
    #endregion
 
    #region PopType Properties
-
-   public bool FilterByPopType
-   {
-      get;
-      set => SetField(ref field, value);
-   }
 
    public PopType SourcePopType
    {

@@ -284,6 +284,11 @@
                 </StackPanel>
             </Border>
 
+            <CheckBox IsChecked = "{Binding UseTotalRatioMode}" HorizontalAlignment = "Center" Margin = "0,5,0,0"
+                      ToolTip = "If checked, all filtered pops will be combined into a single entry with the target identity.">
+                <TextBlock Text = "Pool results into single pop identity" FontSize = "10" Opacity = "0.8" />
+            </CheckBox>
+            
             <!-- GLOBAL SLIDER -->
             <StackPanel Margin = "0,15,0,0">
                 <Grid Margin = "0,0,0,-5">

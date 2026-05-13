@@ -12,19 +12,46 @@ namespace Arcanum.UI.Components.UserControls.ValueAllocators;
 
 public sealed partial class MassPopPainterView
 {
+   private MassPopPainterViewModel? ViewModel { get; set; }
    public MassPopPainterView()
    {
       InitializeComponent();
 
       Loaded += (s, e) =>
       {
-         ClearCultureTarget_OnClick(s, e);
-         ClearReligionTarget_OnClick(s, e);
-         ClearPopTypeTarget_OnClick(s, e);
-         ClearCultureFilter_OnClick(s, e);
-         ClearReligionFilter_OnClick(s, e);
-         ClearPopTypeFilter_OnClick(s, e);
+         SyncAllControls();
       };
+
+      DataContextChanged += (_, e) =>
+      {
+         if (e.NewValue is MassPopPainterViewModel newVm)
+         {
+            ViewModel?.UIResetRequested -= SyncAllControls;
+            ViewModel = newVm;
+            ViewModel.UIResetRequested += SyncAllControls;
+         }
+      };
+   }
+
+   private void SyncAllControls()
+   {
+      if (ViewModel == null)
+         return;
+
+      if (ViewModel.SourceCulture != Culture.Empty)
+         CultureFilterBox.SetSelectedItem(ViewModel.SourceCulture, ViewModel.SourceCulture.ToString());
+      if (ViewModel.TargetCulture != Culture.Empty)
+         CultureTargetBox.SetSelectedItem(ViewModel.TargetCulture, ViewModel.TargetCulture.ToString());
+
+      if (ViewModel.SourceReligion != Religion.Empty)
+         ReligionFilterBox.SetSelectedItem(ViewModel.SourceReligion, ViewModel.SourceReligion.ToString());
+      if (ViewModel.TargetReligion != Religion.Empty)
+         ReligionTargetBox.SetSelectedItem(ViewModel.TargetReligion, ViewModel.TargetReligion.ToString());
+
+      if (ViewModel.SourcePopType != PopType.Empty)
+         PopTypeFilterBox.SetSelectedItem(ViewModel.SourcePopType, ViewModel.SourcePopType.ToString());
+      if (ViewModel.TargetPopType != PopType.Empty)
+         PopTypeTargetBox.SetSelectedItem(ViewModel.TargetPopType, ViewModel.TargetPopType.ToString());
    }
 
    private void Selector_OnSelectionChanged(object sender, SelectionChangedEventArgs e)

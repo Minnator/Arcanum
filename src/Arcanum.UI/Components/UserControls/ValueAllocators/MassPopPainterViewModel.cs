@@ -1,5 +1,6 @@
 ﻿#region
 
+using System.Windows;
 using Arcanum.Core.CoreSystems.Nexus;
 using Arcanum.Core.CoreSystems.NUI;
 using Arcanum.Core.CoreSystems.Selection;
@@ -8,6 +9,8 @@ using Arcanum.Core.GameObjects.InGame.Map.LocationCollections;
 using Arcanum.Core.GameObjects.InGame.Pops;
 using Arcanum.Core.GameObjects.InGame.Religious;
 using Arcanum.UI.Components.Windows.MinorWindows.PopUpEditors;
+using Arcanum.UI.Components.Windows.PopUp;
+using Common.UI.MBox;
 
 #endregion
 
@@ -18,13 +21,24 @@ public sealed class MassPopPainterViewModel : ViewModelBase
    private const double POP_PRECISION_EPSILON = 0.001; // 0.001 = 1 Person (if 1.0 = 1k)
    private const int DECIMALS = 3;
 
-   private static PopPainterState? _lastState = new();
+   public event Action? UIResetRequested;
+   private static PopPainterState? _lastState;
 
    public MassPopPainterViewModel(Location[] selectedLocations)
    {
-      LoadState();
       ResetFor(selectedLocations);
+      OnRequestRefreshPreview();
    }
+
+   public bool UseTotalRatioMode
+   {
+      get;
+      set
+      {
+         if (SetField(ref field, value))
+            OnRequestRefreshPreview();
+      }
+   } = false;
 
    // Toggles for active transformation
    public bool ModifyCulture
@@ -96,7 +110,13 @@ public sealed class MassPopPainterViewModel : ViewModelBase
       var ratio = Math.Clamp(GlobalTransferPercent / 100.0, 0.0, 1.0);
 
       if (ratio < 0.0001)
+      {
+         MBox.Show("Transfer percentage is too low. Please set a higher percentage before applying.",
+                   "Invalid Configuration",
+                   MBoxButton.OK,
+                   MessageBoxImage.Warning);
          return;
+      }
 
       // We have nothing to set.
       var hasTarget = (ModifyCulture && TargetCulture != Culture.Empty) ||
@@ -104,58 +124,110 @@ public sealed class MassPopPainterViewModel : ViewModelBase
                       (ModifyPopType && TargetPopType != PopType.Empty);
 
       if (!hasTarget)
+      {
+         MBox.Show("No target identity specified. Please set at least one target before applying.",
+                   "Invalid Configuration",
+                   MBoxButton.OK,
+                   MessageBoxImage.Warning);
          return;
+      }
+
+      if (UseTotalRatioMode && (TargetCulture == Culture.Empty || TargetReligion == Religion.Empty || TargetPopType == PopType.Empty))
+      {
+         MBox.Show("In Total Ratio Mode, you must specify a Target Culture, Religion, and PopType. Please set all targets before applying.",
+                   "Invalid Configuration",
+                   MBoxButton.OK,
+                   MessageBoxImage.Warning);
+         return;
+      }
 
       foreach (var loc in locations)
       {
          var eligiblePops = GetEligiblePops(loc);
+         if (eligiblePops.Length == 0)
+            continue;
 
-         foreach (var pop in eligiblePops)
+         double pooledAmount = 0;
+
+         // Path A: Total Ratio Mode (Pooling everyone into one target identity)
+         if (UseTotalRatioMode)
          {
-            var amountToMove = Math.Round(pop.Size * ratio, DECIMALS);
-            if (amountToMove < POP_PRECISION_EPSILON)
-               continue;
-
-            var targetCulture = ModifyCulture && TargetCulture != Culture.Empty ? TargetCulture : pop.Culture;
-            var targetReligion = ModifyReligion && TargetReligion != Religion.Empty ? TargetReligion : pop.Religion;
-            var targetType = ModifyPopType && TargetPopType != PopType.Empty ? TargetPopType : pop.PopType;
-
-            // 3. Find existing identical entry for the NEW identity
-            var existingMatch = loc.Pops.FirstOrDefault(lp =>
-                                                           lp != pop &&
-                                                           Nx.Get<Culture>(lp, PopDefinition.Field.Culture) == targetCulture &&
-                                                           Nx.Get<Religion>(lp, PopDefinition.Field.Religion) == targetReligion &&
-                                                           Nx.Get<PopType>(lp, PopDefinition.Field.PopType) == targetType);
-
-            if (existingMatch != null)
-               // OPTION A: Merge into existing
-               Nx.Set(existingMatch, PopDefinition.Field.Size, Math.Round(existingMatch.Size + amountToMove, DECIMALS));
-            else if (ratio >= 0.999)
+            // 1. Calculate how much we are taking from everyone
+            foreach (var pop in eligiblePops)
             {
-               // OPTION B: 100% conversion - mutate the pop directly
-               Nx.Set(pop, PopDefinition.Field.Culture, targetCulture);
-               Nx.Set(pop, PopDefinition.Field.Religion, targetReligion);
-               Nx.Set(pop, PopDefinition.Field.PopType, targetType);
-               continue;
-            }
-            else
-            {
-               // OPTION C: Create a new slice
-               var newPop = (PopDefinition)pop.DeepClone();
-               Nx.Set(newPop, PopDefinition.Field.Size, amountToMove);
-               Nx.Set(newPop, PopDefinition.Field.Culture, targetCulture);
-               Nx.Set(newPop, PopDefinition.Field.Religion, targetReligion);
-               Nx.Set(newPop, PopDefinition.Field.PopType, targetType);
-               Nx.AddToCollection(loc, Location.Field.Pops, newPop);
+               var amountToTake = Math.Round(pop.Size * ratio, DECIMALS);
+               if (amountToTake < POP_PRECISION_EPSILON)
+                  continue;
+
+               pooledAmount += amountToTake;
+
+               // Reduce the source pop
+               var remaining = Math.Round(pop.Size - amountToTake, DECIMALS);
+               if (remaining < POP_PRECISION_EPSILON)
+                  Nx.RemoveFromCollection(loc, Location.Field.Pops, pop);
+               else
+                  Nx.Set(pop, PopDefinition.Field.Size, remaining);
             }
 
-            // 4. Handle Remainder
-            var remainingSize = Math.Round(pop.Size - amountToMove, DECIMALS);
-            if (remainingSize < POP_PRECISION_EPSILON)
-               Nx.RemoveFromCollection(loc, Location.Field.Pops, pop);
-            else
-               Nx.Set(pop, PopDefinition.Field.Size, remainingSize);
+            if (pooledAmount < POP_PRECISION_EPSILON)
+               continue;
+
+            // 2. Define the Target Identity (In pooling mode, we use UI targets)
+            // If UI target is empty, we have to fallback to a sensible default or the first pop's traits
+            var finalC = TargetCulture != Culture.Empty ? TargetCulture : eligiblePops[0].Culture;
+            var finalR = TargetReligion != Religion.Empty ? TargetReligion : eligiblePops[0].Religion;
+            var finalT = TargetPopType != PopType.Empty ? TargetPopType : eligiblePops[0].PopType;
+
+            // 3. Create or Merge the pooled result
+            MergeOrCreate(loc, pooledAmount, finalC, finalR, finalT);
          }
+         // Path B: Individual Mode (Original Logic)
+         else
+         {
+            foreach (var pop in eligiblePops)
+            {
+               var amountToMove = Math.Round(pop.Size * ratio, DECIMALS);
+               if (amountToMove < POP_PRECISION_EPSILON)
+                  continue;
+
+               var targetC = ModifyCulture && TargetCulture != Culture.Empty ? TargetCulture : pop.Culture;
+               var targetR = ModifyReligion && TargetReligion != Religion.Empty ? TargetReligion : pop.Religion;
+               var targetT = ModifyPopType && TargetPopType != PopType.Empty ? TargetPopType : pop.PopType;
+
+               MergeOrCreate(loc, amountToMove, targetC, targetR, targetT, pop);
+
+               var remaining = Math.Round(pop.Size - amountToMove, DECIMALS);
+               if (remaining < POP_PRECISION_EPSILON)
+                  Nx.RemoveFromCollection(loc, Location.Field.Pops, pop);
+               else
+                  Nx.Set(pop, PopDefinition.Field.Size, remaining);
+            }
+         }
+      }
+   }
+
+   private static void MergeOrCreate(Location loc, double size, Culture c, Religion r, PopType t, PopDefinition? original = null)
+   {
+      var match = loc.Pops.FirstOrDefault(lp =>
+                                             lp != original &&
+                                             lp.Culture == c &&
+                                             lp.Religion == r &&
+                                             lp.PopType == t);
+
+      if (match != null)
+         Nx.Set(match, PopDefinition.Field.Size, Math.Round(match.Size + size, DECIMALS));
+      else
+      {
+         PopDefinition newPop;
+         if (loc.Pops.Count > 0)
+            newPop = (PopDefinition)(original?.DeepClone() ?? loc.Pops[0].DeepClone());
+         else
+            newPop = new() { UniqueId = loc.UniqueId };
+         Nx.Set(newPop, PopDefinition.Field.Size, size);
+         Nx.Set(newPop, PopDefinition.Field.Culture, c);
+         Nx.Set(newPop, PopDefinition.Field.Religion, r);
+         Nx.Set(newPop, PopDefinition.Field.PopType, t);
+         Nx.AddToCollection(loc, Location.Field.Pops, newPop);
       }
    }
 
@@ -219,8 +291,8 @@ public sealed class MassPopPainterViewModel : ViewModelBase
       AvailablePopTypes.ClearAndAdd(popTypes);
 
       RefreshPreview(selectedLocations);
-
       LoadState();
+      UIResetRequested?.Invoke();
    }
 
    public void SaveState()
@@ -234,7 +306,8 @@ public sealed class MassPopPainterViewModel : ViewModelBase
                                        ModifyPopType,
                                        SourcePopType,
                                        TargetPopType,
-                                       GlobalTransferPercent);
+                                       GlobalTransferPercent,
+                                       UseTotalRatioMode);
    }
 
    public void LoadState()
@@ -257,6 +330,8 @@ public sealed class MassPopPainterViewModel : ViewModelBase
       TargetPopType = state.TargetPopType;
 
       GlobalTransferPercent = state.GlobalTransferPercent;
+
+      UseTotalRatioMode = state.UseTotalRatioMode;
    }
 
    private record struct PopPainterState(
@@ -269,7 +344,8 @@ public sealed class MassPopPainterViewModel : ViewModelBase
       bool ModifyPopType,
       PopType SourcePopType,
       PopType TargetPopType,
-      double GlobalTransferPercent);
+      double GlobalTransferPercent,
+      bool UseTotalRatioMode);
 
    #region Culture Properties
 

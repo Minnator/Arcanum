@@ -8,7 +8,6 @@ using Arcanum.Core.CoreSystems.SavingSystem;
 using Arcanum.Core.FlowControlServices;
 using Arcanum.Core.GlobalStates;
 using Arcanum.UI;
-using Arcanum.UI.AppFeatures;
 using Arcanum.UI.Commands;
 using Arcanum.UI.Components.StyleClasses;
 using Arcanum.UI.Components.Windows.MainWindows;
@@ -56,6 +55,8 @@ internal static class Program
       _ = typeof(BaseWindow);
       LoadApplicationResources(app);
 
+      AppData.IsHeadless = args.Contains("--headless") || args.Contains("-h");
+
       // Initialize Plugin Host and Lifecycle Manager
       var pluginHost = new PluginHost.PluginHost();
       UiHandlesInjector.InjectUiHandles();
@@ -65,7 +66,7 @@ internal static class Program
       LifecycleManager.Instance.RunStartUpSequence(pluginHost);
       var clean = false;
 
-      if (args.Contains("--headless") || args.Contains("-h"))
+      if (AppData.IsHeadless)
          // --- HEADLESS MODE ---
          try
          {
@@ -77,7 +78,6 @@ internal static class Program
                return;
             }
 
-            AppData.IsHeadless = true;
             Debug.Assert(config.ModPath != null);
             ArcLog.WriteLine(CommonLogSource.PRT, LogLevel.INF, "Init FileManager...");
             FileManager.InitHeadlessMode(config.ModPath, config.BaseMods);
@@ -85,6 +85,8 @@ internal static class Program
 
             ArcLog.WriteLine(CommonLogSource.PRT, LogLevel.INF, "Logic executed successfully.");
 
+            if (config.Clean)
+               ConsoleHelper.SafeClear();
             ErrorManager.PrintDiagnosticsToConsole(config.Clean);
             clean = config.Clean;
          }
@@ -97,6 +99,7 @@ internal static class Program
          {
             if (!clean)
                ArcLog.WriteLine(CommonLogSource.PRT, LogLevel.INF, "Shutting down...");
+            ArcLog.DequeueAll();
             LifecycleManager.Instance.RunShutdownSequence();
             ConsoleHelper.ReleaseConsole();
             app.Shutdown(Environment.ExitCode);

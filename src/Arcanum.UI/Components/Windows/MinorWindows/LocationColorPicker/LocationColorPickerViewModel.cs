@@ -39,7 +39,7 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
          CreateShade();
          CopyIsToggled();
       });
-      ConfirmCommand = new RelayCommand(o => Confirm((o as Window)!));
+      ConfirmCommand = new RelayCommand(o => Confirm());
       CopyRgbCommand = new RelayCommand(_ => Clipboard.SetText(RgbText));
       CopyHexCommand = new RelayCommand(_ => Clipboard.SetText(HexText));
 
@@ -165,6 +165,16 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
       }
    } = true;
 
+   public bool AutoIncreaseNumber
+   {
+      get;
+      set
+      {
+         field = value;
+         OnPropertyChanged();
+      }
+   } = true;
+
    public string CopyButtonText
    {
       get;
@@ -230,7 +240,7 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
       SelectedColor = ColorGenerator.GenerateUnusedShade(_usedColors, ReferenceColor, VariationMin, VariationMax);
    }
 
-   private void Confirm(Window window)
+   private void Confirm()
    {
       var err = string.Empty;
       if (TargetProvince == Province.Empty)
@@ -246,11 +256,9 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
          return;
       }
 
-      var template = new LocationTemplateData();
-      Nx.Set(template, LocationTemplateData.Field.Climate, TargetClimate);
-      Nx.Set(template, LocationTemplateData.Field.Topography, TargetTopography);
+      NewLocationName = IncrementNameSuffix(NewLocationName);
 
-      var newLocation = Eu5ObjectCreator.ShowOnlyNamePickingPopUp(typeof(Location), _ => { });
+      var newLocation = Eu5ObjectCreator.ShowOnlyNamePickingPopUp(typeof(Location), _ => { }, NewLocationName);
 
       if (newLocation == null)
          return;
@@ -261,6 +269,9 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
          return;
       }
 
+      var template = new LocationTemplateData();
+      Nx.Set(template, LocationTemplateData.Field.Climate, TargetClimate);
+      Nx.Set(template, LocationTemplateData.Field.Topography, TargetTopography);
       Nx.Set(newLocation, Location.Field.TemplateData, template);
       Nx.AddToCollection(TargetProvince, Province.Field.Locations, newLocation);
       ((Location)newLocation).ColorIndex = LocationFileLoading.ColorIndex++;
@@ -273,7 +284,32 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
       AppendDefinition((Location)newLocation);
    }
 
-   private void AppendDefinition(Location newLocation)
+   public static string IncrementNameSuffix(string input)
+   {
+      if (string.IsNullOrEmpty(input))
+         return input;
+
+      var lastUnderscore = input.LastIndexOf('_');
+
+      // Check if there is an underscore and at least one character after it
+      if (lastUnderscore == -1 || lastUnderscore == input.Length - 1)
+         return input;
+
+      // Get the part after the underscore
+      var suffix = input.AsSpan(lastUnderscore + 1);
+
+      // Verify all characters in the suffix are digits
+      for (var i = 0; i < suffix.Length; i++)
+         if (!char.IsDigit(suffix[i]))
+            return input;
+
+      if (int.TryParse(suffix, out var number))
+         return string.Concat(input.AsSpan(0, lastUnderscore + 1), (number + 1).ToString());
+
+      return input;
+   }
+
+   private static void AppendDefinition(Location newLocation)
    {
       var files = DescriptorDefinitions.LocationDescriptor.Files;
       if (files.Count == 0)

@@ -20,7 +20,7 @@ using Common.UI.MBox;
 
 namespace Arcanum.UI.Components.Windows.MinorWindows;
 
-public partial class Eu5ObjectCreator
+public sealed partial class Eu5ObjectCreator
 {
    public static readonly DependencyProperty ObjectTitleProperty =
       DependencyProperty.Register(nameof(ObjectTitle),
@@ -188,16 +188,20 @@ public partial class Eu5ObjectCreator
       return window.CreatedObject;
    }
 
-   public static IEu5Object? ShowOnlyNamePickingPopUp(Type type, Action<IEu5Object> postCreationAction, bool addToGlobals = true)
+   public static IEu5Object? ShowOnlyNamePickingPopUp(Type type, Action<IEu5Object> postCreationAction, string? uniqueId, bool addToGlobals = true)
    {
-      if (!CreateAndPromptForUniqueIdInput(type, addToGlobals, out _, out var newObj))
+      if (!CreateAndPromptForUniqueIdInput(type, addToGlobals, out _, out var newObj, uniqueId))
          return null;
 
       postCreationAction(newObj);
       return newObj;
    }
 
-   private static bool CreateAndPromptForUniqueIdInput(Type type, bool addToGlobals, out bool hasUniqueIdBasedGlobalItems, out IEu5Object newObj)
+   private static bool CreateAndPromptForUniqueIdInput(Type type,
+                                                       bool addToGlobals,
+                                                       out bool hasUniqueIdBasedGlobalItems,
+                                                       out IEu5Object newObj,
+                                                       string? preFabUniqueId = null)
    {
       var globals1 = ((IEu5Object)EmptyRegistry.Empties[type]).GetGlobalItemsNonGeneric();
       var globals2 = ((IEu5Object)EmptyRegistry.Empties[type]).GetGlobalItemsNonGeneric();
@@ -209,49 +213,58 @@ public partial class Eu5ObjectCreator
 
       if (hasUniqueIdBasedGlobalItems)
       {
-         // we open the UniqueId input popup to get it first
-         var inputPopup =
-            new InputDialog("Unique ID", $"Enter a unique ID for the new {type.Name} object:", InputKind.String)
-            {
-               WindowStartupLocation = WindowStartupLocation.CenterScreen,
-            };
-         if (inputPopup.ShowDialog() != true)
-            return false;
-
-         var isValidUniqueId = inputPopup.Value is string uniqueId &&
-                               !string.IsNullOrWhiteSpace(uniqueId) &&
-                               !globals1.Contains(uniqueId);
-         while (!isValidUniqueId)
+         var isValidUniqueId = !string.IsNullOrWhiteSpace(preFabUniqueId) &&
+                               !globals1.Contains(preFabUniqueId);
+         if (!isValidUniqueId)
          {
-            var errorMessage = string.IsNullOrWhiteSpace(inputPopup.Value as string)
-                                  ? "Unique ID cannot be empty. Please enter a valid unique ID."
-                                  : $"An object with the Unique ID '{inputPopup.Value}' already exists. Please enter a different unique ID.";
-            var retry = MBox.Show(errorMessage, "Invalid Unique ID", MBoxButton.OKCancel, MessageBoxImage.Error);
-            if (retry == MBoxResult.Cancel)
-               return true;
-
-            inputPopup = new("Unique ID", $"Enter a unique ID for the new {type.Name} object:", InputKind.String)
-            {
-               WindowStartupLocation = WindowStartupLocation.CenterScreen,
-            };
+            // we open the UniqueId input popup to get it first
+            var inputPopup =
+               new InputDialog("Unique ID", $"Enter a unique ID for the new {type.Name} object:", InputKind.String)
+               {
+                  WindowStartupLocation = WindowStartupLocation.CenterScreen,
+               };
             if (inputPopup.ShowDialog() != true)
                return false;
 
-            isValidUniqueId = inputPopup.Value is string uid &&
-                              !string.IsNullOrWhiteSpace(uid) &&
-                              !globals1.Contains(uid);
+            if (inputPopup.Value is string uniqueId)
+            {
+               isValidUniqueId = !string.IsNullOrWhiteSpace(uniqueId) &&
+                                 !globals1.Contains(uniqueId);
+               preFabUniqueId = uniqueId;
+            }
+
+            while (!isValidUniqueId)
+            {
+               var errorMessage = string.IsNullOrWhiteSpace(inputPopup.Value as string)
+                                     ? "Unique ID cannot be empty. Please enter a valid unique ID."
+                                     : $"An object with the Unique ID '{inputPopup.Value}' already exists. Please enter a different unique ID.";
+               var retry = MBox.Show(errorMessage, "Invalid Unique ID", MBoxButton.OKCancel, MessageBoxImage.Error);
+               if (retry == MBoxResult.Cancel)
+                  return true;
+
+               inputPopup = new("Unique ID", $"Enter a unique ID for the new {type.Name} object:", InputKind.String)
+               {
+                  WindowStartupLocation = WindowStartupLocation.CenterScreen,
+               };
+               if (inputPopup.ShowDialog() != true)
+                  return false;
+
+               isValidUniqueId = inputPopup.Value is string uid &&
+                                 !string.IsNullOrWhiteSpace(uid) &&
+                                 !globals1.Contains(uid);
+            }
+            
          }
 
-         newObj.UniqueId = (string)inputPopup.Value!;
+         newObj.UniqueId = preFabUniqueId!;
       }
 
       if (newObj is IIndexRandomColor irc)
-         irc.Index = newObj.GetGlobalItemsNonGeneric().Count - 1;
+         irc.Index = globals1.Count - 1;
 
       var createCommand = new CreateObjectCommand(newObj, true, addToGlobals);
       createCommand.Execute();
       AppData.HistoryManager.AddCommand(createCommand);
-
       Queastor.GlobalInstance.AddToIndex(newObj);
       return true;
    }

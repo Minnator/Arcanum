@@ -167,20 +167,6 @@ public static class ColorGenerator
    }
 
    /// <summary>
-   ///    Converts a Color object to its 32-bit ARGB (Alpha, Red, Green, Blue) integer representation.
-   ///    This is standard for WPF and GDI.
-   /// </summary>
-   public static int AsArgbInt(this Color color) => (color.A << 24) | (color.R << 16) | (color.G << 8) | color.B;
-
-   /// <summary>
-   ///    Converts a Color object to its 32-bit ABGR (Alpha, Blue, Green, Red) integer representation.
-   ///    This is common in graphics APIs like DirectX and OpenGL.
-   /// </summary>
-   public static int AsAbgrInt(this Color color) =>
-      // Notice the R and B channels are swapped in their bitwise positions.
-      (color.A << 24) | (color.B << 16) | (color.G << 8) | color.R;
-
-   /// <summary>
    ///    Generates a list of colors that are perceptually close to a given base color.
    /// </summary>
    /// <param name = "baseColor" >The starting color.</param>
@@ -223,6 +209,55 @@ public static class ColorGenerator
       }
 
       return variations;
+   }
+
+   public static Color GenerateUnusedShade(HashSet<int> usedColorInts, Color referenceColor, float minVar, float maxVar)
+   {
+      var baseHsl = RgbToHsl(referenceColor);
+      var rng = Random.Shared;
+
+      // Convert percentages to 0.0-1.0 scale
+      var minD = minVar / 100.0;
+      var maxD = maxVar / 100.0;
+
+      for (var i = 0; i < 100; i++)
+      {
+         var newHsl = baseHsl;
+
+         // Pick a random magnitude between Min and Max (e.g., between 0.05 and 0.20)
+         var magnitude = minD + rng.NextDouble() * (maxD - minD);
+
+         // Decide direction: Darker (-) or Lighter (+)
+         // We also check if we are at the edges of lightness to avoid "dead" rolls
+         var goLighter = rng.Next(2) == 0;
+
+         // Safety: if we are too bright to go lighter, go darker. If too dark, go lighter.
+         if (baseHsl.L > 0.85)
+            goLighter = false;
+         else if (baseHsl.L < 0.15)
+            goLighter = true;
+
+         var offset = goLighter ? magnitude : -magnitude;
+
+         // Apply the variation to Lightness
+         newHsl.L += offset;
+
+         // Add a tiny bit of saturation jitter (1-2%) to make it look more natural
+         newHsl.S += rng.NextDouble() * 0.04 - 0.02;
+
+         // Clamp values to valid ranges
+         newHsl.L = Math.Clamp(newHsl.L, 0.0, 1.0);
+         newHsl.S = Math.Clamp(newHsl.S, 0.0, 1.0);
+
+         var candidate = HslToRgb(newHsl);
+
+         // Check if color is unique (Jomini/EU5 uses ABGR)
+         if (!usedColorInts.Contains(candidate.AsAbgrInt()) && candidate != Black && candidate != White)
+            return candidate;
+      }
+
+      // Fallback: If 100 specific shade attempts fail, get any distinct color
+      return GetMostDistinctColor(usedColorInts, 50);
    }
 
    /// <summary>
@@ -392,8 +427,6 @@ public static class ColorGenerator
       return Color.FromArgb(255, (byte)rng.Next(256), (byte)rng.Next(256), (byte)rng.Next(256));
    }
 
-   public static Color4 ToColor4(this Color color) => new(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f);
-
    /// <summary>
    ///    Generates a color from the internal hue tables and ensures it is not in the used set.
    /// </summary>
@@ -489,6 +522,25 @@ public static class ColorGenerator
       }
 
       return bestCandidate;
+   }
+
+   extension(Color color)
+   {
+      /// <summary>
+      ///    Converts a Color object to its 32-bit ARGB (Alpha, Red, Green, Blue) integer representation.
+      ///    This is standard for WPF and GDI.
+      /// </summary>
+      public int AsArgbInt() => (color.A << 24) | (color.R << 16) | (color.G << 8) | color.B;
+
+      /// <summary>
+      ///    Converts a Color object to its 32-bit ABGR (Alpha, Blue, Green, Red) integer representation.
+      ///    This is common in graphics APIs like DirectX and OpenGL.
+      /// </summary>
+      public int AsAbgrInt() =>
+         // Notice the R and B channels are swapped in their bitwise positions.
+         (color.A << 24) | (color.B << 16) | (color.G << 8) | color.R;
+
+      public Color4 ToColor4() => new(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f);
    }
 
    /// <summary>

@@ -2,6 +2,7 @@
 
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -24,12 +25,20 @@ namespace Arcanum.UI.Components.Windows.MinorWindows.LocationColorPicker;
 
 public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
 {
-   private readonly Random _random = new();
+   private readonly HashSet<int> _usedColors;
 
    public LocationColorPickerViewModel()
    {
-      SuggestUnusedCommand = new RelayCommand(_ => SuggestUnused());
-      CreateShadeCommand = new RelayCommand(_ => CreateShade());
+      SuggestUnusedCommand = new RelayCommand(_ =>
+      {
+         SuggestUnused();
+         CopyIsToggled();
+      });
+      CreateShadeCommand = new RelayCommand(_ =>
+      {
+         CreateShade();
+         CopyIsToggled();
+      });
       ConfirmCommand = new RelayCommand(o => Confirm((o as Window)!));
       CopyRgbCommand = new RelayCommand(_ => Clipboard.SetText(RgbText));
       CopyHexCommand = new RelayCommand(_ => Clipboard.SetText(HexText));
@@ -64,6 +73,58 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
       }
    } = Color.FromRgb(22, 87, 190);
 
+   public float VariationMinLimit
+   {
+      get;
+      set
+      {
+         if (value > VariationMaxLimit)
+            value = VariationMaxLimit;
+         field = value;
+         OnPropertyChanged();
+      }
+   } = 2;
+
+   public float VariationMaxLimit
+   {
+      get;
+      set
+      {
+         if (value < VariationMinLimit)
+            value = VariationMinLimit;
+         field = value;
+         OnPropertyChanged();
+      }
+   } = 100;
+
+   public float VariationMin
+   {
+      get;
+      set
+      {
+         var rounded = Math.Round(Math.Max(value, VariationMinLimit), 1);
+         if (Math.Abs(field - rounded) < 0.01)
+            return;
+
+         field = (float)rounded;
+         OnPropertyChanged();
+      }
+   } = 2;
+
+   public float VariationMax
+   {
+      get;
+      set
+      {
+         var rounded = Math.Round(Math.Min(value, VariationMaxLimit), 1);
+         if (Math.Abs(field - rounded) < 0.01)
+            return;
+
+         field = (float)rounded;
+         OnPropertyChanged();
+      }
+   } = 5;
+
    // Dropdown Selections
    public Province TargetProvince
    {
@@ -93,6 +154,37 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
       }
    } = Topography.Empty;
 
+   public bool IsCopyHex
+   {
+      get;
+      set
+      {
+         field = value;
+         CopyButtonText = IsCopyHex ? "Copy Hex" : "Copy RGB";
+         OnPropertyChanged();
+      }
+   } = true;
+
+   public string CopyButtonText
+   {
+      get;
+      set
+      {
+         field = value;
+         OnPropertyChanged();
+      }
+   } = "Copy Hex";
+
+   public string NewLocationName
+   {
+      get;
+      set
+      {
+         field = value;
+         OnPropertyChanged();
+      }
+   } = "";
+
    public SolidColorBrush ColorBrush => new(SelectedColor);
    public SolidColorBrush ReferenceBrush => new(ReferenceColor);
    public string RgbText => $"{SelectedColor.R} {SelectedColor.G} {SelectedColor.B}";
@@ -108,7 +200,25 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
 
    public event PropertyChangedEventHandler? PropertyChanged;
 
-   private readonly HashSet<int> _usedColors;
+   private void CopyIsToggled()
+   {
+      var textToCopy = IsCopyHex ? HexText : RgbText;
+
+      Task.Run(() =>
+      {
+         for (var i = 0; i < 15; i++)
+            try
+            {
+               // Application.Current.Dispatcher ensures we talk to the clipboard correctly.
+               Application.Current.Dispatcher.Invoke(() => { Clipboard.SetText(textToCopy); });
+               return;
+            }
+            catch (COMException ex) when ((uint)ex.ErrorCode == 0x800401D0)
+            {
+               Thread.Sleep(30);
+            }
+      });
+   }
 
    private void SuggestUnused()
    {
@@ -117,7 +227,7 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
 
    private void CreateShade()
    {
-      SelectedColor = ColorGenerator.GenerateUnusedShade(_usedColors, ReferenceColor);
+      SelectedColor = ColorGenerator.GenerateUnusedShade(_usedColors, ReferenceColor, VariationMin, VariationMax);
    }
 
    private void Confirm(Window window)

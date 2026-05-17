@@ -232,17 +232,20 @@ public static class ColorGenerator
          var goLighter = rng.Next(2) == 0;
 
          // Safety: if we are too bright to go lighter, go darker. If too dark, go lighter.
-         if (baseHsl.L > 0.85)
-            goLighter = false;
-         else if (baseHsl.L < 0.15)
-            goLighter = true;
+         switch (baseHsl.L)
+         {
+            case > 0.85:
+               goLighter = false;
+               break;
+            case < 0.15:
+               goLighter = true;
+               break;
+         }
 
          var offset = goLighter ? magnitude : -magnitude;
 
-         // Apply the variation to Lightness
          newHsl.L += offset;
-
-         // Add a tiny bit of saturation jitter (1-2%) to make it look more natural
+         // Add a bit of saturation jitter (1-2%) to make it look more natural
          newHsl.S += rng.NextDouble() * 0.04 - 0.02;
 
          // Clamp values to valid ranges

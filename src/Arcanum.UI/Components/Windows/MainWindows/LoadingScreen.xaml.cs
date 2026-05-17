@@ -34,7 +34,7 @@ public partial class LoadingScreen : INotifyPropertyChanged
       "With `RMB` on a map mode button you can change the mapmode assigned to it.",
       "Working on several mods at once? You can access recently opened mods from the main menu!",
       "You don't want to edit location data but climates/religions/cultures instead? Just switch the map mode and use `infer selection` mode!",
-      "You have errors in your mod? Use the Error Log (`F10`) to view and the \"navigat to file\" button on the bottom right to open the file at the errors location!",
+      "You have errors in your mod? Use the Error Log (`F10`) to view and the \"navigate to file\" button on the bottom right to open the file at the errors location!",
    ];
 
    private DispatcherTimer? _tipTimer;

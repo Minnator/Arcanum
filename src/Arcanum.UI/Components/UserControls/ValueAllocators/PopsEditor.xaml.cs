@@ -2,6 +2,7 @@
 
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using Arcanum.UI.SpecializedEditors.Management;
 using Location = Arcanum.Core.GameObjects.InGame.Map.LocationCollections.Location;
 
@@ -17,6 +18,21 @@ public sealed partial class PopsEditor : ISpecializedEditor
    {
       InitializeComponent();
       DataContext = new PopEditorVm();
+   }
+
+   protected override void OnPreviewKeyDown(KeyEventArgs e)
+   {
+      base.OnPreviewKeyDown(e);
+
+      // Handle Ctrl+Q at the PopsEditor level as a fallback for cases where
+      // descendant controls mark the key event handled (common with custom
+      // controls or popups). This ensures the hotkey always reaches the VM.
+      if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.Q)
+         if (DataContext is PopEditorVm vm && vm.ApplyChangesCommand != null && vm.ApplyChangesCommand.CanExecute(null))
+         {
+            vm.ApplyChangesCommand.Execute(null);
+            e.Handled = true;
+         }
    }
 
    public bool Enabled { get; set; } = false;

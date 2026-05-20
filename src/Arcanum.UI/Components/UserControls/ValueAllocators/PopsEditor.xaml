@@ -1,4 +1,4 @@
-﻿<UserControl x:Class = "Arcanum.UI.Components.UserControls.ValueAllocators.PopsEditor"
+﻿<UserControl x:Name = "Root" x:Class = "Arcanum.UI.Components.UserControls.ValueAllocators.PopsEditor"
              xmlns = "http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x = "http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc = "http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -13,6 +13,9 @@
     <UserControl.InputBindings>
         <!-- Alt+Z Undo -->
         <KeyBinding Modifiers = "Alt" Key = "Z" Command = "{Binding UndoCommand}" />
+        <!-- Apply changes via Ctrl+S. Bind to the UserControl.DataContext explicitly because InputBindings do not inherit DataContext reliably -->
+        <KeyBinding Modifiers = "Control" Key = "Q"
+                    Command = "{Binding DataContext.ApplyChangesCommand, ElementName=Root}" />
     </UserControl.InputBindings>
 
     <UserControl.Resources>
@@ -69,7 +72,8 @@
                                      HorizontalAlignment = "Center" Margin = "0,10,0,10" Height = "25"
                                      VerticalAlignment = "Center" Background = "{StaticResource GreenColorBrush}"
                                      local:InteractionMonitor.AllocatorVm = "{Binding}"
-                                     Style = "{StaticResource ThinBaseButtonStyle}" Width = "200" />
+                                     Style = "{StaticResource ThinBaseButtonStyle}" Width = "200"
+                                     ToolTip = "Apply Changes (Ctrl+Q)" />
 
             <Grid Grid.Row = "3">
                 <Grid.RowDefinitions>

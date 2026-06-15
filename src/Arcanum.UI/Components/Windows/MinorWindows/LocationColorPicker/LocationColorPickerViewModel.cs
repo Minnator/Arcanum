@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Arcanum.Core.CoreSystems.IO;
 using Arcanum.Core.CoreSystems.Nexus;
+using Arcanum.Core.CoreSystems.Parsing.ParsingHelpers.ArcColor;
 using Arcanum.Core.CoreSystems.Parsing.ParsingMaster;
 using Arcanum.Core.CoreSystems.Parsing.Steps.InGame.Map;
 using Arcanum.Core.CoreSystems.Queastor;
@@ -259,7 +260,7 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
       NewLocationName = IncrementNameSuffix(NewLocationName);
 
       var newLocation = Eu5ObjectCreator.ShowOnlyNamePickingPopUp(typeof(Location), _ => { }, NewLocationName);
-
+      
       if (newLocation == null)
          return;
 
@@ -275,6 +276,8 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
       Nx.Set(newLocation, Location.Field.TemplateData, template);
       Nx.AddToCollection(TargetProvince, Province.Field.Locations, newLocation);
       ((Location)newLocation).ColorIndex = LocationFileLoading.ColorIndex++;
+      Nx.Set(newLocation, Location.Field.Color, new JominiColor.MediaColor(SelectedColor));
+      
 
       template.UniqueId = newLocation.UniqueId;
       Globals.LocationTemplateData.Add(template.UniqueId, template);

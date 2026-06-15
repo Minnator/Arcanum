@@ -243,6 +243,7 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
 
    private void Confirm()
    {
+      var newColor = new JominiColor.MediaColor(SelectedColor);
       var err = string.Empty;
       if (TargetProvince == Province.Empty)
          err += "No Province selected.\n";
@@ -250,16 +251,21 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
          err += "No Climate selected.\n";
       if (TargetTopography == Topography.Empty)
          err += "No Topography selected.\n";
-
+      if (string.IsNullOrEmpty(NewLocationName))
+         err += "No Location name entered.\n";
+      if (_usedColors.Contains(newColor.AsInt()))
+         err += $"Selected color is already in use ({newColor}.\n";
+      
       if (!string.IsNullOrEmpty(err))
       {
          MBox.Show(err, "Invalid Input", MBoxButton.OK, MessageBoxImage.Error);
          return;
       }
+      
 
-      NewLocationName = IncrementNameSuffix(NewLocationName);
 
       var newLocation = Eu5ObjectCreator.ShowOnlyNamePickingPopUp(typeof(Location), _ => { }, NewLocationName);
+      IncrementNameSuffix();
       
       if (newLocation == null)
          return;
@@ -276,27 +282,28 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
       Nx.Set(newLocation, Location.Field.TemplateData, template);
       Nx.AddToCollection(TargetProvince, Province.Field.Locations, newLocation);
       ((Location)newLocation).ColorIndex = LocationFileLoading.ColorIndex++;
-      Nx.Set(newLocation, Location.Field.Color, new JominiColor.MediaColor(SelectedColor));
+      Nx.Set(newLocation, Location.Field.Color, newColor);
+      _usedColors.Add(newColor.AsInt());
       
 
       template.UniqueId = newLocation.UniqueId;
       Globals.LocationTemplateData.Add(template.UniqueId, template);
-
       Queastor.GlobalInstance.AddToIndex(template);
 
       AppendDefinition((Location)newLocation);
    }
 
-   public static string IncrementNameSuffix(string input)
+   public void IncrementNameSuffix()
    {
+      var input = NewLocationName;
       if (string.IsNullOrEmpty(input))
-         return input;
+         return;
 
       var lastUnderscore = input.LastIndexOf('_');
 
       // Check if there is an underscore and at least one character after it
       if (lastUnderscore == -1 || lastUnderscore == input.Length - 1)
-         return input;
+         return;
 
       // Get the part after the underscore
       var suffix = input.AsSpan(lastUnderscore + 1);
@@ -304,12 +311,10 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
       // Verify all characters in the suffix are digits
       for (var i = 0; i < suffix.Length; i++)
          if (!char.IsDigit(suffix[i]))
-            return input;
+            return;
 
       if (int.TryParse(suffix, out var number))
-         return string.Concat(input.AsSpan(0, lastUnderscore + 1), (number + 1).ToString());
-
-      return input;
+         NewLocationName = string.Concat(input.AsSpan(0, lastUnderscore + 1), (number + 1).ToString());
    }
 
    private static void AppendDefinition(Location newLocation)

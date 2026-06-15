@@ -331,7 +331,7 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
       fileObj.Path.UnregisterWatcher();
       if (moved)
          IO.CopyTo(oldPath, fileObj.GetFullPath());
-      IO.WriteAllTextUtf8WithBom(fileObj.GetFullPath(), $"\n{newLocation.UniqueId} = {newLocation.Color.AsHex().ToString().ToLower()}", true);
+      IO.WriteAllTextUtf8WithBom(fileObj.GetFullPath(), $"\n{newLocation.UniqueId} = {newLocation.Color.AsHexString()}", true);
       fileObj.Path.RegisterWatcher();
    }
 

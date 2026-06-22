@@ -172,6 +172,10 @@
             <autoCompleteBox:AutoCompleteComboBox Height = "24" Margin = "0,0,0,6"
                                                   FullItemsSource = "{Binding Source={x:Static g:Globals.Topography}, Path=Values}"
                                                   SelectedItem = "{Binding TargetTopography, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+            <TextBlock Text = "Default Map Assignment:" Margin = "0,0,0,1" FontSize = "10" Opacity = "0.7" />
+            <ComboBox Height = "24" Margin = "0,0,0,6" ItemsSource = "{Binding MapAssignmentOptions}"
+                      SelectedItem = "{Binding DefaultMapOption, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
 
         <!-- 4. Action Section -->

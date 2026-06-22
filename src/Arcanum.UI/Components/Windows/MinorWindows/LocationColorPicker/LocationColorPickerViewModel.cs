@@ -28,6 +28,17 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
 {
    private readonly HashSet<int> _usedColors;
 
+   public enum DefaultMapOptions
+   {
+      None,
+      Volcanoes,
+      Earthquakes,
+      SeaZones,
+      Lakes,
+      NotOwnable,
+      ImpassableMountains,
+   }
+
    public LocationColorPickerViewModel()
    {
       SuggestUnusedCommand = new RelayCommand(_ =>
@@ -45,7 +56,7 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
          CreateShade(SelectedColor);
          CopyIsToggled();
       });
-      ConfirmCommand = new RelayCommand(o => Confirm());
+      ConfirmCommand = new RelayCommand(_ => Confirm());
       CopyRgbCommand = new RelayCommand(_ => Clipboard.SetText(RgbText));
       CopyHexCommand = new RelayCommand(_ => Clipboard.SetText(HexText));
 
@@ -201,6 +212,16 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
       }
    } = "";
 
+   public DefaultMapOptions DefaultMapOption
+   {
+      get;
+      set
+      {
+         field = value;
+         OnPropertyChanged();
+      }
+   } = DefaultMapOptions.None;
+
    public SolidColorBrush ColorBrush => new(SelectedColor);
    public SolidColorBrush ReferenceBrush => new(ReferenceColor);
    public string RgbText => $"{SelectedColor.R} {SelectedColor.G} {SelectedColor.B}";
@@ -214,6 +235,7 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
    public ICommand ConfirmCommand { get; }
    public ICommand CopyRgbCommand { get; }
    public ICommand CopyHexCommand { get; }
+   public DefaultMapOptions[] MapAssignmentOptions { get; } = Enum.GetValues<DefaultMapOptions>();
 
    public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -267,8 +289,6 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
          MBox.Show(err, "Invalid Input", MBoxButton.OK, MessageBoxImage.Error);
          return;
       }
-      
-
 
       var newLocation = Eu5ObjectCreator.ShowOnlyNamePickingPopUp(typeof(Location), _ => { }, NewLocationName);
       IncrementNameSuffix();
@@ -295,6 +315,8 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
       template.UniqueId = newLocation.UniqueId;
       Globals.LocationTemplateData.Add(template.UniqueId, template);
       Queastor.GlobalInstance.AddToIndex(template);
+
+      AppendToDefaultMap(DefaultMapOption, (Location)newLocation);
 
       AppendDefinition((Location)newLocation);
    }
@@ -344,6 +366,35 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
          IO.CopyTo(oldPath, fileObj.GetFullPath());
       IO.WriteAllTextUtf8WithBom(fileObj.GetFullPath(), $"\n{newLocation.UniqueId} = {newLocation.Color.AsHexString()}", true);
       fileObj.Path.RegisterWatcher();
+   }
+
+   private static void AppendToDefaultMap(DefaultMapOptions option, Location loc)
+   {
+      switch (option)
+      {
+         case DefaultMapOptions.None:
+            break;
+         case DefaultMapOptions.Volcanoes:
+            Nx.AddToCollection(Globals.DefaultMapDefinition, DefaultMapDefinition.Field.Volcanoes, loc);
+            break;
+         case DefaultMapOptions.Earthquakes:
+            Nx.AddToCollection(Globals.DefaultMapDefinition, DefaultMapDefinition.Field.Earthquakes, loc);
+            break;
+         case DefaultMapOptions.SeaZones:
+            Nx.AddToCollection(Globals.DefaultMapDefinition, DefaultMapDefinition.Field.SeaZones, loc);
+            break;
+         case DefaultMapOptions.Lakes:
+            Nx.AddToCollection(Globals.DefaultMapDefinition, DefaultMapDefinition.Field.Lakes, loc);
+            break;
+         case DefaultMapOptions.NotOwnable:
+            Nx.AddToCollection(Globals.DefaultMapDefinition, DefaultMapDefinition.Field.NotOwnable, loc);
+            break;
+         case DefaultMapOptions.ImpassableMountains:
+            Nx.AddToCollection(Globals.DefaultMapDefinition, DefaultMapDefinition.Field.ImpassableMountains, loc);
+            break;
+         default:
+            throw new ArgumentOutOfRangeException(nameof(option), option, null);
+      }
    }
 
    private void OnPropertyChanged([CallerMemberName] string name = null!) => PropertyChanged?.Invoke(this, new(name));

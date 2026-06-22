@@ -37,7 +37,12 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
       });
       CreateShadeCommand = new RelayCommand(_ =>
       {
-         CreateShade();
+         CreateShade(ReferenceColor);
+         CopyIsToggled();
+      });
+      CreateShadeFromResultCommand = new RelayCommand(_ =>
+      {
+         CreateShade(SelectedColor);
          CopyIsToggled();
       });
       ConfirmCommand = new RelayCommand(o => Confirm());
@@ -205,6 +210,7 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
 
    public ICommand SuggestUnusedCommand { get; }
    public ICommand CreateShadeCommand { get; }
+   public ICommand CreateShadeFromResultCommand { get; }
    public ICommand ConfirmCommand { get; }
    public ICommand CopyRgbCommand { get; }
    public ICommand CopyHexCommand { get; }
@@ -236,9 +242,9 @@ public sealed class LocationColorPickerViewModel : INotifyPropertyChanged
       SelectedColor = ColorGenerator.GenerateUnusedColor(_usedColors, true);
    }
 
-   private void CreateShade()
+   private void CreateShade(Color referenceColor)
    {
-      SelectedColor = ColorGenerator.GenerateUnusedShade(_usedColors, ReferenceColor, VariationMin, VariationMax);
+      SelectedColor = ColorGenerator.GenerateUnusedShade(_usedColors, referenceColor, VariationMin, VariationMax);
    }
 
    private void Confirm()

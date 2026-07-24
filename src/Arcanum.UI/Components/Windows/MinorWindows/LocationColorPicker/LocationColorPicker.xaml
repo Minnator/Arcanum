@@ -8,7 +8,7 @@
                          xmlns:autoCompleteBox = "clr-namespace:Arcanum.UI.Components.UserControls.BaseControls.AutoCompleteBox"
                          xmlns:g = "clr-namespace:Arcanum.Core.GlobalStates;assembly=Arcanum.Core"
                          xmlns:baseControls = "clr-namespace:Arcanum.UI.Components.UserControls.BaseControls"
-                         mc:Ignorable = "d" Title = "Location Color Picker" Width = "400" Height = "500"
+                         mc:Ignorable = "d" Title = "Location Color Picker" Width = "400" Height = "550"
                          WindowStartupLocation = "CenterScreen">
     <d:Window.DataContext>
         <locationColorPicker:LocationColorPickerViewModel />

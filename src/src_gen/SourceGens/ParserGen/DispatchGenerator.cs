@@ -1,5 +1,9 @@
-﻿using System.Text;
+﻿#region
+
+using System.Text;
 using Microsoft.CodeAnalysis;
+
+#endregion
 
 namespace ParserGenerator.ParserGen;
 
@@ -244,7 +248,11 @@ public static class DispatchGenerator
 
    private static void AppendMainSwitchBody(StringBuilder sb, List<PropertyData> data)
    {
-      var groups = DispatchDataHandler.GroupByLength(data);
+      var (dataForSwitch, keynodeShatteredLists) = DispatchDataHandler.PrepareDataForSwitch(data);
+
+      var groups = DispatchDataHandler.GroupByLength(dataForSwitch);
+      
+      
 
       if (groups.Count == 0)
       {
@@ -252,9 +260,26 @@ public static class DispatchGenerator
          return;
       }
 
+      if (keynodeShatteredLists.Count > 1)
+         sb.AppendLine("ERROR: Multiple shattered keynode lists found. Only one is supported in the main dispatcher.");
+      else if (keynodeShatteredLists.Count == 1)
+      {
+         var sl = keynodeShatteredLists[0];
+         var knName = $"kn_{sl.PropertyMetadata.PropertyName}";
+         sb.AppendLine($"        // {sl.PropertyMetadata.PropertyName} KeyNode Shattered List");
+         sb.AppendLine($"        if (node is KeyOnlyNode {knName})");
+         sb.AppendLine("        {");
+         sb.AppendLine($"            target._assignComments({sl.PropertyMetadata.FullEnumString}, node, true);");
+         sb.AppendLine($"            return {sl.MethodCall}({knName}, target, ref pc);");
+         sb.AppendLine("        }");
+         sb.AppendLine();
+      }
+      
+
+
       sb.AppendLine("        byte* ptr = (byte*)(rawSource + node.KeyNode.Start);");
       sb.AppendLine();
-      sb.AppendLine($"        // Length-based dispatch for {data.Count} properties");
+      sb.AppendLine($"        // Length-based dispatch for {groups.Count} properties");
       sb.AppendLine("        switch (node.KeyNode.Length)");
       sb.AppendLine("        {");
 
@@ -284,6 +309,10 @@ public static class DispatchGenerator
       }
 
       sb.AppendLine("        }");
+   }
+
+   private static void AppendKeyNodeShatteredLists(StringBuilder sb, PropertyData lists)
+   {
    }
 
    private static void AppendDispatcherHeader(StringBuilder sb, ITypeSymbol targetType)

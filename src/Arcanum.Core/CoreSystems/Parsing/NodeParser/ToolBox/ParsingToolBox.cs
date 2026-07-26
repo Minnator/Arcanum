@@ -737,12 +737,31 @@ public static class ParsingToolBox
       return TryParseFromRegistry(node, ref pc, Globals.Regions, out value);
    }
 
-   public static bool ArcTryParse_LanguageGroup(ContentNode node,
-                                                ref ParsingContext pc,
-                                                [MaybeNullWhen(false)] out Language value)
+   public static bool ArcTryParse_Language(KeyOnlyNode node,
+                                           ref ParsingContext pc,
+                                           [MaybeNullWhen(false)] out Language value)
    {
       using var scope = pc.PushScope();
       return TryParseFromRegistry(node, ref pc, Globals.Languages, out value);
+   }
+
+   public static bool TryParseFromRegistry<T>(KeyOnlyNode node, ref ParsingContext pc, Dictionary<string, T> globals, [MaybeNullWhen(false)] out T value)
+      where T : class
+   {
+      using var scope = pc.PushScope();
+      value = null;
+
+      if (!globals.TryGetValue(pc.SliceString(node.KeyNode), out value))
+      {
+         pc.SetContext(node.KeyNode);
+         DiagnosticException.LogWarning(ref pc,
+                                        ParsingError.Instance.UnknownObjectKey,
+                                        pc.SliceString(node.KeyNode),
+                                        nameof(T));
+         return pc.Fail(ref value);
+      }
+
+      return true;
    }
 
    public static bool TryParseFromRegistry<T>(ContentNode node, ref ParsingContext pc, Dictionary<string, T> globals, [MaybeNullWhen(false)] out T value)

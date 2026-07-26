@@ -1,5 +1,4 @@
 ﻿#region
-
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Numerics;

@@ -318,7 +318,7 @@ public partial class $ClassName$ : IEu5Object&lt;$ClassName$&gt;
 public partial class $Type$ : IEmbeddedEu5Object&lt;$Type$&gt;
 {
    public NUISetting NUISettings =&gt; Config.Settings.NUIObjectSettings.$Type$Settings;
-   public AgsSettings AgsSettings =&gt; Config.Settings.AgsSettings.$Type$AgsSettings;
+   public AgsSettings AgsSettings =&gt; Config.Settings.AgsSettings.$Type$;
    [PropertyConfig(isReadonly: true)]
    public string UniqueId { get; set; } = string.Empty;
    public Eu5FileObj Source { get; set; } = Eu5FileObj.Empty;

@@ -1,4 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿#region
+
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using Arcanum.Core.CoreSystems.Map;
 using Arcanum.Core.CoreSystems.Parsing.MapParsing.Geometry;
@@ -9,6 +11,8 @@ using Arcanum.Core.Utils.Geometry;
 using Arcanum.Core.Utils.Scheduling;
 using Arcanum.Core.Utils.Sorting;
 using Common.UI;
+
+#endregion
 
 namespace Arcanum.Core.CoreSystems.Parsing.Steps.InGame.Map;
 
@@ -38,6 +42,12 @@ public sealed class LocationMapTracing(IEnumerable<IDependencyNode<string>> depe
       if (AppData.IsHeadless)
       {
          ArcLog.WriteLine("MPS", LogLevel.INF, "Skipping map processing in headless mode.");
+         return true;
+      }
+
+      if (DebugConfig.Settings.SkipMapLoading)
+      {
+         ArcLog.WriteLine("MPS", LogLevel.INF, "Skipping map processing due to debug settings.");
          return true;
       }
 

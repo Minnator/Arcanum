@@ -35,7 +35,7 @@ public partial class SubContinent
    public bool IsReadonly { get; } = false;
    public NUISetting NUISettings { get; } = Config.Settings.NUIObjectSettings.SuperRegionSettings;
    public INUINavigation[] Navigations { get; } = [];
-   public static Dictionary<string, SubContinent> GetGlobalItems() => Globals.SuperRegions;
+   public static Dictionary<string, SubContinent> GetGlobalItems() => Globals.SubContinents;
 
    public List<IEu5Object> GetInferredList(IEnumerable<Location> sLocs) => sLocs
                                                                           .Select(IEu5Object (loc) => loc

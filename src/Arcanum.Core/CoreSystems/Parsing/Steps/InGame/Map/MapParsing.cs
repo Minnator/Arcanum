@@ -45,20 +45,21 @@ public sealed class LocationMapTracing(IEnumerable<IDependencyNode<string>> depe
          return true;
       }
 
+#if DEBUG
       if (DebugConfig.Settings.SkipMapLoading)
       {
          ArcLog.WriteLine("MPS", LogLevel.INF, "Skipping map processing due to debug settings.");
          return true;
       }
-
+#endif
       (int, int) mapSize;
       List<PolygonParsing> parsingPolygons;
       using (var bitmap = new Bitmap(fileObj.Path.FullPath))
-      using (MapTracing tracing = new(bitmap))
-      {
-         parsingPolygons = tracing.Trace().SelectMany(kvp => kvp.Value).ToList();
-         mapSize = new(bitmap.Width, bitmap.Height);
-      }
+         using (MapTracing tracing = new(bitmap))
+         {
+            parsingPolygons = tracing.Trace().SelectMany(kvp => kvp.Value).ToList();
+            mapSize = new(bitmap.Width, bitmap.Height);
+         }
 
       ArcLog.WritePure(MapTracingValidator.GenerateFingerprint(parsingPolygons));
 

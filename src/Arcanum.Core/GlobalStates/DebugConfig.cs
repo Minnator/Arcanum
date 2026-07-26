@@ -32,5 +32,6 @@ public class DebugConfigSettings() : InternalSearchableSetting(Config.Settings)
    public string ExternalDocumentationPath { get; set; } = string.Empty;
    public bool UseExternalDocumentation { get; set; } = false;
    public bool ProduceCrashLogs { get; set; } = false;
+   public bool SkipMapLoading { get; set; } = false;
 }
 #endif

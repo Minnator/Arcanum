@@ -154,7 +154,7 @@ public static class DispatchGenerator
       sb.AppendLine("                    DiagnosticException.LogWarning(ref pc,");
       sb.AppendLine("                       ParsingError.Instance.InvalidNodeType,");
       sb.AppendLine("                       node.GetType().Name,");
-      sb.AppendLine("                       \"ContentNode or BlockNode or is node type is correct no parse in the dictionaries was found.\",");
+      sb.AppendLine("                       \"ContentNode or BlockNode or if correct no parser in the dictionaries was found.\",");
       sb.AppendLine("                       pc.SliceString(node.KeyNode));");
       sb.AppendLine("                }");
       sb.AppendLine("            }");
